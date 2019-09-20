@@ -1,7 +1,6 @@
-# Pages(作成中)
 ## githubで公開しているプロジェクト
 ---
-### **[Qch](https://github.com/Taro3/Qch)**
+### [Qch](https://github.com/Taro3/Qch)
     Qtを使用した5chビューア。作成中。
 ### **[ディープラーニング(C++)](https://github.com/Taro3/DeepLearning_Cpp)**
     「ゼロから作るDeep Learning」のPythonコードをC++(+Eigen)にポーティングしてみるテスト。
