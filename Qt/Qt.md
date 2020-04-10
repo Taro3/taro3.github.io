@@ -6,6 +6,10 @@ Qtに関する実装の記事などです。
 
 ### **[QtConcurrentの簡単な例](QtConcurrent/QtConcurrent1.md)**
 
+### **[QtConcurrentを使用してコレクション内の全オブジェクト関数を並列で呼び出す方法](QtConcurrent/QtConcurrent2.md)**
+
+### **[QtConcurrentを使用してコレクション内の全オブジェクト関数を並列で呼び出し、結果をコレクションで受け取る](QtConcurrent/QtConcurrent3.md)**
+
 ***
 
 **[戻る](../../index.html)**
