@@ -1,6 +1,7 @@
 # メモなど
 
 ## githubで公開しているプロジェクト
+
 (幾つかのBitBucketプロジェクトをgithubに徐々に移動中)
 
 ***
@@ -24,6 +25,10 @@ Qt Quickについてなどたまに書いているものです。
 ### **[Qtに関する動画など](https://www.youtube.com/channel/UCFxAZQrRT32KeJ9U5UtyhHQ?view_as=subscriber)**
 
 ほぼ遊びで作った動画です。
+
+### **[Qt関連記事](Qt/Qt.md)**
+
+Qtに関する記事です  。
 
 ***
 
