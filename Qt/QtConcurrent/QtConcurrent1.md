@@ -209,6 +209,23 @@ int main(int argc, char *argv[]) {
 ※これはWindows10上のQt 5.12.8を使用した結果です。(CPUはi9-9900K)
 並列処理を行った場合の処理時間の短さがわかりますね(^_^;)
 
+## QtConcurrent非対応の場合を加味する
+
+QtConcurrentが使用できない環境のへの対応が必要な場合は、QT_NO_CONCURRENTを使用して処理を振り分けます。
+```cpp
+#if defined(QT_NO_CONCURRENT)
+    // シーケンシャル処理
+    et.start();
+    t.execute1();
+    std::cout << "elapsed time:" << et.elapsed() << std::endl << std::flush;
+#else
+    // 並列処理
+    et.restart();
+    t.execute2();
+    std::cout << "elapsed time:" << et.elapsed() << std::endl << std::flush;
+#endif
+```
+
 ## プログラム全体
 
 最後に、プログラム全体を示します。
