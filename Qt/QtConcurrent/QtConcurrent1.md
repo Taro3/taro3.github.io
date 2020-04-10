@@ -15,7 +15,7 @@ QtConcurrentを使用した単純なサンプルプログラムです。
 
 まず、処理を行うデータのクラスを作成します。
 単純にint値を保持するだけです…(^_^;)
-```C++
+```cpp
 /**
  * @brief The Params class
  */
@@ -52,7 +52,7 @@ private:
 
 次に処理結果を示すクラスを作成します。
 これも単にint値を保持するだけです。
-```C++
+```cpp
 /**
  * @brief The Result class
  */
@@ -86,7 +86,7 @@ private:
 ```
 
 次に、順次処理と並列処理を行うクラスを作成します。
-```C++
+```cpp
 /**
  * @brief The TestClass class
  */
@@ -172,7 +172,7 @@ Result TestClass::calculateStats(const Params &params) {
 ```
 
 最後に、テストを実行するメイン処理を実装します。
-```C++
+```cpp
 /**
  * @brief   main
  *          プログラムメイン
@@ -212,7 +212,7 @@ int main(int argc, char *argv[]) {
 ## プログラム全体
 
 最後に、プログラム全体を示します。
-```C++
+```cpp
 #include <iostream>
 
 #include <QObject>
