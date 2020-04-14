@@ -12,6 +12,10 @@ Qtに関する実装の記事などです。
 
 ### **[QtConcurrentを使用して非メンバ関数を呼び出す](QtConcurrent/QtConcurrent3.md)**
 
+## ■その他
+
+### **[再起動可能なアプリケーション](Misc/RebootableApp.md)**
+
 ***
 
 **[戻る](../../index.html)**
