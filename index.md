@@ -28,7 +28,10 @@ Qt Quickについてなどたまに書いているものです。
 
 ### **[Qt関連記事](Qt/Qt.html)**
 
-Qtに関する記事です  。
+Qtに関する記事です。
+
+### **[Mastering Qt5](Qt/MasteringQt5/index.html)**
+Mastering Qt5に沿って勉強するページ。
 
 ***
 
