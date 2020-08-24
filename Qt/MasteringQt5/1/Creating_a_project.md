@@ -62,7 +62,7 @@ MainWindow.uiファイルは、XML形式のUIデザインファイルです。Qt
 
 ここでmain.cppを示します。
 
-```Qt
+```C++
 #include "mainwindow.h"
 
 #include <QApplication>

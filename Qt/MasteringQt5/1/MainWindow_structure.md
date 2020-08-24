@@ -4,7 +4,7 @@
 
 ここで重要なのは、ヘッダファイルのMainWindow.hに注目することです。MainWindowオブジェクトはQtのQMainWindowクラスを継承しています。
 
-```Qt
+```C++
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -50,7 +50,7 @@ MainWindowクラスは、QtフレームワークのQMainWidgetを継承してい
 
 次のコードでは、最初のincludeはクラスのヘッダです。2番めのincludeは生成されたクラスUi::MainWindowが必要とするincludeです。このincludeはヘッダでは前方宣言しかしていないので必須です。
 
-```Qt
+```C++
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
