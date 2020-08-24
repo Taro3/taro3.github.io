@@ -28,7 +28,7 @@ Qt Creatorでは、「ファイル」→「ファイル/プロジェクトの新
 
 QtとC++14の組み合わせにはいくつかの素晴らしい機能があります。GCCとCLANGコンパイラの場合は、C++14を有効にするには、次に示すようにQtプロジェクトファイル(.proファイル)でCONFIG += c++14を追加する必要があります。
 
-```
+```QMake
 QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
