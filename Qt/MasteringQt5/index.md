@@ -13,5 +13,7 @@
 
 ### **[カスタムQWidget](1/Custom_QWidget.html)**
 
+### **[タスクの追加](1/Adding_a_task.html)**
+
 ***
 以降、現在制作中です...。
