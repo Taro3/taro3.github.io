@@ -17,5 +17,7 @@
 
 ### **[QDialogの使用](1/Using_a_QDialog.html)**
 
+### **[コード責任の分散](1/Distributing_code_responsibility.html)**
+
 ***
 以降、現在制作中です...。
