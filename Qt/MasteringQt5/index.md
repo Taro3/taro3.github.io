@@ -19,5 +19,7 @@
 
 ### **[コード責任の分散](1/Distributing_code_responsibility.html)**
 
+### **[ラムダ式を使用したカスタムシグナルのエミット](1/Emitting_a_custom_signal_using_lambdas.html)**
+
 ***
 以降、現在制作中です...。
