@@ -23,5 +23,7 @@
 
 ### **[auto型とレンジベースのfor文でシンプルに](1/Simplifying_with_the_auto_type_and_a_rangebased_for_loop.html)**
 
+### **[まとめ](1/Summary.html)**
+
 ***
 以降、現在制作中です...。
