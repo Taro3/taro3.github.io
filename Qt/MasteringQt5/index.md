@@ -1,7 +1,6 @@
 # Mastering Qt5に沿って勉強するページ
 
 ## **[1.Qt入門(概要説明)](1/index.html)**
-このページで解説する内容の概要です。
 
 ### **[プロジェクトの作成](1/Creating_a_project.html)**
 
@@ -24,6 +23,10 @@
 ### **[auto型とレンジベースのfor文でシンプルに](1/Simplifying_with_the_auto_type_and_a_rangebased_for_loop.html)**
 
 ### **[まとめ](1/Summary.html)**
+
+***
+
+## **[2.QMakeの秘密を発見する](2/index.html)**
 
 ***
 以降、現在制作中です...。
