@@ -15,5 +15,7 @@
 
 ### **[タスクの追加](1/Adding_a_task.html)**
 
+### **[QDialogの使用](1/Using_a_QDialog.html)**
+
 ***
 以降、現在制作中です...。
