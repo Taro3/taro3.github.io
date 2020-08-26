@@ -21,5 +21,7 @@
 
 ### **[ラムダ式を使用したカスタムシグナルのエミット](1/Emitting_a_custom_signal_using_lambdas.html)**
 
+### **[auto型とレンジベースのfor文でシンプルに](1/Simplifying_with_the_auto_type_and_a_rangebased_for_loop.html)**
+
 ***
 以降、現在制作中です...。
