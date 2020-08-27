@@ -140,6 +140,18 @@ QVector<qulonglong> SysInfoWindowsImpl::cpuRawData()
 これが、GetSystemTimes関数へのWindows API呼び出しです！この関数は、システムがアイドルモード、カーネルモード、ユーザモードで費やした時間を教えてくれます。QVectorクラスに入力する前に、次のコードで説明されているヘルパconvertFileTimeを使用して各値を変換します。
 
 ```C++
+qulonglong SysInfoWindowsImpl::convertFileTime(const FILETIME &filetime) const
+{
+    ULARGE_INTEGER largeInteger;
+    largeInteger.LowPart = filetime.dwLowDateTime;
+    largeInteger.HighPart = filetime.dwHighDateTime;
+    return largeInteger.QuadPart;
+}
+```
+
+WindowsのFILETIME構造体は、64ビットの情報を2つの32ビット部分(ローとハイ)に格納します。関数convertFileTimeは、WindowsのULARGE_INTEGERを使用して、qulonglong型として返す前に、64ビット値を正しく構築します。最後になりましたが、以下cpuLoadAverage()の実装です。
+
+```C++
 double SysInfoWindowsImpl::cpuLoadAverage()
 {
     QVector<qulonglong> firstSample = mCpuLoadLastValues;
