@@ -28,5 +28,7 @@
 
 ## **[2.QMakeの秘密を発見する](2/index.html)**
 
+### **[クロスプラットフォームプロジェクトの設計](2/Designing_a_cross-platform_project.html)
+
 ***
 以降、現在制作中です...。
