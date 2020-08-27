@@ -33,6 +33,9 @@ Qtに関する記事です。
 ### **[Mastering Qt5](Qt/MasteringQt5/index.html)**
 Mastering Qt5に沿って勉強するページ。
 
+### **[Qt Design Studioを使ってみよう!](Qt/Qt_Design_Studio/index.html)**
+Qt Design Studioのドキュメントをちょっと日本語化して触ってみているページ。
+
 ***
 
 E-mail: [taro.develop@gmail.com](mailto:taro.develop@gmail.com)
