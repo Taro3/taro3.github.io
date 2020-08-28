@@ -32,5 +32,8 @@
 
 ### **[Windowsの実装を追加する](2/Adding_the_Windows_implementation.html)
 
+### **[Linuxの実装を追加する](2/Adding_the_Linux_implementation.html)
+
+
 ***
 以降、現在制作中です...。
