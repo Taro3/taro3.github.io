@@ -38,5 +38,7 @@
 
 ### **[SysInfoをシングルトンに変換する](2/Transforming_SysInfo_into_a_singleton.html)**
 
+### **[Qt Chartsを探る](2/Exploring_Qt_Charts.html)**
+
 ***
 以降、現在制作中です...。
