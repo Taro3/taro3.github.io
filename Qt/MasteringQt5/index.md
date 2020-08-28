@@ -36,5 +36,7 @@
 
 ### **[Mac OSの実装を追加する](2/Adding_the_Mac_OS_implementation.html)**
 
+### **[SysInfoをシングルトンに変換する](2/Transforming_SysInfo_into_a_singleton.html)**
+
 ***
 以降、現在制作中です...。
