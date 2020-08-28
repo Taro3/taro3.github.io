@@ -177,7 +177,7 @@ double SysInfoWindowsImpl::cpuLoadAverage()
 
 ## Tip
 
-Windows APIの詳細については、https://msdn.microsoft.com/library にあるMSDNのドキュメントをご覧ください。
+Windows APIの詳細については、<https://msdn.microsoft.com/library> にあるMSDNのドキュメントをご覧ください。
 
 Windowsの実装を完了する最後の手順は、ファイルch02-sysinfo.proを編集して、次のようにすることです。
 

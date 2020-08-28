@@ -11,7 +11,7 @@ class SysInfoLinuxImpl : public SysInfo
 {
 public:
     SysInfoLinuxImpl();
-    
+
     // SysInfo interface
 public:
     void init();
@@ -27,11 +27,11 @@ double SysInfoLinuxImpl::memoryUsed()
 {
     struct sysinfo memInfo;
     sysinfo(&memInfo);
-    
+
     qulonglong totalMemoryUsed = memInfo.totalram - memInfo.freeram;
     totalMemoryUsed += memInfo.totalswap - memInfo.freeswap;
     totalMemoryUsed += memInfo.mem_unit;
-    
+
     double percecnt = (double) totalMemoryUsed /
             (double)totalMemoryUsed * 100.0;
     return qBound(0.0, percecnt, 100.0);
@@ -58,10 +58,10 @@ public:
     void init();
     double cpuLoadAverage();
     double memoryUsed();
-    
+
 private:
     QVector<qulonglong> cpuRawData();
-    
+
 private:
     QVector<qulonglong> mCpuLoadLastValues;
 };
@@ -101,20 +101,20 @@ QVector<qulonglong> SysInfoLinuxImpl::cpuRawData()
 {
     QFile file("/proc/stat");
     file.open(QIODevice::ReadOnly);
-    
+
     QByteArray line = file.readLine();
     file.close();
     qulonglong totalUser = 0, totalUserNice = 0, totalSystem = 0, totalIdle = 0;
-    
+
     std::sscanf(line.data(), "cpu %llu %llu %llu %llu",
                 &totalUser, &totalUserNice, &totalSystem, &totalIdle);
-    
+
     QVector<qulonglong> rawData;
     rawData.append(totalUser);
     rawData.append(totalUserNice);
     rawData.append(totalSystem);
     rawData.append(totalIdle);
-    
+
     return rawData;
 }
 ```
@@ -127,11 +127,11 @@ double SysInfoLinuxImpl::cpuLoadAverage()
     QVector<qulonglong> firstSample = mCpuLoadLastValues;
     QVector<qulonglong> secondSample = cpuRawData();
     mCpuLoadLastValues = secondSample;
-    
+
     double overall = (secondSample[0] - firstSample[0])
             + (secondSample[1] - firstSample[1])
             + (secondSample[2] - firstSample[2]);
-    
+
     double total = overall + (secondSample[3] - firstSample[3]);
     double percent = (overall / total) * 100.0;
     return qBound(0.0, percent, 100.0);
@@ -148,7 +148,7 @@ double SysInfoLinuxImpl::cpuLoadAverage()
 
 ## Tip
 
-/proc/statの詳細については、https://www.kernel.org/doc/Documentation/filesystems/proc.txt にあるLinuxカーネルのドキュメントを参照してください。
+/proc/statの詳細については、<https://www.kernel.org/doc/Documentation/filesystems/proc.txt> にあるLinuxカーネルのドキュメントを参照してください。
 
 他の実装と同様に、最後に行うことは、ch02-sysinfo.proファイルを次のように編集することです。
 
