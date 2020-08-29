@@ -40,5 +40,7 @@
 
 ### **[Qt Chartsを探る](2/Exploring_Qt_Charts.html)**
 
+### **[QChartsを使ったCpuWidget](2/CpuWidget_using_QCharts.html)**
+
 ***
 以降、現在制作中です...。
