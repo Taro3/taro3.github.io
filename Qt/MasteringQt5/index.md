@@ -42,5 +42,7 @@
 
 ### **[QChartsを使ったCpuWidget](2/CpuWidget_using_QCharts.html)**
 
+### **[QChartsを使ったメモリ使用画面](2/Memory_using_QCharts.html)**
+
 ***
 以降、現在制作中です...。
