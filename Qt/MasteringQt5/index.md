@@ -62,6 +62,8 @@
 
 ### **[スマートポインタでコードを保護する](3/Protecting_your_code_with_a_smart_pointer.html)**
 
+### **[モデルの実装](3/Implementing_the_model.html)**
+
 ***
 
 以降、現在制作中です...。
