@@ -60,6 +60,8 @@
 
 ### **[データをデータベースに保存する](3/Storing_your_data_in_a_database.html)**
 
+### **[スマートポインタでコードを保護する](3/Protecting_your_code_with_a_smart_pointer.html)**
+
 ***
 
 以降、現在制作中です...。
