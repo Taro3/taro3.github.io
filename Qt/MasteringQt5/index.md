@@ -72,7 +72,9 @@
 
 ### **[AlbumListWidgetでアルバムをリストアップ](4/Listing_your_albums_with_AlbumListWidget.html)**
 
-### **[ThumbnailProxyModelの作成](Creating_a_ThumbnailProxyModel.html)**
+### **[ThumbnailProxyModelの作成](4/Creating_a_ThumbnailProxyModel.html)**
+
+### **[選択したアルバムを AlbumWidget で表示する](4/Displaying_the_selected_album_with_AlbumWidget.html)**
 
 ***
 
