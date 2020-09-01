@@ -69,6 +69,11 @@
 ## **[4.デスクトップUIの克服](4/index.html)**
 
 ### **[コアな共有ライブラリと連携したGUIの作成](4/Creating_a_GUI_linked_to_a_core_shared_library.html)**
+
+### **[AlbumListWidgetでアルバムをリストアップ](4/Listing_your_albums_with_AlbumListWidget.html)**
+
+
+
 ***
 
 以降、現在制作中です...。
