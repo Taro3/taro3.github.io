@@ -78,6 +78,8 @@
 
 ### **[PictureDelegateでサムネイルを強化する](4/Enhancing_thumbnails_with_PictureDelegate.html)**
 
+### **[PictureWidgetで像を表示する](4/Displaying_a_picture_with_PictureWidget.html)**
+
 ***
 
 以降、現在制作中です...。
