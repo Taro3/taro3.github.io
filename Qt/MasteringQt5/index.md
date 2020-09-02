@@ -76,6 +76,8 @@
 
 ### **[選択したアルバムを AlbumWidget で表示する](4/Displaying_the_selected_album_with_AlbumWidget.html)**
 
+### **[PictureDelegateでサムネイルを強化する](4/Enhancing_thumbnails_with_PictureDelegate.html)**
+
 ***
 
 以降、現在制作中です...。
