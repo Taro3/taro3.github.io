@@ -80,6 +80,8 @@
 
 ### **[PictureWidgetで像を表示する](4/Displaying_a_picture_with_PictureWidget.html)**
 
+### **[ギャラリーアプリの構成](4/Composing_your_Gallery_app.html)**
+
 ***
 
 以降、現在制作中です...。
