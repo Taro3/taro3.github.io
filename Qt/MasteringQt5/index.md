@@ -90,7 +90,7 @@
 
 ### **[Qt Quickプロジェクトの作成](5/Creating_a_Qt_Quick_project.html)**
 
-### **[Qtクイックギャラリーのエントリーポイントの準備](5/Preparing_your_Qt_Quick_gallery_entry_point.gtml)**
+### **[Qtクイックギャラリーのエントリーポイントの準備](5/Preparing_your_Qt_Quick_gallery_entry_point.html)**
 ***
 
 以降、現在制作中です...。
