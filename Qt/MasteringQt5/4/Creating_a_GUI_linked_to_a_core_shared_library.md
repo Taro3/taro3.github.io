@@ -1,12 +1,12 @@
 # コアな共有ライブラリと連携したGUIの作成
 
-これで、gallery-core共有ライブラリの準備ができました。それでは、デスクトップGUIプロジェクトの作成方法を見ていきましょう。gallery-desktopというQtウィジェットアプリケーションのサブプロジェクトを作成します。最初の手順だけが従来のQtウィジェットアプリケーションと異なります。メインプロジェクト上で右クリックして、ch04-gallery-desktop | New subproject | Application | Qt Widgets Application | Chooseを選択します。
+これで、gallery-core共有ライブラリの準備ができました。それでは、デスクトップGUIプロジェクトの作成方法を見ていきましょう。gallery-desktopというQtウィジェットアプリケーションのサブプロジェクトを作成します。最初の手順だけが従来のQtウィジェットアプリケーションと異なります。メインプロジェクト上で右クリックして、ch04-gallery-desktop → New subproject → Application → Qt Widgets Application → Chooseを選択します。
 
 このような素敵なマルチプロジェクトの階層ができあがります。
 
 ![階層](img/1.png)
 
-このgallery-desktopアプリケーションをgallery-coreにリンクします。gallery-desktop.proファイルを自分で編集するか、Qt Creatorウィザードを使って以下のように編集します。プロジェクトを右クリックして、gallery-desktop | ライブラリの追加 | 内部ライブラリ | gallerycore | 次へ > 完了を選択します。更新されたgallery-desktop.proは以下の通りです。
+このgallery-desktopアプリケーションをgallery-coreにリンクします。gallery-desktop.proファイルを自分で編集するか、Qt Creatorウィザードを使って以下のように編集します。プロジェクトを右クリックして、gallery-desktop → ライブラリの追加 → 内部ライブラリ → gallerycore → 次へ > 完了を選択します。更新されたgallery-desktop.proは以下の通りです。
 
 ```QMake
 QT       += core gui

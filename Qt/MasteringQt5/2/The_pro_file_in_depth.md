@@ -47,7 +47,7 @@ windows {
 debug スコープを windows 内にネストすることは、if (windows && debug) と同等です。スコーピングの仕組みはさらに柔軟です。この構文では、OR ブール演算子条件を持つことができます。
 
 ```QMake
-windows|unix {
+windows:unix {
     SOURCES += SysInfoWindowsAndLinux.cpp
 }
 ```
@@ -55,7 +55,7 @@ windows|unix {
 他のif/else文を持っていても構いません。
 
 ```QMake
-windows|unix {
+windows:unix {
     SOURCES += SysInfoWindowsAndLinux.cpp
 } else:macx {
     SOURCES += SysInfoMacImpl.cpp
@@ -93,7 +93,7 @@ macx {
 }
 ```
 
-プロジェクトをビルドすると、プロジェクトをビルドするたびにプラットフォーム固有のメッセージが 「一般メッセージ」 タブに表示されます (このタブは、ウィンドウ | 出力ペイン | 一般メッセージ からアクセスできます)。ここでは、COMPILE_MSG 変数を定義し、 message($$COMPILE_MSG windows) を呼び出す際にこれを参照しています。これは、.proファイルから外部ライブラリをコンパイルする必要がある場合に興味深い可能性を提供します。変数内のすべてのソースを集約したり、特定のコンパイラへの呼び出しと組み合わせたりすることができます。
+プロジェクトをビルドすると、プロジェクトをビルドするたびにプラットフォーム固有のメッセージが 「一般メッセージ」 タブに表示されます (このタブは、ウィンドウ → 出力ペイン → 一般メッセージ からアクセスできます)。ここでは、COMPILE_MSG 変数を定義し、 message($$COMPILE_MSG windows) を呼び出す際にこれを参照しています。これは、.proファイルから外部ライブラリをコンパイルする必要がある場合に興味深い可能性を提供します。変数内のすべてのソースを集約したり、特定のコンパイラへの呼び出しと組み合わせたりすることができます。
 
 ## Tip
 

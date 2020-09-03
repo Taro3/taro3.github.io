@@ -5,11 +5,12 @@
 ![タスクの追加](img/9.png)
 
 編集内容は下記のとおりです。
+
 * toolbarLayoutとtasksLayoutを含むcentralWidgetの垂直レイアウト。
 * 垂直方向のスペーサが上記のレイアウトを上に押し上げ、できるだけ小さなスペースになるようにする。
 * 自動生成されたmenuBar、mainToolBar、statusBarは不要なため削除します。
 
-オブジェクトインスペクタウィンドウでMainWindowを選択し、**QWidget**|**windowTitle**プロパティを編集してMainWindowのタイトルをTodoに変更することを忘れないでください。
+オブジェクトインスペクタウィンドウでMainWindowを選択し、**QWidget** → **windowTitle**プロパティを編集してMainWindowのタイトルをTodoに変更することを忘れないでください。
 
 ## Qt tip
 

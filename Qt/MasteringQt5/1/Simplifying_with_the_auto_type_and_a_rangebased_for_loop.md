@@ -44,7 +44,7 @@ checkbox::toggledシグナルに接続するスロットchecked(bool checked)を
 
 ## Tip
 
-Qt Designerでフォントオブジェクトを弄ってみましょう。Task.uiファイルのチェックボックスを選択し、プロパティエディタ|QWidget|fontで行います。
+Qt Designerでフォントオブジェクトを弄ってみましょう。Task.uiファイルのチェックボックスを選択し、プロパティエディタ → QWidget → fontで行います。
 
 最後の命令は、Taskのステータスが変更されたことをMainWindowに通知します。タスクの実装の詳細を隠すために、シグナル名をcheckboxCheckedではなくstatusChangedにしています。MainWindow.hファイルに以下のコードを追加します。
 

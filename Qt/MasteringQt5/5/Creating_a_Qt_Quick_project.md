@@ -2,7 +2,7 @@
 
 この章では、第4章「デスクトップUIの克服」で説明したのと同じプロジェクト構造に従います。親プロジェクト ch05-gallery-mobile.pro は、2つのサブプロジェクト、gallery-coreと新しいgallery-mobileをホストします。
 
-Qt creatorでは、**ファイル**|**新規ファイル**または**プロジェクト**|**アプリケーション**|**Qt Quick Controls Application**|**選択**からQt Quickサブプロジェクトを作成することができます。
+Qt creatorでは、**ファイル** → **新規ファイル**または**プロジェクト** → **アプリケーション** → **Qt Quick Controls Application** → **選択**からQt Quickサブプロジェクトを作成することができます。
 
 ウィザードでは、プロジェクトの作成をカスタマイズすることができます。
 
