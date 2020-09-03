@@ -91,12 +91,11 @@
 ### **[Qt Quickプロジェクトの作成](5/Creating_a_Qt_Quick_project.html)**
 
 ### **[Qtクイックギャラリーのエントリーポイントの準備](5/Preparing_your_Qt_Quick_gallery_entry_point.html)**
-<<<<<<< HEAD
 
 ### **[ListViewでアルバムを表示する](5/Displaying_albums_with_ListView.html)**
 
-=======
->>>>>>> origin/master
+### **[QMLシングルトンを用いたアプリケーションのプログラミング](5/Theming_the_application_with_a_QML_singleton.html)**
+
 ***
 
 以降、現在制作中です...。
