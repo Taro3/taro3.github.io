@@ -84,6 +84,8 @@
 
 ## **[5.モバイルUIを支配する](5/index.html)**
 
+### **[Qt QuickとQMLで始める](5/Starting_with_Qt_Quick_and_QML.html)**
+
 ***
 
 以降、現在制作中です...。
