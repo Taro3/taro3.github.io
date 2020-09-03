@@ -86,6 +86,8 @@
 
 ### **[Qt QuickとQMLで始める](5/Starting_with_Qt_Quick_and_QML.html)**
 
+### **[開発環境の確認](5/Checking_your_development_environment.html)**
+
 ***
 
 以降、現在制作中です...。
