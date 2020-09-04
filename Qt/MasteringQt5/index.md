@@ -96,6 +96,7 @@
 
 ### **[QMLシングルトンを用いたアプリケーションのプログラミング](5/Theming_the_application_with_a_QML_singleton.html)**
 
+### **[モバイルでのデータベースの読み込み](5/Loading_a_database_on_mobile.html)**
 ***
 
 以降、現在制作中です...。
