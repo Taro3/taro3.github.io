@@ -99,6 +99,9 @@
 ### **[モバイルでのデータベースの読み込み](5/Loading_a_database_on_mobile.html)**
 
 ### **[カスタムInputDialogから新しいアルバムを作成する](5/Creating_a_new_album_from_a_custom_InputDialog.html)**
+
+### **[ImageProviderで画像を読み込む](5/Loading_images_with_an_ImageProvider.html)**
+
 ***
 
 以降、現在制作中です...。
