@@ -102,6 +102,8 @@
 
 ### **[ImageProviderで画像を読み込む](5/Loading_images_with_an_ImageProvider.html)**
 
+### **[GridViewでサムネイルを表示する](5/Displaying_thumbnails_in_a_GridView.html)**
+
 ***
 
 以降、現在制作中です...。
