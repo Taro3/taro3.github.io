@@ -104,6 +104,8 @@
 
 ### **[GridViewでサムネイルを表示する](5/Displaying_thumbnails_in_a_GridView.html)**
 
+### **[フル解像度の写真をスワイプで表示](5/Swiping_through_full_resolution_pictures.html)**
+
 ***
 
 以降、現在制作中です...。
