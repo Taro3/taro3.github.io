@@ -82,6 +82,8 @@
 
 ### **[ギャラリーアプリの構成](4/Composing_your_Gallery_app.html)**
 
+***
+
 ## **[5.モバイルUIを支配する](5/index.html)**
 
 ### **[Qt QuickとQMLで始める](5/Starting_with_Qt_Quick_and_QML.html)**
@@ -105,6 +107,12 @@
 ### **[GridViewでサムネイルを表示する](5/Displaying_thumbnails_in_a_GridView.html)**
 
 ### **[フル解像度の写真をスワイプで表示](5/Swiping_through_full_resolution_pictures.html)**
+
+***
+
+## **[6.QtはRaspberry Piに向いている](6/index.html)**
+
+### **[Qt3Dの発見](6/Discovering_Qt3D.html)**
 
 ***
 
