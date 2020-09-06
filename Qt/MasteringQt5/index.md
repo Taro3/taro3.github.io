@@ -118,6 +118,8 @@
 
 ### **[Qt3Dコードのエントリーポイントの作成](6/Creating_an_entry_point_for_your_Qt3D_code.html)**
 
+### **[シーンの設定](6/Setting_up_the_scene.html)**
+
 ***
 
 以降、現在制作中です...。
