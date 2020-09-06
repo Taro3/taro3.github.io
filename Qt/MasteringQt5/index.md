@@ -114,6 +114,8 @@
 
 ### **[Qt3Dの発見](6/Discovering_Qt3D.html)**
 
+### **[Raspberry Pi用にQtを設定する](6/Configuring_Qt_for_your_Raspberry_Pi.html)**
+
 ***
 
 以降、現在制作中です...。
