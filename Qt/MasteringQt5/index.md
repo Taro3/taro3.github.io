@@ -116,6 +116,8 @@
 
 ### **[Raspberry Pi用にQtを設定する](6/Configuring_Qt_for_your_Raspberry_Pi.html)**
 
+### **[Qt3Dコードのエントリーポイントの作成](6/Creating_an_entry_point_for_your_Qt3D_code.html)**
+
 ***
 
 以降、現在制作中です...。
