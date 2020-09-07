@@ -126,6 +126,8 @@
 
 ### **[ファクトリから実体を作る](6/Crafting_entities_from_the_factory.html)**
 
+### **[JavaScriptでスネークエンジンを構築する](6/Building_a_snake_engine_in_JavaScript.html)**
+
 ***
 
 以降、現在制作中です...。
