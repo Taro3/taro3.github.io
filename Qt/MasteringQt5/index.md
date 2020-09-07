@@ -122,6 +122,8 @@
 
 ### **[Qt3Dエンティティの組み立て](6/Assembling_your_Qt3D_entities.html)**
 
+### **[ボードゲームの準備](6/Preparing_the_board_game.html)**
+
 ***
 
 以降、現在制作中です...。
