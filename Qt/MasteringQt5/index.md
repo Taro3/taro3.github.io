@@ -120,6 +120,8 @@
 
 ### **[シーンの設定](6/Setting_up_the_scene.html)**
 
+### **[Qt3Dエンティティの組み立て](6/Assembling_your_Qt3D_entities.html)**
+
 ***
 
 以降、現在制作中です...。
