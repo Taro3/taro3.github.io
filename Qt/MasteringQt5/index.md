@@ -128,6 +128,8 @@
 
 ### **[JavaScriptでスネークエンジンを構築する](6/Building_a_snake_engine_in_JavaScript.html)**
 
+### **[QMLの状態でHUDを変化させる](6/Varying_the_HUD_with_QML_states.html)**
+
 ***
 
 以降、現在制作中です...。
