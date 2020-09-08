@@ -130,6 +130,8 @@
 
 ### **[QMLの状態でHUDを変化させる](6/Varying_the_HUD_with_QML_states.html)**
 
+### **[QML アプリケーションのプロファイリング](6/Profiling_your_QML_application.html)**
+
 ***
 
 以降、現在制作中です...。
