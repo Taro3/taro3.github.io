@@ -134,4 +134,10 @@
 
 ***
 
+## **[頭痛のないサードパーティ製ライブラリ](7/index.html)**
+
+### **[Qt Designer プラグインの作成](7/Creating_your_Qt_Designer_plugin.html)**
+
+***
+
 以降、現在制作中です...。
