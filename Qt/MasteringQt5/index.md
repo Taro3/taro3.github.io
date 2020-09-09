@@ -138,6 +138,8 @@
 
 ### **[Qt Designer プラグインの作成](7/Creating_your_Qt_Designer_plugin.html)**
 
+### **[Windows用のプロジェクトを設定する](7/Configuring_the_project_for_Windows.html)**
+
 ***
 
 以降、現在制作中です...。
