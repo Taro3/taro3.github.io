@@ -142,6 +142,8 @@
 
 ### **[Linux用のプロジェクトを設定する](7/Configuring_the_project_for_Linux.html)**
 
+### **[Mac用のプロジェクトを設定する](7/Configuring_the_project_for_Mac.html)**
+
 ***
 
 以降、現在制作中です...。
