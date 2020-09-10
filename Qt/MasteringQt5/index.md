@@ -140,6 +140,8 @@
 
 ### **[Windows用のプロジェクトを設定する](7/Configuring_the_project_for_Windows.html)**
 
+### **[Linux用のプロジェクトを設定する](7/Configuring_the_project_for_Linux.html)**
+
 ***
 
 以降、現在制作中です...。
