@@ -144,6 +144,7 @@
 
 ### **[Mac用のプロジェクトを設定する](7/Configuring_the_project_for_Mac.html)**
 
+### **[OpenCVフィルタの実装](7/Implementing_your_OpenCV_filters.html)**
 ***
 
 以降、現在制作中です...。
