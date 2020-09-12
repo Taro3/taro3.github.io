@@ -145,6 +145,9 @@
 ### **[Mac用のプロジェクトを設定する](7/Configuring_the_project_for_Mac.html)**
 
 ### **[OpenCVフィルタの実装](7/Implementing_your_OpenCV_filters.html)**
+
+### **[FilterWidget で UI をデザインする](7/Designing_the_UI_with_FilterWidget.html)**
+
 ***
 
 以降、現在制作中です...。
