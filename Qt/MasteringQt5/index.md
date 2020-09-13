@@ -147,8 +147,10 @@
 ### **[OpenCVフィルタの実装](7/Implementing_your_OpenCV_filters.html)**
 
 ### **[FilterWidget で UI をデザインする](7/Designing_the_UI_with_FilterWidget.html)**
- 
+
 ### **[プラグインを Qt Designer に公開する](7/Exposing_your_plugin_to_Qt_Designer.html)**
+
+### **[Qt Designer プラグインを使用する](7/Using_your_Qt_Designer_plugin.html)**
 
 ***
 
