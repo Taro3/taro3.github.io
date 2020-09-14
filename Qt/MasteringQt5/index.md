@@ -152,6 +152,8 @@
 
 ### **[Qt Designer プラグインを使用する](7/Using_your_Qt_Designer_plugin.html)**
 
+### **[画像フィルタアプリケーションの構築](7/Building_the_image-filter_application.html)**
+
 ***
 
 以降、現在制作中です...。
