@@ -134,7 +134,7 @@
 
 ***
 
-## **[頭痛のないサードパーティ製ライブラリ](7/index.html)**
+## **[7.頭痛のないサードパーティ製ライブラリ](7/index.html)**
 
 ### **[Qt Designer プラグインの作成](7/Creating_your_Qt_Designer_plugin.html)**
 
@@ -153,6 +153,11 @@
 ### **[Qt Designer プラグインを使用する](7/Using_your_Qt_Designer_plugin.html)**
 
 ### **[画像フィルタアプリケーションの構築](7/Building_the_image-filter_application.html)**
+
+***
+
+## **[8.アニメーション - It's Alive, Alive!](8/index.html)**
+
 
 ***
 
