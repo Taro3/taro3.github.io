@@ -158,6 +158,7 @@
 
 ## **[8.アニメーション - It's Alive, Alive!](8/index.html)**
 
+### **[SDKの準備](8/Preparing_an_SDK.html)**
 
 ***
 
