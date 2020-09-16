@@ -164,6 +164,8 @@
 
 ### **[プラグインを動的にロードする](8/Loading_your_plugins_dynamically.html)**
 
+### **[アプリケーション内部のプラグインを使用する](8/Using_the_plugins_inside_the_application.html)**
+
 ***
 
 以降、現在制作中です...。
