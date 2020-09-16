@@ -160,6 +160,8 @@
 
 ### **[SDKの準備](8/Preparing_an_SDK.html)**
 
+### **[プラグインの作成](8/Creating_your_plugins.html)**
+
 ***
 
 以降、現在制作中です...。
