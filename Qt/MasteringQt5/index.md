@@ -162,6 +162,8 @@
 
 ### **[プラグインの作成](8/Creating_your_plugins.html)**
 
+### **[プラグインを動的にロードする](8/Loading_your_plugins_dynamically.html)**
+
 ***
 
 以降、現在制作中です...。
