@@ -166,6 +166,8 @@
 
 ### **[アプリケーション内部のプラグインを使用する](8/Using_the_plugins_inside_the_application.html)**
 
+### **[アニメーションフレームワークの発見](8/Discovering_the_Animation_Framework.html)**
+
 ***
 
 以降、現在制作中です...。
