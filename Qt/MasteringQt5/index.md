@@ -168,6 +168,8 @@
 
 ### **[アニメーションフレームワークの発見](8/Discovering_the_Animation_Framework.html)**
 
+### **[サムネイルをジャンプさせる](8/Making_your_thumbnails_jump.html)**
+
 ***
 
 以降、現在制作中です...。
