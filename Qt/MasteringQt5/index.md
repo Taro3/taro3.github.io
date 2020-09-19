@@ -170,6 +170,7 @@
 
 ### **[サムネイルをジャンプさせる](8/Making_your_thumbnails_jump.html)**
 
+### **[写真をフェードインして](8/Fading_the_picture_in.html)**
 ***
 
 以降、現在制作中です...。
