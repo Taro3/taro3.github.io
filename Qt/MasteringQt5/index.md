@@ -184,6 +184,8 @@
 
 ### **[マンデルブロプロジェクトの建築](9/Architecting_the_Mandelbrot_project.html)**
 
+### **[QRunnableでジョブクラスを定義する](9/Defining_a_Job_class_with_QRunnable.html)**
+
 
 ***
 
