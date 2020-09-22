@@ -186,6 +186,7 @@
 
 ### **[QRunnableでジョブクラスを定義する](9/Defining_a_Job_class_with_QRunnable.html)**
 
+### **[MandelbrotCalculatorでのQThreadPoolの使用](9/Using_QThreadPool_in_MandelbrotCalculator.html)**
 
 ***
 
