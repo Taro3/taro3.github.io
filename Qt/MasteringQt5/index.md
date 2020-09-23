@@ -188,6 +188,8 @@
 
 ### **[MandelbrotCalculatorでのQThreadPoolの使用](9/Using_QThreadPool_in_MandelbrotCalculator.html)**
 
+### **[MandelbrotWidgetでフラクタルを表示する](9/Displaying_the_fractal_with_MandelbrotWidget.html)**
+
 ***
 
 以降、現在制作中です...。
