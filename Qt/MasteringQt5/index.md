@@ -200,6 +200,8 @@
 
 ### **[QDataStreamとQTcpSocketを使った作業](10/Working_with_QDataStream_and_QTcpSocket.html)**
 
+### **[ワーカーのソケットとの相互作用](10/Interacting_with_sockets_in_the_worker.html)**
+
 ***
 
 以降、現在制作中です...。
