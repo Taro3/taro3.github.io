@@ -195,6 +195,9 @@
 ## **[IPCが必要ですか？ミニオンを働かせましょう](10/index.html)**
 
 ### **[IPCプロジェクトの構築](10/Architecturing_an_IPC_project.html)**
+
+### **[SDK を使って基礎を固める](10/Laying_down_the_foundations_with_an_SDK.html)**
+
 ***
 
 以降、現在制作中です...。
