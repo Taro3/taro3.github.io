@@ -198,6 +198,8 @@
 
 ### **[SDK を使って基礎を固める](10/Laying_down_the_foundations_with_an_SDK.html)**
 
+### **[QDataStreamとQTcpSocketを使った作業](10/Working_with_QDataStream_and_QTcpSocket.html)**
+
 ***
 
 以降、現在制作中です...。
