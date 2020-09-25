@@ -192,4 +192,9 @@
 
 ***
 
+## **[IPCが必要ですか？ミニオンを働かせましょう](10/index.html)**
+
+### **[IPCプロジェクトの構築](10/Architecturing_an_IPC_project.html)**
+***
+
 以降、現在制作中です...。
