@@ -204,6 +204,7 @@
 
 ### **[アプリケーションからのソケットとのインタラクション](10/Interacting_with_sockets_from_the_application.html)**
 
+### **[独自の QTcpServer を構築する](10/Building_your_own_QTcpServer.html)**
 ***
 
 以降、現在制作中です...。
