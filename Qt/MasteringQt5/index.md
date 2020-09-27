@@ -202,6 +202,8 @@
 
 ### **[ワーカーのソケットとの相互作用](10/Interacting_with_sockets_in_the_worker.html)**
 
+### **[アプリケーションからのソケットとのインタラクション](10/Interacting_with_sockets_from_the_application.html)**
+
 ***
 
 以降、現在制作中です...。
