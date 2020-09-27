@@ -176,7 +176,7 @@
 
 ***
 
-## **[マルチスレッドで正気を保つ](9/index.html)**
+## **[9.マルチスレッドで正気を保つ](9/index.html)**
 
 ### **[Qスレッドの発見](9/Discovering_QThread.html)**
 
@@ -192,7 +192,7 @@
 
 ***
 
-## **[IPCが必要ですか？ミニオンを働かせましょう](10/index.html)**
+## **[10.IPCが必要ですか？ミニオンを働かせましょう](10/index.html)**
 
 ### **[IPCプロジェクトの構築](10/Architecturing_an_IPC_project.html)**
 
@@ -205,6 +205,11 @@
 ### **[アプリケーションからのソケットとのインタラクション](10/Interacting_with_sockets_from_the_application.html)**
 
 ### **[独自の QTcpServer を構築する](10/Building_your_own_QTcpServer.html)**
+
+***
+
+## **[11.シリアライズを楽しむ](11/index.html)**
+
 ***
 
 以降、現在制作中です...。
