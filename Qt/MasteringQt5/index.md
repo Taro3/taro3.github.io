@@ -210,6 +210,8 @@
 
 ## **[11.シリアライズを楽しむ](11/index.html)**
 
+### **[ドラムマシンプロジェクトの構築](11/Architecting_the_drum_machine_project.html)**
+
 ***
 
 以降、現在制作中です...。
