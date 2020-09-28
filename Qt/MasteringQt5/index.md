@@ -212,6 +212,8 @@
 
 ### **[ドラムマシンプロジェクトの構築](11/Architecting_the_drum_machine_project.html)**
 
+### **[ドラムトラックの作成](11/Creating_a_drum_track.html)**
+
 ***
 
 以降、現在制作中です...。
