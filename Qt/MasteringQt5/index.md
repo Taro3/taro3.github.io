@@ -214,6 +214,8 @@
 
 ### **[ドラムトラックの作成](11/Creating_a_drum_track.html)**
 
+### **[QVariant を使ってオブジェクトをシリアル化する](11/Making_your_objects_serializable_with_QVariant.html)**
+
 ***
 
 以降、現在制作中です...。
