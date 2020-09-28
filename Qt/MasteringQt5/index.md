@@ -216,6 +216,9 @@
 
 ### **[QVariant を使ってオブジェクトをシリアル化する](11/Making_your_objects_serializable_with_QVariant.html)**
 
+### **[JSON形式でのオブジェクトのシリアライズ](11/Serializing_objects_in_JSON_format.html)**
+
+
 ***
 
 以降、現在制作中です...。
