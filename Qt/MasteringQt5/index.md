@@ -220,6 +220,7 @@
 
 ### **[XML 形式のオブジェクトのシリアライズ](11/Serializing_objects_in_XML_format.html)**
 
+### **[バイナリ形式でのオブジェクトのシリアライズ](11/Serializing_objects_in_binary_format.html)**
 ***
 
 以降、現在制作中です...。
