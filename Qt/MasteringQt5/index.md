@@ -226,6 +226,8 @@
 
 ### **[キーボードでQButtonをトリガーする](11/Triggering_a_QButton_with_your_keyboard.html)**
 
+### **[PlaybackWorkerに命を吹き込む](11/Bringing_PlaybackWorker_to_life.html)**
+
 ***
 
 以降、現在制作中です...。
