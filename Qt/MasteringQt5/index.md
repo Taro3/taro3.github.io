@@ -224,6 +224,7 @@
 
 ### **[QSoundEffectで低レイテンシーのサウンドを再生する](11/Playing_low_latency_sounds_with_QSoundEffect.html)**
 
+### **[キーボードでQButtonをトリガーする](11/Triggering_a_QButton_with_your_keyboard.html)**
 
 ***
 
