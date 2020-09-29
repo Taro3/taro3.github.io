@@ -218,6 +218,7 @@
 
 ### **[JSON形式でのオブジェクトのシリアライズ](11/Serializing_objects_in_JSON_format.html)**
 
+### **[XML 形式のオブジェクトのシリアライズ](11/Serializing_objects_in_XML_format.html)**
 
 ***
 
