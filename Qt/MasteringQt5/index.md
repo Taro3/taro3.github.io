@@ -221,6 +221,10 @@
 ### **[XML 形式のオブジェクトのシリアライズ](11/Serializing_objects_in_XML_format.html)**
 
 ### **[バイナリ形式でのオブジェクトのシリアライズ](11/Serializing_objects_in_binary_format.html)**
+
+### **[QSoundEffectで低レイテンシーのサウンドを再生する](11/Playing_low_latency_sounds_with_QSoundEffect.html)**
+
+
 ***
 
 以降、現在制作中です...。
