@@ -236,6 +236,7 @@
 
 ### **[Qtテストの理解](12/Discovering_Qt_Test.html)**
 
+### **[テストの実行](12/Executing_your_tests.html)**
 ***
 
 以降、現在制作中です...。
