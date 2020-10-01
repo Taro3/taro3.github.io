@@ -245,6 +245,11 @@
 ### **[GUIのテスト](12/Testing_your_GUI.html)**
 
 ### **[QSignalSpyでアプリケーションをスパイする](12/Spying_on_your_application_with_QSignalSpy.html)**
+
+***
+
+## **[すべてが梱包され、配備の準備ができています。](13/index.html)**
+
 ***
 
 以降、現在制作中です...。
