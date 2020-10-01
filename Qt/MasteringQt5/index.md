@@ -253,6 +253,9 @@
 ### **[アプリケーションのパッケージング](13/Packaging_your_application.html)**
 
 ### **[Windows用パッケージ](13/Packaging_for_Windows.html)**
+
+### **[ディストリビューションパッケージを使ったLinuxのパッケージ化](13/Packaging_for_Linux_with_a_distribution_package.html)**
+
 ***
 
 以降、現在制作中です...。
