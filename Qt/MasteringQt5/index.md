@@ -240,6 +240,7 @@
 
 ### **[データセットを用いた因数分解検定の記述](12/Writing_factorized_tests_with_datasets.html)**
 
+### **[コードのベンチマーク](12/Benchmarking_your_code.html)**
 ***
 
 以降、現在制作中です...。
