@@ -237,6 +237,9 @@
 ### **[Qtテストの理解](12/Discovering_Qt_Test.html)**
 
 ### **[テストの実行](12/Executing_your_tests.html)**
+
+### **[データセットを用いた因数分解検定の記述](12/Writing_factorized_tests_with_datasets.html)**
+
 ***
 
 以降、現在制作中です...。
