@@ -256,6 +256,8 @@
 
 ### **[ディストリビューションパッケージを使ったLinuxのパッケージ化](13/Packaging_for_Linux_with_a_distribution_package.html)**
 
+### **[AppImageを使ったLinuxのパッケージング](13/Packaging_for_Linux_with_AppImage.html)**
+
 ***
 
 以降、現在制作中です...。
