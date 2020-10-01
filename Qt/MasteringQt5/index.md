@@ -252,6 +252,7 @@
 
 ### **[アプリケーションのパッケージング](13/Packaging_your_application.html)**
 
+### **[Windows用パッケージ](13/Packaging_for_Windows.html)**
 ***
 
 以降、現在制作中です...。
