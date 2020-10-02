@@ -258,6 +258,10 @@
 
 ### **[AppImageを使ったLinuxのパッケージング](13/Packaging_for_Linux_with_AppImage.html)**
 
+### **[Mac OS X用パッケージ](13/Packaging_for_Mac_OS_X.html)**
+
+### **[Android用パッケージ](13/Packaging_for_Android.html)**
+
 ***
 
 以降、現在制作中です...。
