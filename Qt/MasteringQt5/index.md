@@ -268,6 +268,8 @@
 
 ## [14.Qtハットのヒントとコツ](14/index.html)**
 
+### [セッションでワークスペースを管理する](14/Managing_your_workspace_with_sessions.html)**
+
 ***
 
 以降、現在制作中です...。
