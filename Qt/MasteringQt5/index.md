@@ -262,6 +262,8 @@
 
 ### **[Android用パッケージ](13/Packaging_for_Android.html)**
 
+### **[iOS用パッケージ](13/Packaging_for_iOS.html)**
+
 ***
 
 以降、現在制作中です...。
