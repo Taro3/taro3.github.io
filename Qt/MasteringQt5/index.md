@@ -270,6 +270,8 @@
 
 ### [セッションでワークスペースを管理する](14/Managing_your_workspace_with_sessions.html)**
 
+### [ロケーターで検索](14/Searching_with_the_Locator.html)**
+
 ***
 
 以降、現在制作中です...。
