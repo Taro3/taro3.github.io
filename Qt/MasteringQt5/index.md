@@ -284,6 +284,8 @@
 
 ### [ログメッセージの改善](14/Improving_log_messages.html)**
 
+### [ログをファイルに保存する](14/Saving_your_logs_to_a_file.html)**
+
 ***
 
 以降、現在制作中です...。
