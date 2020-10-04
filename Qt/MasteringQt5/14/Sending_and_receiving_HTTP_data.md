@@ -76,7 +76,7 @@ HTTP GETリクエストは、mAccessManager.get()を使用して処理されま�
 
 URL <http://httpbin.org/ip> を使用してリクエストを行いましたが、これは JSON 形式でエミッターの IP アドレスに応答します。
 
-```
+```json
 {
  "origin": "1.2.3.4"
 }
@@ -135,7 +135,7 @@ QNetworkReploy::readyReadシグナルは、QIODevice APIから来ており、パ
 
 最後に、このコードスニペットは、mAccessManagerに接続されている前のスロット、replyFinished()を元に戻しません。このコードを実行すると、以下のような出力シーケンスになります。
 
-```
+```shell
 Ready to read from reply
 Reponse network error QNetworkReply::NetworkError(NoError)
 Reponse HTTP status code 200

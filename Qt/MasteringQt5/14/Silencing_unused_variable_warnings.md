@@ -2,7 +2,7 @@
 
 コンパイラが警告を出力するように設定されている場合、このようなログが表示されることがあるでしょう。
 
-```
+```shell
 warning: unused parameter 'myVariable' [-Wunused-parameter]
 ```
 

@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
 
 アプリケーションの出力には、このようなものが表示されるはずです。
 
-```
+```shell
 [2016-10-03 10:22:40] [info] qMain Application starting...
 ```
 

@@ -26,7 +26,7 @@ qDebug() << "done!";
 
 コンソール出力には以下の情報が表示されます。
 
-```
+```shell
 boolean is: true
 integer is: 5
 character is: A
@@ -83,7 +83,7 @@ integerPointer変数のメモリエディタを開いてみてください。コ
 
 以下は、私たちの変更を反映した最終的なコンソール出力です。
 
-```
+```shell
 boolean is: false
 integer is: 9
 character is: D
