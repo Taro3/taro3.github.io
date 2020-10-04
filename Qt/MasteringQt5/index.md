@@ -276,6 +276,7 @@
 
 ### [Qt Creatorでメモリを調べる](14/Examining_the_memory_with_Qt_Creator.html)**
 
+### [乱数の生成](14/Generating_random_numbers.html)**
 ***
 
 以降、現在制作中です...。
