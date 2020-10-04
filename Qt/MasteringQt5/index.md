@@ -280,6 +280,8 @@
 
 ### [使用されていない変数の警告の消音](14/Silencing_unused_variable_warnings.html)**
 
+### [カスタムオブジェクトをQDebugにロギングする](14/Logging_custom_objects_to_QDebug.html)**
+
 ***
 
 以降、現在制作中です...。
