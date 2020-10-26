@@ -23,8 +23,8 @@ parser.addVersionOption();
 
 parser.addOptions({
     {"debug", "Enable the debug mode."},
-    \{\{"f", "file"}, "Write the logs into <file>.", "logfile"},
-    \{\{"l", "level"}, "Restrict the logs to level <level>. Default is 'fatal'.", "level", "fatal"},
+    { {"f", "file"}, "Write the logs into <file>.", "logfile"},
+    { {"l", "level"}, "Restrict the logs to level <level>. Default is 'fatal'.", "level", "fatal"},
 });
 
 parser.process(app);
