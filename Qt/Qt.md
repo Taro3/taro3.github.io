@@ -1,8 +1,10 @@
 # Qt関連記事
 
+***
+
 Qtに関する実装の記事などです。
 
-## ■QtConcurrent
+## QtConcurrent
 
 ### **[QtConcurrentの簡単な例](QtConcurrent/QtConcurrent1.md)**
 
@@ -12,10 +14,10 @@ Qtに関する実装の記事などです。
 
 ### **[QtConcurrentを使用して非メンバ関数を呼び出す](QtConcurrent/QtConcurrent3.md)**
 
-## ■その他
+## その他
 
 ### **[再起動可能なアプリケーション](Misc/RebootableApp.md)**
 
 ***
 
-**[戻る](../../index.html)**
+**[戻る](../index.md)**
