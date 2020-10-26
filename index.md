@@ -26,15 +26,37 @@ Qt Quickについてなどたまに書いているものです。
 
 ほぼ遊びで作った動画です。
 
-### **[Qt関連記事](Qt/Qt.html)**
+### **[Qt関連記事](Qt/Qt.md)**
 
 Qtに関する記事です。
 
-### **[Mastering Qt5](Qt/MasteringQt5/index.html)**
+### **[Mastering Qt5](Qt/MasteringQt5/index.md)**
+
 Mastering Qt5に沿って勉強するページ。
 
-### **[Qt Design Studioを使ってみよう!](Qt/Qt_Design_Studio/index.html)**
+### **[Qt Design Studioを使ってみよう!](Qt/Qt_Design_Studio/index.md)**
+
 Qt Design Studioのドキュメントをちょっと日本語化して触ってみているページ。
+
+## 読んだ本
+
+* CODE COMPLETE(上下)
+* レガシーコード改善ガイド
+* Mastering Qt5
+* オブジェクト指向でなぜつくるのか
+* プログラミング言語C++ 第４版
+* リーダブルコード(英日)
+* C#プログラミングのイディオム/定石&パターン
+* 退屈なことはPythonにやらせよう
+* Effective C++ 第３版
+* More Effective C++
+* Java言語で学ぶデザインパターン入門
+* Java言語で学ぶデザインパターン入門 マルチスレッド編
+* C++のためのAPIデザイン
+* ゼロから作る Deep Learning
+* Unityの教科書
+* Linuxデバイスドライバ 第３版
+* 等々
 
 ***
 
