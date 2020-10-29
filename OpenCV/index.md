@@ -147,6 +147,7 @@ LIBS += -L/usr/local/lib
 LIBS += -lopencv_core -lopencv_highgui -lopencv_imgcodecs -lopencv_videoio
 ```
 
-リンクエラーが出た場合は、適宜ライブラリを追加すること。( libopencv_world はOpenCV 4.5 では存在しない)
+リンクエラーが出た場合は、適宜ライブラリを追加すること。( libopencv_world を作成していない場合)
+libopencv_world を作成する場合は、-D BUILD_opencv_world=on を付けてビルドする。
 
 **[戻る](../index.md)**
