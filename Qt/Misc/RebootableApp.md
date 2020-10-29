@@ -4,7 +4,7 @@ Qtで簡単な再起動可能なアプリケーションを作成します。
 
 ## ソース
 
-```cpp
+```c++
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -35,9 +35,10 @@ private:
 };
 #endif // MAINWINDOW_H
 ```
+
 リブート用の定数を定義して、リブートコマンドのイベントハンドラも宣言します。
 
-```cpp
+```c++
 #include <QDebug>
 
 #include "mainwindow.h"
@@ -72,9 +73,10 @@ void MainWindow::slotReboot() {
     qApp->exit(EXIT_CODE_REBOOT);
 }
 ```
+
 リブートコマンドのイベントハンドラでリブート用定数でQApplicationを終了します。
 
-```cpp
+```c++
 #include "mainwindow.h"
 
 #include <QApplication>
@@ -102,6 +104,7 @@ int main(int argc, char *argv[])
     return currentExitCode;
 }
 ```
+
 プログラムメインでリブートコマンドで終了した場合は再度QApplicationを実行し続けます。
 
 ```xml
@@ -172,8 +175,10 @@ int main(int argc, char *argv[])
  </slots>
 </ui>
 ```
+
 GUI定義です。
 メインメニューにRebootのアクションを割り当てています。
 
 ***
+
 **[戻る](../Qt.html)**

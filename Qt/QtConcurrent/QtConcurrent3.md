@@ -5,7 +5,8 @@ QtConcurrentはQtの並列処理を行うモジュールです。
 ## プロジェクトファイルの設定
 
 QtConcurrentを使用するには、.proファイルにconcurrentを追加します。
-```
+
+```QMake
 QT += concurrent
 ```
 
@@ -13,7 +14,7 @@ QT += concurrent
 
 まず、コレクションするオブジェクトのクラスを作成します。
 
-```cpp
+```c++
 /**
  * @brief The MyClass class
  */
@@ -48,7 +49,7 @@ private:
 
 次にコレクション内の関数を呼び出すメイン処理を作成します。
 
-```cpp
+```c++
 /**
  * @brief main
  *        プログラムメイン
@@ -79,7 +80,7 @@ int main(int argc, char *argv[]) {
 
 ## 実行結果
 
-実行結果を示します。<br>
+実行結果を示します。
 コレクション内の全Test関数が呼び出されて結果が保存されています。
 
 ![実行結果](result3.png)
@@ -87,7 +88,8 @@ int main(int argc, char *argv[]) {
 ## プログラム全体
 
 最後に、プログラム全体を示します。
-```cpp
+
+```c++
 #include <iostream>
 #include <cmath>
 
@@ -156,4 +158,5 @@ int main(int argc, char *argv[]) {
 ```
 
 ***
-**[戻る](../Qt.html)**
+
+**[戻る](../Qt.md)**

@@ -14,6 +14,10 @@ Qtを使用した5chビューア。作成中。
 
 「ゼロから作るDeep Learning」のPythonコードをC++(+Eigen)にポーティングしてみるテスト。
 
+### **[OepnCV関連メモ](OpenCV/index.md)**
+
+OpenCVに関するメモです。
+
 ***
 
 ## その他
@@ -37,6 +41,8 @@ Mastering Qt5に沿って勉強するページ。
 ### **[Qt Design Studioを使ってみよう!](Qt/Qt_Design_Studio/index.md)**
 
 Qt Design Studioのドキュメントをちょっと日本語化して触ってみているページ。
+
+***
 
 ## 読んだ本
 

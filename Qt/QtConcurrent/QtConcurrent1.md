@@ -5,7 +5,8 @@ QtConcurrentはQtの並列処理を行うモジュールです。
 ## プロジェクトファイルの設定
 
 QtConcurrentを使用するには、.proファイルにconcurrentを追加します。
-```
+
+```QMake
 QT += concurrent
 ```
 
@@ -15,7 +16,8 @@ QtConcurrentを使用した単純なサンプルプログラムです。
 
 まず、処理を行うデータのクラスを作成します。
 単純にint値を保持するだけです…(^_^;)
-```cpp
+
+```c++
 /**
  * @brief The Params class
  */
@@ -52,7 +54,8 @@ private:
 
 次に処理結果を示すクラスを作成します。
 これも単にint値を保持するだけです。
-```cpp
+
+```c++
 /**
  * @brief The Result class
  */
@@ -86,7 +89,8 @@ private:
 ```
 
 次に、順次処理と並列処理を行うクラスを作成します。
-```cpp
+
+```c++
 /**
  * @brief The TestClass class
  */
@@ -112,6 +116,7 @@ private:
  */
 TestClass::TestClass() {
 }
+
 /**
  * @brief   execute1
  *          シーケンシャル処理テスト関数
@@ -125,6 +130,7 @@ void TestClass::execute1() {
         std::cout << r.value() << " ";
     std::cout << std::endl << std::flush;
 }
+
 /**
  * @brief   TestClass::execute2
  *          並列処理テスト関数
@@ -136,6 +142,7 @@ void TestClass::execute2() {
         std::cout << r.value() << " ";
     std::cout << std::endl << std::flush;
 }
+
 /**
  * @brief   generateParamsSet
  *          初期値設定処理
@@ -147,6 +154,7 @@ QList<Params> TestClass::generateParamsSet() {
         params.append(Params(i));
     return params;
 }
+
 /**
  * @brief       someReallyTimeConsumingFunction
  *              各要素に対する処理(時間のかかる処理本体)
@@ -160,6 +168,7 @@ Result TestClass::someReallyTimeConsumingFunction(const Params &params) {
 
     return Result(r);
 }
+
 /**
  * @brief   calculateStats
  *          並行処理実行関数
@@ -172,6 +181,7 @@ Result TestClass::calculateStats(const Params &params) {
 ```
 
 最後に、テストを実行するメイン処理を実装します。
+
 ```cpp
 /**
  * @brief   main
@@ -212,7 +222,8 @@ int main(int argc, char *argv[]) {
 ## QtConcurrent非対応の場合を加味する
 
 QtConcurrentが使用できない環境のへの対応が必要な場合は、QT_NO_CONCURRENTを使用して処理を振り分けます。
-```cpp
+
+```c++
 #if defined(QT_NO_CONCURRENT)
     // シーケンシャル処理
     et.start();
@@ -229,7 +240,8 @@ QtConcurrentが使用できない環境のへの対応が必要な場合は、QT
 ## プログラム全体
 
 最後に、プログラム全体を示します。
-```cpp
+
+```c++
 #include <iostream>
 
 #include <QObject>
@@ -329,6 +341,7 @@ private:
  */
 TestClass::TestClass() {
 }
+
 /**
  * @brief   execute1
  *          シーケンシャル処理テスト関数
@@ -342,6 +355,7 @@ void TestClass::execute1() {
         std::cout << r.value() << " ";
     std::cout << std::endl << std::flush;
 }
+
 /**
  * @brief   TestClass::execute2
  *          並列処理テスト関数
@@ -353,6 +367,7 @@ void TestClass::execute2() {
         std::cout << r.value() << " ";
     std::cout << std::endl << std::flush;
 }
+
 /**
  * @brief   generateParamsSet
  *          初期値設定処理
@@ -364,6 +379,7 @@ QList<Params> TestClass::generateParamsSet() {
         params.append(Params(i));
     return params;
 }
+
 /**
  * @brief       someReallyTimeConsumingFunction
  *              各要素に対する処理(時間のかかる処理本体)
@@ -377,6 +393,7 @@ Result TestClass::someReallyTimeConsumingFunction(const Params &params) {
 
     return Result(r);
 }
+
 /**
  * @brief   calculateStats
  *          並行処理実行関数
@@ -415,4 +432,5 @@ int main(int argc, char *argv[]) {
 ```
 
 ***
-**[戻る](../Qt.html)**
+
+**[戻る](../Qt.md)**

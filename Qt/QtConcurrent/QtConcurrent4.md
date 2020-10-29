@@ -5,7 +5,8 @@ QtConcurrentはQtの並列処理を行うモジュールです。
 ## プロジェクトファイルの設定
 
 QtConcurrentを使用するには、.proファイルにconcurrentを追加します。
-```
+
+```QMake
 QT += concurrent
 ```
 
@@ -14,7 +15,8 @@ QT += concurrent
 GUIアプリケーションを作成します。
 
 まずヘッダ
-```cpp
+
+```c++
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -47,7 +49,7 @@ private:
 
 次に実装
 
-```cpp
+```c++
 #include <iostream>
 
 #include <QtConcurrent>
@@ -144,7 +146,8 @@ UI定義
 ```
 
 最後にメイン関数
-```cpp
+
+```c++
 #include "mainwindow.h"
 
 #include <QApplication>
@@ -167,4 +170,5 @@ int main(int argc, char *argv[])
 ![実行結果](result4_2.png)
 
 ***
-**[戻る](../Qt.html)**
+
+**[戻る](../Qt.md)**
