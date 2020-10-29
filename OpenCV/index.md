@@ -1,6 +1,6 @@
-# OpenCVに関するメモ
+# OpenCV に関するメモ
 
-## Ubuntu 20.04にOpenCVをインストールする
+## Ubuntu 20.04 に OpenCV 4.5 をインストールする
 
 ### インストール
 
@@ -38,7 +38,7 @@ sudo ninja install
 
 * 画像の表示テスト
 
-DisplayImage.cpp というファイルを作って試す(OpenCVのサイトにあるソースそのまま)
+DisplayImage.cpp というファイルを作って試す( OpenCV のサイトにあるソースそのまま)
 
 ```c++
 #include <stdio.h>
@@ -65,7 +65,7 @@ int main(int argc, char** argv )
 }
 ```
 
-CMakeLists.txtを作る
+CMakeLists.txt を作る
 
 ```txt
 cmake_minimum_required(VERSION 2.8)
@@ -134,5 +134,17 @@ make
 とりあえず、以上で画像と動画の動作確認ができる。
 
 ***
+
+## Qt での OpenCV アプリ作成( Ubuntu )
+
+Qt で OpenCV アプリを作成する際には、下記のように .pro ファイルに追記する必要がある。
+
+```QMake
+INCLUDEPATH += /usr/local/include/opencv4
+LIBS += -L/usr/local/lib
+LIBS += -lopencv_core -lopencv_highgui -lopencv_imgcodecs -lopencv_videoio
+```
+
+リンクエラーが出た場合は、適宜ライブラリを追加すること。( libopencv_world はOpenCV 4.5 では存在しない)
 
 **[戻る](../index.md)**
