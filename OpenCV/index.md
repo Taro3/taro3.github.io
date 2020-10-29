@@ -29,8 +29,10 @@ mv opencv-master opencv
 mkdir -p build && cd build
 cmake -GNinja ../opencv
 ninja
-sudo ninja install
+sudo ninja install ※
 ```
+
+※ sudo ninja install は、 /usr/local/ 以下にヘッダやライブラリをインストールするため、複数のバージョンが必要な場合は実行しないほうがいい！
 
 ***
 
