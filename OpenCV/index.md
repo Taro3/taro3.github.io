@@ -26,8 +26,9 @@ unzip opencv_contrib.zip
 
 ```shell
 mv opencv-master opencv
+mv opencv_contrib-master opencv_contrib
 mkdir -p build && cd build
-cmake -GNinja ../opencv
+cmake -GNinja -DOPENCV_EXTRA_MODULES_PATH=../opencv_contrib/modules ../opencv
 ninja
 sudo ninja install ※
 ```
