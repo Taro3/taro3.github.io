@@ -20,6 +20,8 @@ Qtに関する実装の記事などです。
 
 ### **[Qtでウェブカメラ映像を表示する](QtAndVision/DisplayWebcamVideoWidhtQt.md)**
 
+### **[Qt と OpenCV を使用してウェブカメラの映像を表示する](QtAndVision/DisplayWebcamVideoUsingOpenCVwithQt.md)**
+
 ***
 
 **[戻る](../index.md)**
