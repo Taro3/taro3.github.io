@@ -34,7 +34,7 @@ QCamera のインスタンス生成時に、 QCameraInfo を渡してどのカ�
         _cam->stop();
 ```
 
-Linmux Mint と Qt 5.15.1 で確認した感じでは、デバイスがあっても映像が送られてこない場合、 QCamera::status が QCamera::ActiveStatus に切り替わらない仕様のようなので、テストプログラムでは QTimer を使用して、一定時間(10秒) QCamera::status が QCamera::ActiveStatus にならない場合は、処理を中断するようにしています。
+Linmix Mint と Qt 5.15.1 で確認した感じでは、デバイスがあっても映像が送られてこない場合、 QCamera::status が QCamera::ActiveStatus に切り替わらない仕様のようなので、テストプログラムでは QTimer を使用して、一定時間(10秒) QCamera::status が QCamera::ActiveStatus にならない場合は、処理を中断するようにしています。
 
 アプリケーション終了時には、 QCamera にアタッチされている QVideoWidget を nullptr に設定しています。(これがないと落ちるため)この処理が本当に必要かどうかは定かでは有りません…(^_^;)
 
