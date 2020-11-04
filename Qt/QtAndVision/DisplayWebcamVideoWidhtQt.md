@@ -43,6 +43,10 @@ Linmux Mint と Qt 5.15.1 で確認した感じでは、デバイスがあって
         _cam->setViewfinder(static_cast<QVideoWidget*>(nullptr));
 ```
 
+実行結果はこんな感じ。
+
+![実行結果](img/1.png)
+
 ***
 
 **[戻る](../Qt.md)**
