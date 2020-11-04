@@ -1,5 +1,7 @@
 # OpenCV を使用して Qt でウェブカメラの映像を表示する
 
+環境: Linux Mint 20 + Qt 5.15.1
+
 **[全ソースはここ](https://github.com/Taro3/QtOpenCVVideoView)**
 
 Qt と OpenCV を使用して、ウェブカメラの映像を表示してみます。

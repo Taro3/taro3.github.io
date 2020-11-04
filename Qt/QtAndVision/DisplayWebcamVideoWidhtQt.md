@@ -1,5 +1,7 @@
 # ウェブカメラの映像を Qt で表示する
 
+環境: Linux Mint 20 + Qt 5.15.1
+
 **[全ソースはここ](https://github.com/Taro3/ViewWebcam)**
 
 Qt のマルチメディア機能を使用してウェブカメラの映像を表示してみます。
