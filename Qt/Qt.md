@@ -26,6 +26,8 @@ Qtに関する実装の記事などです。
 
 ### **[Qt を使用してウェブカメラの映像を動画ファイルに保存する](QtAndVision/RecordWebcamVideoWithQt.md)**
 
+### **[Qt と OpenCV を使用してウェブカメラの映像を保存する](QtAndVision/RecordOpenCVVideo.md)**
+
 ***
 
 **[戻る](../index.md)**
