@@ -30,6 +30,8 @@ Qtに関する実装の記事などです。
 
 ### **[Qt と OpenCV と ffmpeg を使用してウェブカメラの映像を保存する](QtAndVision/RecordOpenCVVideoUsingFfmpeg.md)**
 
+### **[OpenCV を使用して動体検出を行う](QtAndVision/MotionDetectionUsingOpenCV.md)**
+
 ***
 
 **[戻る](../index.md)**
