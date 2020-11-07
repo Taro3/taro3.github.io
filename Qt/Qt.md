@@ -32,6 +32,8 @@ Qtに関する実装の記事などです。
 
 ### **[OpenCV を使用して動体検出を行う](QtAndVision/MotionDetectionUsingOpenCV.md)**
 
+### **[OpenCV を使用して映像内の顔を検出する](QtAndVision/OpenCVFaceDetect.md)**
+
 ***
 
 **[戻る](../index.md)**
