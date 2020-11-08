@@ -34,6 +34,8 @@ Qtに関する実装の記事などです。
 
 ### **[OpenCV を使用して映像内の顔を検出する](QtAndVision/OpenCVFaceDetect.md)**
 
+### **[OpenCV を使用して顔のランドマークを検出する](QtAndVision/OpenCVFaceLandmark.md)**
+
 ***
 
 **[戻る](../index.md)**
