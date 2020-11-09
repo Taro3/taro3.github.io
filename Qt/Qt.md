@@ -36,6 +36,8 @@ Qtに関する実装の記事などです。
 
 ### **[OpenCV を使用して顔のランドマークを検出する](QtAndVision/OpenCVFaceLandmark.md)**
 
+### **[Tesseract を使って画像内の文字列を読み取る(OCR)](QtAndVision/OcrImage.md)**
+
 ***
 
 **[戻る](../index.md)**
