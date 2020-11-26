@@ -1,4 +1,4 @@
-# 細かいことはいいから、とにかく QListWidget が使いたい！
+# 細かいことはいいから、とにかく QListWidget が使いたい
 
 環境: Linux Mint 20 + Qt 5.15.1
 

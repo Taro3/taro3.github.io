@@ -72,4 +72,8 @@ Qt Design Studioのドキュメントをちょっと日本語化して触って�
 
 ***
 
+## **[どうでもよさげな日記](Dialy/index.md)**
+
+***
+
 E-mail: [taro.develop@gmail.com](mailto:taro.develop@gmail.com)
