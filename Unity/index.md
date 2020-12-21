@@ -1908,5 +1908,58 @@ public class AlienForce : MonoBehaviour {
 
 ### スクリプトによるマテリアルプロパティーの制御
 
+ゲーム中にスクリプトから色などのマテリアルのプロパティーを変更します。
+
+*MeshRenderer* 、 *SpriteRenderer* または、その他のレンダラーにアクセスできる場合は、それらからマテリアルにアクセスし、プロパティーを変更可能です。
+
+```C#
+public class ChangeMaterialColor : MonoBehaviour {
+
+    // この色の間をフェードする
+    [SerializeField] Color fromColor = Color.white;
+    [SerializeField] Color toColor = Color.green;
+    
+    // フェードする速度
+    [SerializeField] float speed = 1f;
+    
+    // キャッシュ用レンダラ参照
+    new Renderer renderer;
+    
+    private void Start() {
+        renderer = GetComponent<Renderer>();
+    }
+    
+    private void Update() {
+        // time を -1 から 1 の間の値に保管する
+        float t = Mathf.Sin(Time.time * speed);
+        
+        // 0 ～ 2 の間に変換する
+        t += 1;
+        
+        // 0 ～ 1 に変換
+        t /= 2;
+        
+        // 2 つの色の間を保管する
+        var newColor = Color.Lerp(fromColor, toColor, t);
+        
+        // 色を適用
+        renderer.material.color = newColor;
+    }
+}
+```
+
+マテリアルにアクセスするには、 *material* プロパティーと、 *sharedMaterial* プロパティーの 2 つがあります。
+*material* プロパティーはマテリアルの複製を作成して返しますが、*sharedMaterial* プロパティーは、元になるマテリアルを返します。
+変更するマテリアルを使用するすべてのオブジェクトのプロパティーを変更したい場合は、 *sharedMaterial* を使用します。
+
+*sharedMaterial* プロパティーを変更すると、ディスク上のアセットが変更されます。ゲームプレイ中に *sharedMaterial* を変更した場合、プレイモードを終了したあとも元には戻されません。
+
+変更するシェーダーのプロパティー名がわかっている場合は、マテリアルの *setColor* 、 *SetFloat* 、 *SetInt* や、関連するメソッド呼び出しで直接変更することもできます。
+
+***
+
+### Unlit マテリアルの作成
+
+
 
 --***現在作成中***--
