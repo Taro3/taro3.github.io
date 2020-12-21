@@ -2,7 +2,7 @@
 
 環境: Linux Mint 20 + Qt 5.15.2
 
-**[全ソースはここ]()**
+**[全ソースはここ](https://github.com/Taro3/DetectingTextAreasWithOpenCV)**
 
 ここでは、本のような整然と並んだ文字列ではなく、画像の中に存在する文字列を検出してみます。
 ここでは、 OpenCV の EAST テキスト検出を使用して文字列を検出します。EAST は Efficient and Accurate Scene Text の略で、<https://arxiv.org/abs/1704.03155> に説明があります。(ニューラルネットワークを使用したアルゴリズムです)ここでは、 OpenCV の EAST 事前トレーニング済みモデルを使用します。
