@@ -70,6 +70,8 @@ Qt Design Studioのドキュメントをちょっと日本語化して触って�
 * Linuxデバイスドライバ 第３版
 * 等々
 
+### **[読書メモ](ReadingNotes/EffectiveC++/第1章C++に慣れよう.md)**
+
 ***
 
 ## Unityメモ
