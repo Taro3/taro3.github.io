@@ -84,6 +84,8 @@ inline void callWithMax(const T& a, const T& b)
 }
 ```
 
+#### まとめ
+
 **単純な定数には、 #define より、 const か enum を使うようにしよう。**
 **#define で定義するマクロより、インライン関数を使うように使用。**
 
@@ -302,3 +304,65 @@ std::size_t CTextBlock::length() const
 
 #### const なメンバ関数と非 cont なメンバ関数の重複を取り除く
 
+すべての関数に const と、非 const の両方の関数を用意し、さらにそれをインライン化するとクラス定義がひどいことになります。
+
+```C++
+class TextBlock {
+public:
+    ...
+    const char& operator[](std::size_t position) const
+    {
+        ... // 境界超えのチェック
+        ... // アクセスログを取る
+        ... // データの整合性をチェック
+        return text[position];
+    }
+    char& operator[](std::size_t position)
+    {
+        ... // 境界超えのチェック
+        ... // アクセスログを取る
+        ... // データの整合性をチェック
+        return text[position];
+    }
+private:
+    std::string text;
+};
+```
+
+上記のコードは、コードがかなり重複しています。
+これを解決するために、非 const な関数から const な関数を呼び出します。
+
+```C++
+class TextBlock {
+public:
+    ...
+    const char& operator[](std::size_t position) const  // 前と同じ
+    {
+        ...
+        ...
+        ...
+        return text[position];
+    }
+    char& operator[](std::size_t position)          // 単に const な [] を呼び出すだけ
+    {
+        return
+          const_cast<char&>(                        // [] の戻り値から const をキャストではずす
+            static_cast<const TextBlock&>(*this)    // const を *this に付けて const な [] を呼び出す
+            [position]
+          );
+    }
+    ...
+};
+```
+
+見栄えはあまり良くないですが、重複は避けられました。
+ここでは、 const な関数を非 const な関数から呼び出していますが、その逆はNGです。
+非 const な関数は、オブジェクトを変更する可能性があるため、 const な関数から呼び出すのはおかしいからです。
+
+#### まとめ
+
+* **const を付けて宣言すると、コンパイラがそのオブジェクトの誤用を検出してくれる。 const は、あらゆるスコープのオブジェクト、関数の仮引数と戻り値、メンバ関数自体につけることができる。**
+* **コンパイラは const に対し、「ビットレベルの不変性」を保証する。しかし、「論理的不変性(概念的不変性)」を保証するようなコードを書くべき。**
+* **const と非 const なメンバ関数で、本質的に同じ実装をする必要がある場合、非 const なメンバ関数内で const なメンバ関数を呼び出し、コードの重複を避けることができる。**
+
+### 4 項 オブジェクトは、使う前に初期化しよう
