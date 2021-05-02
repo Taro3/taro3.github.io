@@ -17,8 +17,6 @@ C++ は
 
 という4つのサブセットの連合と考える。
 
-***
-
 ### 2 項 #define より、const、enum、inline を使おう
 
 * #define マクロでは、定義名がシンボルテーブルに乗らないため、デバッグがやりにくくなる。
@@ -84,7 +82,7 @@ inline void callWithMax(const T& a, const T& b)
 }
 ```
 
-#### まとめ
+***まとめ***
 
 **単純な定数には、 #define より、 const か enum を使うようにしよう。**
 **#define で定義するマクロより、インライン関数を使うように使用。**
@@ -359,10 +357,153 @@ public:
 ここでは、 const な関数を非 const な関数から呼び出していますが、その逆はNGです。
 非 const な関数は、オブジェクトを変更する可能性があるため、 const な関数から呼び出すのはおかしいからです。
 
-#### まとめ
+***まとめ***
 
 * **const を付けて宣言すると、コンパイラがそのオブジェクトの誤用を検出してくれる。 const は、あらゆるスコープのオブジェクト、関数の仮引数と戻り値、メンバ関数自体につけることができる。**
 * **コンパイラは const に対し、「ビットレベルの不変性」を保証する。しかし、「論理的不変性(概念的不変性)」を保証するようなコードを書くべき。**
 * **const と非 const なメンバ関数で、本質的に同じ実装をする必要がある場合、非 const なメンバ関数内で const なメンバ関数を呼び出し、コードの重複を避けることができる。**
 
 ### 4 項 オブジェクトは、使う前に初期化しよう
+
+オブジェクトは、使う前に必ず初期化するようにしましょう。
+
+クラスのメンバでない組み込み型の初期化は以下のようになります。
+
+```C++
+int x = 0;                              // int の初期化
+
+const char* text = "A C-style string";  // ポインタの初期化
+
+double d;                               // 入力ストリームからの
+std::cin >> d;                          // 読み込みによる初期化
+```
+
+オブジェクト内のすべてのデータはコンストラクタで初期化しましょう。
+
+```C++
+class PhoneNumber {...};
+
+class ABEntry {             // Address Book Entry (アドレス帳のデータ) を表す
+public:
+    ABEntry(cont std::string& name, const std::string& address, const std::list<PhoneNumber>& phone);
+
+private:
+    std::string theName;
+    std::string theAddress;
+    std::list<PhoneNumber> thePhone;
+    int numTimesConsulted;
+};
+
+ABEntry::ABEntry(const std::string& name, const std::string& address, const std::list<PhoneNumber>& phones)
+{
+    theNumber = name;           // これらは代入であって初期化ではない
+    theAddress = address;
+    thePhones = phones;
+    numTImesConsulted = 0;
+}
+```
+
+上記のコンストラクタで行っているのは**変数への代入であって初期化ではありません**。
+
+一般には、以下のようにメンバ初期化子リストを使います。
+
+```C++
+ABEntry::ABEntry(const std::string& name, const std::string& address, const std::list<PhoneNumber>& phones)
+:   theName(name),          // データメンバのすべてを初期化する
+    theAddress(address),
+    thePhones(phones),
+    numTimesCOnsulted(0)
+{}                          // コンストラクタ本体は空になる
+```
+
+デフォルトコンストラクタで初期化するデータメンバに対しても、以下のように初期化子を使用できます。
+
+```C++
+ABEntry::ABEntry()
+:   theName(),              // theName に関してデフォルトコンストラクタを呼び出す
+    theAddress(),           // theAddress でも同様
+    thePhones(),            // thePhones でも同様
+    numTimesConsulted(0)    // ここでは明示的に 0 に初期化
+{}
+```
+
+オブジェクトのデータ初期化の順番は、基底クラス→派生クラスの順に初期化され、オブジェクト内での順番はデータメンバが宣言された順に初期化されます。
+
+ちょっと複雑ですが、「異なる翻訳単位で定義されたローカルでない静的オブジェクトの初期化の順番は決められていない」という問題があります。
+
+```C++
+class FileSystem {                  // このクラスはライブラリ内にあるとする
+public:
+    ...
+    std::size_t numDisks() const;   // たくさんあるメンバ関数のうちの 1 つ
+    ...
+};
+
+extern FileSystem tfs;              // クライアントが使うためのオブジェクトの宣言
+                                    // tfs は「the file system」の意
+```
+
+上記の tfs が「ローカルでない静的オブジェクト」の宣言です。
+さらに以下のクラスがあるとします。
+
+```C++
+class Directory {                       // ライブラリのクライアントが書いたクラス
+public:
+    Directory(params);
+    ...
+};
+
+Directory::Directory(params)
+{
+    ...
+    std::size_t disks = tfs.numDisk();  // tfs を使う
+}
+```
+
+さらに、クライアントは、テンポラリのディレクトリを以下のように作成したとします。
+
+```C++
+Directory tempDir(params);
+```
+
+tempDir も「ローカルでない静的オブジェクト」です。
+この場合、 tfs と tempDir は「異なる翻訳単位にあるローカルでない静的オブジェクト」です。
+このとき、 **tfs が tempDir よりも先に初期化される保証はないのです**。
+
+この問題を解決するには、以下のように「ローカルでない静的オブジェクト」を「ローカルな static オブジェクト」に変更します。
+
+```C++
+class FileSystem {...};                     // 以前と同じ
+FileSystem& tfs()                           // この関数が tfs の代わりになる
+{                                           // FileSystem クラスの static な関数にしてもよい
+
+    static FileSystem fs;                   // fs をローカルな static オブジェクトとして定義・初期化
+    return fs;                              // その参照を返す
+}
+
+class Directory {...};                      // 以前と同じ
+
+DIrectory::Directory(params)                // 前と同じだが、 tfs を tfs() に置き換えた
+{
+    ...
+    std::size_t disks = tfs().numDisks();
+    ...
+}
+
+Directory& tempDir()                        // この関数が tempDir の代わりになる
+{                                           // Directory クラスの static 関数としてもよい
+
+    static Directory td(params);            // td をローカルな static オブジェクトとして定義・初期化
+    return td;                              // その参照を戻す
+}
+```
+
+***まとめ***
+
+* **組み込み型のオブジェクトは自動で初期化されるとは限らない。そこで、プログラマが初期化するコードを書こう。**
+* **コンストラクタでは、代入を行うより、初期化子リストを使うようにしよう。その際、初期化子の順番は、クラス内でデータメンバを宣言するのと同じ順番にしよう。**
+* **異なる翻訳単位にある「ローカルでない静的オブジェクト」の初期化の順番は決められていない。「ローカルでない静的オブジェクト」を「関数に対する static なオブジェクト」に置き換えることで、この問題を避けることができる。**
+
+***
+
+#### **[戻る](../index.md)**
