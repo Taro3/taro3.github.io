@@ -426,3 +426,99 @@ private:
 * **クラスのクライアントが例外に対処する必要があるなら、クラスに「例外を投げるかもしれない処理」をする通常の関数(つまり、デストラクタ出ない関数)を付ける。
 
 ### 9 項 コンストラクタやデストラクタ内では決して仮想関数を呼び出さないようにしよう
+
+コンストラクタやデストラクタから仮想関数を呼び出してはいけません。
+例えば
+
+```C++
+class Transaction {                             // すべての取引の基底クラス
+public:
+    Transaction();
+    virtual void logTransaction const = 0;      // 型ごとにログを取る関数
+    ...
+};
+
+Transaction::Transaction()                      // 基底クラスのコンストラクタの定義
+{
+    ...
+    logTransaction();                           // コンストラクタの最後で
+}                                               // この取引のログを取る
+
+class BuyTransaction : public Transaction {     // 派生クラス「買い」
+public:
+    virtual void logTransaction() const;        // 「買い」のログ
+    ...
+};
+
+class SellTransaction : public Transaction {    // 派生クラス「売り」
+public:
+    virtual void logTransaction() const;        // 「売り」のログ
+    ...
+};
+```
+
+この時、次のようなコードが合った場合
+
+```C++
+BuyTransaction b;
+```
+
+この時、BuyTransaction の前に Transaction のコンストラクタが呼ばれます。
+Transaction のコンストラクタの最後で、仮想関数 logTransaction を呼び出しています。
+この時呼び出されるのは、BuyTransaction のものではなく、**基底クラス**である Transaction クラスの BuyTransaction です。
+デストラクタでも、まず派生クラスの部分が破棄され、派生クラスのメンバ変数は不定になります。その後、基底クラスの破棄を行いますが、その際に呼び出される仮想関数は**基底クラスのも**のになります。
+コンパイラによっては警告を出す場合があります。
+
+また
+
+```C++
+class Transaction {
+public:
+    Transaction()
+    { init(); }                                 // 仮想でない関数の呼び出しですが、
+    virtual void logTransaction() const = 0;
+    ...
+private:
+    void init()
+    {
+        ...
+        logTransaction();                       // 中で仮想関数を呼び出している！
+    }
+};
+```
+
+上記の場合は、直接仮想関数を呼び出していないため、コンパイラはエラーを出しません。
+
+この問題の解決方法はいくつかありますが、その 1 つは「logTransaction を仮想ではない関数にする」というものです。
+
+```C++
+class Transaction {
+public:
+    explicit Transaction(const std::string& logInfo);
+    void logTransaction(const std::string& logInfo) const;  // 非仮想関数
+    ...
+};
+Transaction::Transaction(const std::string& logInfo)
+{
+    ...
+    logTransaction(logInfo);                                // 非仮想関数の呼び出し
+}
+class BuyTransaction : public Transaction {
+public:
+    BuyTransaction(params)
+     : Transaction(createLogString(params))                 // ログ情報を基底クラスの
+     { ... }                                                // コンストラクタに渡す
+     ...
+private:
+    static std::string createLogString(params);
+};
+```
+
+基底クラスのコンストラクタ内で仮想関数を呼び出しても、派生クラスの関数が呼び出されないため、派生クラスのコンストラクタが基底クラスのコンストラクタに必要な情報を渡すようにしたのです。
+この例ではBuyTransactionで、private な static 関数 createLogString を使用しています。関数を static にすることで「まだ初期化されていないデータメンバを使う」という危険を避けることができます。
+
+***覚えておくこと***
+
+* **オブジェクトの生成や破棄の間に仮想関数を呼び出してはいけない。そのような呼び出しで実行されるのは、そのときの(生成屋は期の途中の)オブジェクトの型のものになる。**
+
+### 10 項 代入演算子は*thisへの参照を戻すようにしよう
