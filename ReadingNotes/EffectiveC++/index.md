@@ -3,3 +3,9 @@
 ## **[第 1 章 C++ に慣れよう](1_GetFamiliarWithC++.md)**
 
 ## **[第 2 章 コンストラクタ、デストラクタ、コピー代入演算子](2_ConstructorDestructorCopyAssignmentOperators.md)**
+
+## **[第 3 章 リソース管理](3_ResourceManagement.md)**
+
+***
+
+[戻る](../index.md)

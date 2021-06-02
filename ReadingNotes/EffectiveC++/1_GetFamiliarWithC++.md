@@ -502,4 +502,4 @@ Directory& tempDir()                        // この関数が tempDir の代わ
 
 ***
 
-#### **[戻る](../index.md)**
+[戻る](../index.md)

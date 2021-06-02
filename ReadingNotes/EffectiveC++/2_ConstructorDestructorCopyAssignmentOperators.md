@@ -699,3 +699,110 @@ Widget& Widget::operator=(Widget rhs)   // rhs は渡される引数のコピー
 * **複数のオブジェクトを操作する場合、異なるオブジェクトと考えられていたものが、実は同じオブジェクトであることもある。そのような場合でも、正しく動作するように関数を書こう。**
 
 ### 12 項 コピーするときは、オブジェクトの全体をコピーしよう
+
+```C++
+void logCall(const std::strinng& funcName);             // ログを取る
+
+class Customer {
+public:
+    ...
+    Customer(const Customer& rhs);
+    ...
+private:
+    std::string name;
+};
+
+Customer::Customer(const Customer& rhs)
+: name(rhs.name)                                        // rhs のデータをコピー
+{
+    logCall("Customer copy constructor");
+}
+
+Customer& Customer::operator=(const Customer& rhs)
+{
+    logCall("Customer copy assignment operator");
+    name = rhs.name;                                    // rhs のデータをコピー
+    return *this;
+}
+```
+
+上記のコードは問題ありません。しかし、次のように Customer に新しいデータメンバを追加すると問題が発生します。
+
+```C++
+class Date {...};           // 日時を表すクラスとする
+
+class Customer {
+public:
+    ...                     // 前と同じ
+private:
+    std::string name;
+    Date lastTransaction;   // 追加された
+};
+```
+
+この段階で、前に書いたコピー関数は、部分的なコピーしかしない関数になります。しかし、コンパイラーは何も言いません。
+なので、「クラスにデータメンバを追加したなら、コピー関数も更新しなければならない」のです。
+
+継承を考えると更に複雑になります。
+
+```C++
+class PriorityCustomer : public Customer {                                      // 派生クラス
+public:
+    PriorityCustomer(const PriorityCustomer& rhs);
+    PriorityCustomer& operator=(const PriorityCUstomer& rhs);
+    ...
+private:
+    int priority;
+};
+
+PriorityCustomer::PriorityCustomer(const PriorityCustomer& rhs)
+    : priority(rhs.priority)
+{
+    logCall("PriorityCustomer copy constructor");
+}
+
+PriorityCustomer& PriorityCustomer::operator=(const PriorityCustomer& rhs)
+{
+    logCall("PriorityCustomer copy assignment operator");
+    priority = rhs.priority;
+    return *this;
+}
+```
+
+上記のコードでは、PriorityCustomer のデータメンバしかコピーしていません。Customer のデータメンバはコピーされていません。
+上記のコードは、Customer のコンストラクタを明示的に呼び出していないので、引数なしのコンストラクタが呼ばれています。
+これによって、name と lastTransaction はデフォルト値に初期化されることになります。
+コピー代入演算子でも、同様のことが起こります。
+つまり、派生クラスにコピー関数を書く場合は、基底クラスの部分もコピーする必要があるのです。
+通常、基底クラスのメンバは、private なデータメンバなので、派生クラスから直接アクセスできません。派生クラスのコピー関数では、基底クラスの対応するコピー関数を呼び出すようにします。
+
+```C++
+PriorityCustomer::PriorityCustomer(const PriorityCustomer& rhs)
+    : Customer(rhs),                                            // 基底クラスのコピーコンストラクタを呼び出す
+    priority(rhs.priority)
+{
+    logCall("PriorityCustomer copy constructor");
+}
+
+PriorityCustomer&
+PriorityCustomer::operator=(const PriorityCustomer& rhs)
+{
+    logCall("PriorityCustomer copy assignment operator");
+    Customer::operator=(rhs);                                   // 基底クラスのコピー代入演算子を呼び出す
+    priority = rhs.priority;
+    return *this;
+}
+```
+
+つまり、(1) そのクラスで宣言しているすべてのデータメンバをコピーし、(2) 基底クラスの適当なコピー関数を呼び出すということです。
+
+2 つの関数には共通する部分がありますが、コンストラクタからコピー代入演算子を呼び出したり、その逆を行ってはいけません。かわりに、共通する部分を別の関数に抜き出して、その関数を呼び出すようにしましょう。
+
+***覚えておくこと***
+
+* **コピー関数は、オブジェクトのデータメンバと基底クラスのすべてをコピーするように書かなければならない。**
+* **一方のコピー関数から他方のコピー関数を呼び出すようなコードを書いてはならない。かわりに、両者の共通部分を別の関数として定義し、それを呼び出すようにする。
+
+***
+
+[戻る](../index.md)
