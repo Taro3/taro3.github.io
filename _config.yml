@@ -1,2 +1,4 @@
 theme: jekyll-theme-hacker
 google_analytics: UA-198775851-1
+plugins:
+– jekyll-sitemap
