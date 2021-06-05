@@ -1,0 +1,1031 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+<!--  created with free sitemap generation system www.sitemapxml.jp  --> 
+<url>
+  <loc>https://taro3.github.io/</loc>
+  <priority>1.0</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/OpenCV/</loc>
+  <priority>0.8</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Django/index.md</loc>
+  <priority>0.8</priority>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/Qt.html</loc>
+  <priority>0.8</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/</loc>
+  <priority>0.8</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/Qt_Design_Studio/</loc>
+  <priority>0.8</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/ReadingNotes/</loc>
+  <priority>0.8</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Unity/</loc>
+  <priority>0.8</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Dialy/</loc>
+  <priority>0.8</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/QtConcurrent/QtConcurrent1.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/QtConcurrent/QtConcurrent2.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/QtConcurrent/QtConcurrent3.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/QSqlDatabase/QSqlDatabaseSample.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/QListWidget/QListWidgetSample.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/QMLListView/QMLListViewSample.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/Misc/RebootableApp.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/Misc/Qt6QList.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/QtAndVision/DisplayWebcamVideoWidhtQt.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/QtAndVision/DisplayWebcamVideoUsingOpenCVwithQt.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/QtAndVision/DisplayWebcamVideoUsingOpenCVwithQt2.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/QtAndVision/RecordWebcamVideoWithQt.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/QtAndVision/RecordOpenCVVideo.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/QtAndVision/RecordOpenCVVideoUsingFfmpeg.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/QtAndVision/MotionDetectionUsingOpenCV.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/QtAndVision/OpenCVFaceDetect.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/QtAndVision/OpenCVFaceLandmark.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/QtAndVision/OcrImage.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/1/index.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/1/Creating_a_project.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/1/MainWindow_structure.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/1/Qt_designer.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/1/Signals_and_Slots.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/1/Custom_QWidget.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/1/Adding_a_task.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/1/Using_a_QDialog.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/1/Distributing_code_responsibility.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/1/Emitting_a_custom_signal_using_lambdas.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/1/Simplifying_with_the_auto_type_and_a_rangebased_for_loop.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/1/Summary.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/2/index.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/2/Designing_a_cross-platform_project.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/2/Adding_the_Windows_implementation.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/2/Adding_the_Linux_implementation.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/2/Adding_the_Mac_OS_implementation.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/2/Transforming_SysInfo_into_a_singleton.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/2/Exploring_Qt_Charts.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/2/CpuWidget_using_QCharts.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/2/Memory_using_QCharts.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/2/The_pro_file_in_depth.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/2/Under_the_hood_of_qmake.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/2/Beneath_Q_OBJET_and_signal_slot.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/3/index.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/3/Designing_a_maintainable_project.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/3/Defining_data_classes.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/3/Storing_your_data_in_a_database.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/3/Protecting_your_code_with_a_smart_pointer.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/3/Implementing_the_model.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/4/index.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/4/Creating_a_GUI_linked_to_a_core_shared_library.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/4/Listing_your_albums_with_AlbumListWidget.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/4/Creating_a_ThumbnailProxyModel.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/4/Displaying_the_selected_album_with_AlbumWidget.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/4/Enhancing_thumbnails_with_PictureDelegate.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/4/Displaying_a_picture_with_PictureWidget.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/4/Composing_your_Gallery_app.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/5/index.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/5/Starting_with_Qt_Quick_and_QML.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/5/Checking_your_development_environment.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/5/Creating_a_Qt_Quick_project.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/5/Preparing_your_Qt_Quick_gallery_entry_point.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/5/Displaying_albums_with_ListView.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/5/Theming_the_application_with_a_QML_singleton.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/5/Loading_a_database_on_mobile.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/5/Creating_a_new_album_from_a_custom_InputDialog.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/5/Loading_images_with_an_ImageProvider.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/5/Displaying_thumbnails_in_a_GridView.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/5/Swiping_through_full_resolution_pictures.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/6/index.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/6/Discovering_Qt3D.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/6/Configuring_Qt_for_your_Raspberry_Pi.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/6/Creating_an_entry_point_for_your_Qt3D_code.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/6/Setting_up_the_scene.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/6/Assembling_your_Qt3D_entities.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/6/Preparing_the_board_game.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/6/Crafting_entities_from_the_factory.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/6/Building_a_snake_engine_in_JavaScript.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/6/Varying_the_HUD_with_QML_states.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/6/Profiling_your_QML_application.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/7/index.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/7/Creating_your_Qt_Designer_plugin.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/7/Configuring_the_project_for_Windows.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/7/Configuring_the_project_for_Linux.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/7/Configuring_the_project_for_Mac.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/7/Implementing_your_OpenCV_filters.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/7/Designing_the_UI_with_FilterWidget.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/7/Exposing_your_plugin_to_Qt_Designer.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/7/Using_your_Qt_Designer_plugin.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/7/Building_the_image-filter_application.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/8/index.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/8/Preparing_an_SDK.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/8/Creating_your_plugins.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/8/Loading_your_plugins_dynamically.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/8/Using_the_plugins_inside_the_application.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/8/Discovering_the_Animation_Framework.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/8/Making_your_thumbnails_jump.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/8/Fading_the_picture_in.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/8/Flashing_the_thumbnail_in_a_sequence.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/9/index.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/9/Discovering_QThread.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/9/Flying_over_Qt_multithreading_technologies.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/9/Architecting_the_Mandelbrot_project.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/9/Defining_a_Job_class_with_QRunnable.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/9/Using_QThreadPool_in_MandelbrotCalculator.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/9/Displaying_the_fractal_with_MandelbrotWidget.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/10/index.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/10/Architecturing_an_IPC_project.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/10/Laying_down_the_foundations_with_an_SDK.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/10/Working_with_QDataStream_and_QTcpSocket.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/10/Interacting_with_sockets_in_the_worker.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/10/Interacting_with_sockets_from_the_application.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/10/Building_your_own_QTcpServer.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/11/index.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/11/Architecting_the_drum_machine_project.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/11/Creating_a_drum_track.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/11/Making_your_objects_serializable_with_QVariant.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/11/Serializing_objects_in_JSON_format.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/11/Serializing_objects_in_XML_format.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/11/Serializing_objects_in_binary_format.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/11/Playing_low_latency_sounds_with_QSoundEffect.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/11/Triggering_a_QButton_with_your_keyboard.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/11/Bringing_PlaybackWorker_to_life.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/11/Accepting_mouse_drag_and_drop_events.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/12/index.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/12/Discovering_Qt_Test.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/12/Executing_your_tests.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/12/Writing_factorized_tests_with_datasets.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/12/Benchmarking_your_code.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/12/Testing_your_GUI.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/12/Spying_on_your_application_with_QSignalSpy.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/13/index.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/13/Packaging_your_application.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/13/Packaging_for_Windows.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/13/Packaging_for_Linux_with_a_distribution_package.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/13/Packaging_for_Linux_with_AppImage.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/13/Packaging_for_Mac_OS_X.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/13/Packaging_for_Android.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/13/Packaging_for_iOS.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/14/index.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/14/Managing_your_workspace_with_sessions.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/14/Searching_with_the_Locator.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/14/Increasing_the_compilation_speed.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/14/Examining_the_memory_with_Qt_Creator.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/14/Generating_random_numbers.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/14/Silencing_unused_variable_warnings.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/14/Logging_custom_objects_to_QDebug.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/14/Improving_log_messages.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/14/Saving_your_logs_to_a_file.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/14/Generating_a_command-line_interface.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/14/Sending_and_receiving_HTTP_data.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/Qt_Design_Studio/Getting_Started/Tutorials.html</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/index.html</loc>
+  <priority>0.7</priority>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/ReadingNotes/EffectiveC++/</loc>
+  <priority>0.7</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/index.html</loc>
+  <priority>0.6</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/index.hrml</loc>
+  <priority>0.6</priority>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/index.htmnl</loc>
+  <priority>0.6</priority>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/MasteringQt5/5/5/index.html</loc>
+  <priority>0.6</priority>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/Qt_Design_Studio/Getting_Started/Log_in_UI-Part_1.html</loc>
+  <priority>0.6</priority>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/Qt_Design_Studio/Getting_Started/Log_in_UI-Part_2.html</loc>
+  <priority>0.6</priority>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/Qt/Qt_Design_Studio/index.html</loc>
+  <priority>0.6</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/ReadingNotes/EffectiveC++/1_GetFamiliarWithC++.html</loc>
+  <priority>0.6</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/ReadingNotes/EffectiveC++/2_ConstructorDestructorCopyAssignmentOperators.html</loc>
+  <priority>0.6</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://taro3.github.io/ReadingNotes/EffectiveC++/3_ResourceManagement.html</loc>
+  <priority>0.6</priority>
+  <lastmod>2021-06-05T10:55:47+09:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+
+</urlset>
