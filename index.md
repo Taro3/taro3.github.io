@@ -2,49 +2,39 @@
 
 *Qiitaとかにはちゃんとした文章(?)で投稿しないと駄目な感じがするので、それほどでもないものはここに書いています…。*
 
-## githubで公開しているプロジェクト
+## **[読書メモ](ReadingNotes/index.md)**
 
-(幾つかのBitBucketプロジェクトをgithubに徐々に移動中)
+呼んだ本のメモなど
 
-***
-
-### [Qch](https://github.com/Taro3/Qch)
-
-Qtを使用した5chビューア。作成中。
-
-### **[ディープラーニング(C++)](https://github.com/Taro3/DeepLearning_Cpp)**
-
-「ゼロから作るDeep Learning」のPythonコードをC++(+Eigen)にポーティングしてみるテスト。
-
-### **[OepnCV関連メモ](OpenCV/index.md)**
+## **[OepnCV関連メモ](OpenCV/index.md)**
 
 OpenCVに関するメモです。
 
-### **[Django関連メモ](Django/index.md)**
+## [Qch](https://github.com/Taro3/Qch)
 
-Djangoに関するメモです。
+Qtを使用した5chビューア。作成中。
 
-***
+## **[ディープラーニング(C++)](https://github.com/Taro3/DeepLearning_Cpp)**
 
-## その他
+「ゼロから作るDeep Learning」のPythonコードをC++(+Eigen)にポーティングしてみるテスト。
 
-### **[たまに書いてるQiita](https://qiita.com/Taro3)**
+## **[たまに書いてるQiita](https://qiita.com/Taro3)**
 
 Qt Quickについてなどたまに書いているものです。
 
-### **[Qtに関する動画など](https://www.youtube.com/channel/UCFxAZQrRT32KeJ9U5UtyhHQ?view_as=subscriber)**
+## **[Qtに関する動画など](https://www.youtube.com/channel/UCFxAZQrRT32KeJ9U5UtyhHQ?view_as=subscriber)**
 
 ほぼ遊びで作った動画です。
 
-### **[Qt関連記事](Qt/Qt.md)**
+## **[Qt関連記事](Qt/Qt.md)**
 
 Qtに関する記事です。
 
-### **[Mastering Qt5](Qt/MasteringQt5/index.md)**
+## **[Mastering Qt5](Qt/MasteringQt5/index.md)**
 
 Mastering Qt5に沿って勉強するページ。
 
-### **[Qt Design Studioを使ってみよう!](Qt/Qt_Design_Studio/index.md)**
+## **[Qt Design Studioを使ってみよう!](Qt/Qt_Design_Studio/index.md)**
 
 Qt Design Studioのドキュメントをちょっと日本語化して触ってみているページ。
 
@@ -70,8 +60,6 @@ Qt Design Studioのドキュメントをちょっと日本語化して触って�
 * Linuxデバイスドライバ 第３版
 * 等々
 
-### **[読書メモ](ReadingNotes/index.md)**
-
 ***
 
 ## Unityメモ
@@ -80,7 +68,7 @@ Qt Design Studioのドキュメントをちょっと日本語化して触って�
 
 ***
 
-## **[どうでもよさげな日記](Dialy/index.md)**
+##### **[どうでもよさげな日記](Dialy/index.md)**
 
 ***
 

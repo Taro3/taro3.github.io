@@ -185,3 +185,131 @@ Lock ml2(ml1);  // ml2 を ml1 にコピー。すると、どうなるでしょ�
 * **一般的な RAII オブジェクトのコピーでは、コピーを禁止するか、参照を数えるようにする。しかし、他の扱いを考えることもある。**
 
 ### 15 項 リソース管理クラスには、リソースそのものへのアクセス方法を付けよう
+
+下記のようなスマートポインタがあった場合
+
+```C++
+std::shared_ptr<Investment> pInv(createInvestment());
+```
+
+これを使う関数は次のような感じです。
+
+```C++
+int dayHeld(const Investment *pi);  // 投資されてから経った日数を返す
+```
+
+すると、次のように使いたくなります。
+
+```C++
+int days = daysHeld(pInv);  // エラー
+```
+
+このようなときのために、uniqut_ptr も shared_ptr も、内部で保持しているポインタを取り出す get というメンバ関数を持っています。
+
+```C++
+int days = daysHeld(pInv.get());  // 問題なし
+                                  // pInv が保持するポインタを daysHeld に渡している
+```
+
+ほとんどのスマートポインタは(unique_ptr や shared_ptr も)、ポインタの逆参照演算子(-> 演算子と * 演算子)をオーバーロードしています。
+これにより次のような使い方ができます。
+
+```C++
+class Investment {                                      // すべての「投資」を表すクラスの基底クラス
+public:
+  bool isTaxFree() const;
+  ...
+};
+
+Investment* createInvestment();                         // ファクトリ関数
+
+std::shared_ptr<Investment>                             // shared_ptr でリソース管理
+  pi1(createInvestment());
+bool taxable1 = !(pi1->isTaxFree());                     // -> 演算子を通してリソースにアクセス
+...
+std::unique_ptr<Investment> pi2(createInvestment());    // unique_ptr でリソース管理
+bool taxable2 = !((*pi2).isTaxFree());                   // * 演算子を通してリソースにアクセス
+...
+```
+
+RAII クラスの中には、内部のリソースにアクセスするための暗黙の型変換を持つものがあります。
+
+```C++
+FontHandle getFont();             // C スタイルの関数
+                                  // 簡単にするため、引数は省略
+
+void releaseFont(FontHandle fh);  // 同じく C スタイルの関数
+
+class Font {                      // RAII クラス
+public:
+  explicit Font(FontHandle fh)    // リソースの確保
+    : f(fh)                       // C スタイルの API を使うため値渡し
+    {}
+    ~Font() { releaseFont(f); }   // リソースの開放
+private:
+  FontHandle f;                   // 生のフォントリソース
+};
+```
+
+フォントを扱うために FontHandle を使う C スタイルの関数がたくさんある場合、Font オブジェクトを頻繁に FontHandle に変換する必要が出てきます。そのために、**明示的なリソースアクセス**のための get を、Font クラスに定義することもできます。
+
+```C++
+class Font {
+public:
+  ...
+  FontHandle get() const { return f; }  // 明示的にアクセスを与える関数
+  ...
+};
+```
+
+しかし、これだと、C スタイルのフォント関数を呼び出すたびに、get を使わなければなりません。
+
+```C++
+void changeFontSize(FontHandle f, int newSize); // C スタイルの関数
+
+Font f(getFont());
+int newFontFize;
+
+...
+changeFontSize(f.get(), newFontSize);           // Font から FontHandle を得るため get を使う
+```
+
+そこで、Font に、FontHandle への**暗黙の型変換**をもたせる方法もあるのです。
+
+```C++
+class Font {
+public:
+  ...
+  operator FontHandle() const // 暗黙の型変換
+  { return f; }
+  ...
+};
+```
+
+この演算子があると、C スタイルの「**FontHandle** を引数に取る関数」を、以下のように簡単に呼び出すことができるようになります。
+
+```C++
+Font f(getFont());
+int newFontSize;
+...
+changeFontSize(f, newFontSize); // Font が FontHandle に自動的に変換される
+```
+
+この方法の欠点は、**暗黙の型変換はエラーを引き起こしやすい**ことです。
+
+```C++
+Font f1(getFont());
+...
+FontHandle f2 = f1; // おっと！Font オブジェクトをコピーするつもり
+                    // だったのに、f1 を FontHandle オブジェクト
+                    // に変換してからコピーしてしまった
+```
+
+RAII オブジェクトの内部リソースへのアクセスは、カプセル化を破壊するという意見もありますが、適材適所でしょう。
+
+***覚えておくこと***
+
+* **利用する API によっては、生のりソースにアクセスする必要がある。そのため、RAII クラスは、管理するリソースにアクセスする方法を提供すべき。**
+* **そのアクセス方法には、明示的なもの(get のような関数)と非明示的なもの(暗黙の型変換)がある。一般には、明示的なものが安全だが、暗黙の型変換が使えると、クライアントにはより便利になる。**
+
+### 16 項 対応する new と delete は同じ型のものを使おう
