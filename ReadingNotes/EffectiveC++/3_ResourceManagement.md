@@ -313,3 +313,54 @@ RAII オブジェクトの内部リソースへのアクセスは、カプセル
 * **そのアクセス方法には、明示的なもの(get のような関数)と非明示的なもの(暗黙の型変換)がある。一般には、明示的なものが安全だが、暗黙の型変換が使えると、クライアントにはより便利になる。**
 
 ### 16 項 対応する new と delete は同じ型のものを使おう
+
+以下のコードは間違いです。
+
+```C++
+std::string *stringArray = new std::string[100];
+...
+delete stringArray;
+```
+
+配列を new で作成しているのに、delete は単一のオブジェクトに対して行われているためです。このときの動作は未定義になります。
+
+```C++
+std::string *stringPtr1 = new std::string;
+std::string *stringPtr2 = new std::string[100];
+...
+delete stringPtr1;                              // 単独オブジェクトを破棄
+delete [] stringPtr2;                           // オブジェクトの配列を破棄
+```
+
+上記のように、単独のオブジェクトと配列で **delete** と **delete []** を使い分ける必要があります。
+必ず対になるように使用しなければなりません。
+
+また、typedef を使用するときも気をつけなければなりません。
+
+```C++
+typedef std::string AddressLines[4];  // string が 4 つの配列
+```
+
+上記のような typedef をした場合
+
+```C++
+std::string *pal = new AddressLines;  // new AddressLines は string* を戻す
+                                      // これは new string[4] と同じ意味になる
+```
+
+この new に対する delete は同じ形式のものでなければなりません。
+
+```C++
+delete pal;     // 未定義！
+delete [] pal;  // 問題なし
+```
+
+このような混乱を避けるため、配列を typedef することは避けたほうが良いでしょう。
+代わりに、string や vector などで動的配列を確保しましょう。
+今の例では、AddressLines は string の vector 、つまり、 vector\<string\> になります。
+
+***覚えておくこと***
+
+* **オブジェクトを new で生成するときに [] を使ったなら、対応する delete でも [] を使おう。逆に、オブジェクトを new で生成するときに [] を使っていないなら、対応する delete でも [] うぃ使わないように。**
+
+### 17 項 new で生成したオブジェクトをスマートポインタに渡すのは、独立したステートメントで行うようにしよう
