@@ -6,6 +6,8 @@
 
 ## **[第 3 章 リソース管理](3_ResourceManagement.md)**
 
+## **[第 4 章 デザインと宣言](4_DesignAndDeclaration.md)**
+
 ***
 
 [戻る](../index.md)
