@@ -127,6 +127,100 @@ std::shared_ptr は、メモリ以外のリソース開放に関してもミス�
 * 本当に新しい型が必要なのか？
 
 ***覚えておくおこと***
-* **クラスのデザインは、型のデザイン。新しい型を定義する前に、この項に挙げたすべての問いを考えてみよう。
+
+* **クラスのデザインは、型のデザイン。新しい型を定義する前に、この項に挙げたすべての問いを考えてみよう。**
 
 ### 20 項 値渡しより const 参照渡しを使おう
+
+以下のクラスを考える。
+
+```C++
+class Person {
+public:
+  Person();           // 簡単にするため、引数なしとした
+  virtual ~Person();  // 仮想にする理由は 7 項参照のこと
+  ...
+private:
+  std::string name;
+  std::string address;
+};
+
+class Student : public Person {
+public:
+  Student();          // ここでも仮引数を省略している
+  virtual ~Student();
+  ...
+private:
+  std::string schoolName;
+  std::string schoolAddress;
+};
+```
+
+ここで、次のようなコードを考えます。
+
+```C++
+bool validateStudent(Student s);        // Student オブジェクトを値渡しで受け取る関数
+Student plato;                          // ソクラテスの学生プラトン
+bool platoOK = validateStudent(plato);  // 関数の呼び出し
+```
+
+上記のコードでは、コンストラクタが 6 回、デストラクタも 6 回呼び出されています！
+これを避ける方法が、const 参照渡しです。
+
+```C++
+bool validateStudent(const Student& s);
+```
+
+これは、前のコードよりかなり効率的です。
+さらに、引数を参照渡しにすると、「スライス問題」も避けられます。以下のようなことです。
+
+```C++
+class Window {
+public:
+  ...
+  std::string name() const;     // ウィンドウの名前を返す
+  virtual void display() const; // ウィンドウとその内容を描画する
+};
+
+class WindowWithScrollBars : public Window {
+public:
+  ...
+  virtual void display() const;
+};
+```
+
+ここで、ウィンドウの名前を出力してからウィンドウを表示する関数を書くとします。
+
+```C++
+void printNameAndDisplay(Window w)  // 誤り！ 引数がスライスされる
+{
+  std::cout << w.name();
+  w.display();
+}
+```
+
+この値渡しの関数を下記のように呼び出します。
+
+```C++
+WindowWithScrollBars wwsb;
+printNameAndDisplay(wwsb);
+```
+
+この呼出では、WindowWithScrollBars オブジェクトから、仮引数 w が Window オブジェクトとして生成されます。そして、wwsb の持つ WindowWithScrollBars に特有の部分は切り捨てられてしまうのです。
+つまり、WindowWithScrollBars::display ではなく、Window::display が呼び出されてしまいます。
+ここで、w を const 参照にすれば、このスライス問題は避けられます。
+
+```C++
+void printNameAndDisplay(const Window w)  // 問題なし。引数はスライスされない
+{
+  std::cout << w.name();
+  w.display();
+}
+```
+
+***覚えておくこと***
+
+* **値渡しより const 参照渡しを使おう。そうすれば、一般的に、効率的で、スライス問題が起こらない。**
+* **ただし、これは、組み込み型と STL の反復子・関数オブジェクトには適用されない。これらについては、普通、値渡しが適当。**
+
+### 21 項 オブジェクトを戻すべき時に参照を返そうとしないこと
