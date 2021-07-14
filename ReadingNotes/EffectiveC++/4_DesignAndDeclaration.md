@@ -224,3 +224,102 @@ void printNameAndDisplay(const Window w)  // 問題なし。引数はスライ�
 * **ただし、これは、組み込み型と STL の反復子・関数オブジェクトには適用されない。これらについては、普通、値渡しが適当。**
 
 ### 21 項 オブジェクトを戻すべき時に参照を返そうとしないこと
+
+以下のコードを考えます。
+
+```C++
+class Rational {
+public:
+  Rational(int numerator = 0,                             // なで explicit にしないかは 24 項を参照のこと
+    int denominator = 1);                                 // numerator は分子、denominator は分母
+
+  ...
+private:
+  int n, d;
+  friend const Rational operator*(const Rational& lhs,  // なで戻り値を const にしたかは
+    const Rational& rhs);                               // 3 項を参照のこと
+}
+```
+
+このコードでもし参照を返すことができれば、値渡しのコストを削減できます。
+しかし、参照は何かの別名なので、必ず実態が必要です。
+
+```C++
+Rational a(1, 2);   // a は 1/2 を表す
+Ratiobal b(3, 5);   // b は 3/5 を表す
+Rational c = a * b; // c は 3/10 になる
+```
+
+上のコードでは、はじめから 3/10 を持つオブジェクトはないのでどこかに実態がなければなりません。
+関数がオブジェクトを生成する方法は、スタック上かヒープ上の 2 つしかありません。
+スタック上に生成する場合は以下のようになります。
+
+```C++
+const Rational& operator*(const Rational& lhs,  // 警告！悪いコード！
+                          const Rational& rhs)
+{
+  Rational result(lhs.n * rhs.n, lhs.d * rhs.d);
+  return result;
+}
+```
+
+上のコードはローカルのオブジェクトの参照を返すので、動作未定義になってしまいます。
+では、ヒープ上に生成する方法はどうでしょうか？
+
+```C++
+const Rational& operator*(const Rational& lhs,  // 警告！まだ、悪いコード！
+                          const Rational& rhs)
+{
+  Rational *result = new Rational(lhs.n * rhs.n, lhs.d * rhs.d);
+  return *result;
+}
+```
+
+上の方法では new で生成されたオブジェクトを delete する方法がないという問題があります。
+
+上記の 2 つの方法は共にコンストラクタが実行されてしまうので、static な Rational オブジェクトの参照を返す方法を考えます。
+
+```C++
+const Rational& operator*(const Rational& lhs,  // 警告！まだ、悪いコード！
+                          const Rational& rhs)
+{
+  static Rational result;                       // static なオブジェクトの参照を返す
+
+  result = ...;                                 // lhs と rhs の積を result に格納する
+  return result;
+}
+```
+
+上の処理ではスレッド安全性が問題になりそうです。また、以下のような間違いを誘発します。
+
+```C++
+bool operator==(const Rational& lhs,  // Rational のための operator==
+                const Rational& rhs);
+Rational a, b, c;
+...
+if ((a * b) == (c * d)) {
+  積が等しいときの処理;
+} else {
+  積が等しくないときの処理;
+}
+```
+
+上のコードでは、((a \* b) == (c \* d))は常に true になってしまいます。
+
+結局正しいコードは以下のようなものになります。
+
+```C++
+inline const Rational operator*(const Rational& lhs, const Rational& rhs)
+{
+  return Rational(lhs.n * rhs.n, lhs.d * rhs.d);
+}
+```
+
+operator* の戻り値に使われるオブジェクトの生成と破棄というコストが掛かりますが、結局これが正しいということになります。
+
+
+***覚えておくこと***
+
+* **スタック上のローカルなオブジェクトを指し示すポインタや参照、ヒープ上のオブジェクトへの参照を戻してはいけない。ローカルに static なオブジェクトを作って、そのオブジェクトを指し示すポインタや参照を戻すのも、そのオブジェクトが複数個必要なら、よくない。(4 項では、「ローカルに static なオブジェクト」への参照を返す、少なくとも単一スレッドの場合には合理的なコード例を紹介しました。ただし、それは、「ただ 1 つのオブジェクト」だけが必要な場合でした。)**
+
+### 22 項 データメンバは private 宣言しよう
