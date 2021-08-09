@@ -353,3 +353,74 @@ protected メンバにすると、そこから派生したクラスに変更を�
 * **protected は public よりカプセル化を進めるものではない。**
 
 ### 23 項 メンバ関数より、メンバでも friend でもない関数を使おう
+
+以下のコードを考えます。
+
+```C++
+class WebBrowser {
+public:
+  ...
+  void clearCache();
+  void clearHistory();
+  void removeCookies();
+  ...
+};
+```
+
+これらの関数を一度に実行したい場合
+
+```C++
+class WebBrowser {
+public:
+  ...
+  void clearEverything(); // clearCache、clearHistory、
+                          // removeCookie を呼び出す関数
+  ...
+};
+```
+
+と
+
+```C++
+void clearBrowser(WebBrowser& wb)
+{
+  wb.clearCache();
+  wb.clearHistory();
+  wb.removeCookie();
+}
+```
+
+のどちらが良いのでしょうか？
+
+カプセル化の観点から考えると、private な項目に一切アクセスできない後者のほうが好ましいのです。
+これは、「メンバでも friend でもない関数」のほうがカプセル化をより強く維持できるからです。
+
+また、機能ごとにヘッダを分割し、それぞれ独立したヘッダファイルで宣言しましょう。
+
+```C++
+// WebBrowser.h WebBrowser クラスのヘッダ
+// WebBrowser 関連の便利関数のコア部分も含める
+namespace WebBrowserStuff {
+  class WebBrowser {...};
+  ...                             // ほとんどのクライアントが必要とする
+                                  // 非メンバ関数など、便利関数のコア部分
+}
+
+// webBrowserbookmarks.h
+namespace WebBrowserStuff {
+  ...                             // ブックマーク関連の便利機能
+}
+
+// webbrowsercookies.h
+namespace WebBrowserStuff {       // クッキー関連の便利関数
+  ...
+}
+...
+```
+
+これは、C++ の標準ライブラリの構成方法にもなっています。
+
+***覚えておくこと***
+* **メンバ関数より、メンバでも friend でもない関数を使おう。それによって、カプセル化の度合いを増し、柔軟性と機能拡張性をもたせることになる。**
+
+### 24 項 すべての引数に型変換が必要なら、メンバでない関数を宣言しよう
