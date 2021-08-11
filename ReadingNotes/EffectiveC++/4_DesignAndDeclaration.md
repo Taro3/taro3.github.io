@@ -421,6 +421,110 @@ namespace WebBrowserStuff {       // クッキー関連の便利関数
 これは、C++ の標準ライブラリの構成方法にもなっています。
 
 ***覚えておくこと***
+
 * **メンバ関数より、メンバでも friend でもない関数を使おう。それによって、カプセル化の度合いを増し、柔軟性と機能拡張性をもたせることになる。**
 
 ### 24 項 すべての引数に型変換が必要なら、メンバでない関数を宣言しよう
+
+以下のコードを考えます。
+
+```C++
+class Rational {
+public:
+  Rational(int numerator = 0,     // 意図的に explicit にせず、int から
+           int denominator = 1);  // Rational への暗黙の型変換を許す
+  int numerator() const;          // 分子と分母へのアクセス関数
+  int denominator() const;        // 22 項を参照のこと
+private:
+  ...
+};
+```
+
+さらに算術演算もサポートしたいのですが、この場合にメンバ関数にした場合
+
+```C++
+class Rational {
+public:
+  ...
+  const Rational operator*(const Rational& rhs) const;
+};
+```
+
+のようになります。
+これで、オブジェクト同士の積の計算がとても簡単になります。
+
+```C++
+Rational oneEighth(1, 8);
+Rational oneHalf(1, 2);
+Rational result = oneHalf * oneEighth;  // OK
+result = result * oneEighth;            // OK
+```
+
+しかし、Rational と int の積だと
+
+```C++
+result = oneHalf * 2; // OK
+result = 2 * oneHalf; // エラー！
+```
+
+となってしまします。
+これは下記のコードと同じ意味になります。
+
+```C++
+result = oneHalf.operator*(2);  // OK
+result = 2.operator*(oneHalf);  // エラー！
+```
+
+このとき、コンパイラは
+
+```C++
+result = operator*(2, oneHalf); // エラー！
+```
+
+という呼び出しが可能かを調べますが、そのような operator\* は定義されていないのでエラーになります。
+エラーにならない「result = oneHalf \* 2;」「result = oneHalf.operator\*(2);」について考えます。
+これは
+
+```C++
+const Rational temp(2);   // Rational の一時オブジェクトを生成
+result = oneHalf + temp;  // oneHalf.operator*(temp); と同じ
+```
+
+という処理になります。
+これは、Rational のコンストラクタが explicit ではないから可能になるもので、もし、explicit 宣言されていたら両方共エラーになります。
+
+```C++
+result = oneHalf * 2; // エラー！explicit なコンストラクタは
+                      // 呼び出されないので、2 が Rational
+                      // オブジェクトに変換されない
+
+result = 2 * oneHalf; // 前と同様に、エラー！
+```
+
+この問題を解決するには、operator* を非メンバ関数にすれば解決します。
+
+```C++
+class Rational {
+  ...                                         // ここで operator* は定義しない
+};
+const Rational operator*(const Rational& lhs, // メンバ関数ではない
+                         const Rational& rhs)
+{
+  return Rational(lhs.numerator() * rhs.numerator(),
+                  lhs.denominator() * rhs.denominator());
+}
+Rational oneFourth(1, 4);
+Rational result;
+result = oneFourth * 2;                       // OK
+result = 2 * oneFourth;                       // やった！大丈夫だ
+```
+
+ここで、operator* は、Rational の friend にするべきかを考えます。
+公開されたインターフェースのみで実現できているため、答えは No です。
+関数を friend にしないで済むのなら、するべきではないのです。
+
+***覚えておくこと***
+
+* **関数を呼び出すオブジェクト(this の指し示すオブジェクト)が暗黙の型変換で生成されることはない。そのような場合にも暗黙の型変換を利用したいなら、その関数を非メンバ関数にしよう。**
+
+### 25 項 例外を投げない swap を考えよう
