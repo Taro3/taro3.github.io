@@ -106,6 +106,119 @@ TestButton という MainWindow.xaml で定義したオブジェクトを、Dele
 
 次は、RequestNavigate を使用して画面遷移する方法です。
 
+* まず、Views を右クリックして、追加→新しい項目で開いたダイアログから、Prism UserControl(WPF) を選択して ViewA という新しいビューを追加します。
+
+* ViewA.xaml を下記のように修正します。
+
+```xml
+<UserControl x:Class="PrismTest.Views.ViewA"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"             
+             prism:ViewModelLocator.AutoWireViewModel="True">
+  <Grid>
+    <Label Content="ViewA" FontSize="30" Foreground="Brown"/>
+  </Grid>
+</UserControl>
+```
+
+*<Label Content="ViewA" FontSize="30" Foreground="Brown"\/>* を追加しています。
+
+* 次に、MainWindow.xaml にテスト用のボタンを追加します。
+
+```xml
+  <Grid>
+    <StackPanel>
+      <Label Content="{Binding LabelData}"/>
+      <Button Content="ボタンのテキスト" Command="{Binding TestButton}"/>
+      <Button Content="Show ViewA" Command="{Binding ShowViewAButton}"/>
+
+      <ContentControl prism:RegionManager.RegionName="ContentRegion" />
+    </StackPanel>
+  </Grid>
+```
+
+*<Button Content="Show ViewA" Command="{Binding ShowViewAButton}"\/>* を追加しています。
+
+* MainWindowViewModel.cs に画面遷移処理を追加します
+
+```cs
+using Prism.Commands;
+using Prism.Mvvm;
+using Prism.Regions;    // 追加
+using PrismTest.Views;  // 追加
+
+namespace PrismTest.ViewModels {
+  public class MainWindowViewModel : BindableBase {
+    private readonly IRegionManager _regionManager; // 追加
+
+    private string _title = "Prism Application";
+    public string Title {
+      get => _title;
+      set => SetProperty(ref _title, value);
+    }
+
+    private string _labelData = "あいうえお";
+    public string LabelData { get => _labelData; set => SetProperty(ref _labelData, value); }
+
+    public MainWindowViewModel(IRegionManager regionManager) {
+      _regionManager = regionManager; // 追加
+      TestButton = new DelegateCommand(TestButtonExecute);
+      ShowViewAButton = new DelegateCommand(ShowViewAButtonExecute);  // 追加
+    }
+
+    public DelegateCommand TestButton { get; }
+    public DelegateCommand ShowViewAButton { get; } // 追加
+
+    private void TestButtonExecute() {
+      LabelData = "かきくけこ";
+    }
+
+    // 追加
+    private void ShowViewAButtonExecute() {
+      _regionManager.RequestNavigate("ContentRegion", nameof(ViewA)); 
+    }
+  }
+}
+```
+
+* App.xaml.cs に新しいビューを登録する
+
+```cs
+using Prism.Ioc;
+using PrismTest.Views;
+using System.Windows;
+
+namespace PrismTest {
+  /// <summary>
+  /// Interaction logic for App.xaml
+  /// </summary>
+  public partial class App {
+    protected override Window CreateShell() {
+      return Container.Resolve<MainWindow>();
+    }
+
+    protected override void RegisterTypes(IContainerRegistry containerRegistry) {
+      containerRegistry.RegisterForNavigation<ViewA>(); // 追加
+    }
+  }
+}
+```
+
+実行して Show ViewA ボタンを押下すると、ボタンの下の領域に ViewA が表示されます。
+
+![Show ViewA](image/3.png)
+
+ということで、画面遷移をする場合は
+
+1. 遷移先ビューを作成
+2. 親ビューのビューモデルコンストラクタで IRegionManager を受け取り保存する
+3. 画面遷移処理で、IRegionManager の RequestNavigation メソッドを使用して View を表示する処理を追加する
+4. App.xaml.cs 内の RegisterTypes メソッド内で IContainerRegistry.RegisterForNavigation メソッドでビューを登録する
+
+ということですね。
+
+## RequestNavigate でパラメータを渡す
 
 ### 以下作成中
 
