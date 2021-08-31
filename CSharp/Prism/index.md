@@ -220,6 +220,71 @@ namespace PrismTest {
 
 ## RequestNavigate でパラメータを渡す
 
+遷移するビューにパラメータを渡してみます。
+
+view の xaml を下記のように変えます。
+
+```xml
+<StackPanel>
+  <Label Content="View A" FontSize="30"/>
+  <Label Content="{Binding TestLabel}"/>
+</StackPanel>
+```
+
+下のラベルに受け取ったパラメータの文字列が表示されます。
+
+ViewModel を下記のように変更します。
+
+```cs
+private void ShowViewAButtonExecute() {
+  var p = new NavigationParameters();
+  p.Add(nameof(ViewAViewModel.TestLabel), LabelData);
+  _regionManager.RequestNavigate("ContentRegion", nameof(ViewA), p);
+}
+```
+
+NavigationParameters を作成し、パラメータを辞書に追加してから、RequestNavigate の最後の引数として渡します。
+
+最後に、ViewAViewModel を下記のように変更します。
+
+```cs
+public class ViewAViewModel : BindableBase, INavigationAware {
+  public ViewAViewModel() { }
+
+  private string _testLabel = string.Empty;
+  public string TestLabel { get => _testLabel; set => SetProperty(ref _testLabel, value); }
+
+  public void OnNavigatedTo(NavigationContext navigationContext) {
+    TestLabel = navigationContext.Parameters.GetValue<string>(nameof(TestLabel));
+  }
+
+  public bool IsNavigationTarget(NavigationContext navigationContext) {
+    return false;
+  }
+
+  public void OnNavigatedFrom(NavigationContext navigationContext) { }
+}
+```
+
+INavigationAware インターフェースを実装しています。インターフェース関数の役割は下記のとおりです。
+
+* **OnNavigatedTo**
+  ナビゲーションが移ってきた時に実行される。パラメータを受け取りたい場合はこの関数で受け取ります。
+* **IsNavigationTarget**
+  インスタンスの状態を保存するかを決定します。状態を保存する場合は true を返します。
+* **OnNavigatedFrom**
+  ナビゲーションが他に遷移する時に実行されます。終了処理が必要な場合は個々で処理します。
+
+ここでは、パラメータを受け取りたいので、OnNavigatedTo 関数で TestLabel という名前をキーにした文字列をディクショナリから取得して、TestLabel に表示しています。
+
+実行して、ボタンを押下すると、受け取った文字列が表示されていることがわかります。
+
+![パラメータ取得](image/4.png)
+
+ということで、遷移先のビューにパラメータを渡す場合は、渡す側で NavigationParameters を作成して RequestNavigate に渡す。受け取る側のビューで、INavigationAware インターフェースの OnNavigateTo 関数で、受け取った NavigationContext 内の該当キーでパラメータを受け取る。という動作になります。
+
+## IsNavigationTarget の確認
+
 ### 以下作成中
 
 ***
