@@ -175,3 +175,94 @@ for (VPW::iterator iter = winPrts.begin(); iter != winPtrs.end(); ++iter)
 * **古い C スタイルのものより C++ スタイルのキャストを使おう。C++ スタイルのキャストは、見やすく、何をするかについても、よりはっきりしているから。**
 
 ### 28 項 オブジェクト内部のデータへの「ハンドル」を戻さないようにしよう
+
+以下のコードを考えます。
+
+```C++
+class Point {             // 点を表すクラス
+public:
+  Point(int x, int y);
+  ...
+  void setX(int newVal);
+  void setY(int newVal);
+  ...
+};
+
+struct RectData {         // Ractangle のデータ
+  Point ulhc;             // 左上の点(upper left-hand corner)
+  Point lrhc;             // 右下の点(lower right-hand corner)
+};
+
+class Rectangle {
+public:
+  ...
+  Point& upperLeft() const { return pData->ulhc; }
+  Point& lowerRight() const { return pData->lrhc; }
+  ...
+private:
+  std::shared_ptr<RectData> pData;
+}
+```
+
+このコードでは、矩形の左上座標と右下座標をクラス外(Rectangle クラス外)に持っています。
+そして、その座標を取得する upperLeft と lowerRight 関数があります。
+
+しかし、upperLeft と lowerRight は const 宣言されているにも関わらず、呼び出し元で変更できてしまうという問題があります。
+
+```C++
+Point coord1(0, 0);
+Point coord2(100, 100);
+const Rectangle rec(coord1, coord2);  // rec は const なオブジェクト
+                                      // 左上の点が(0, 0)、右下の点が(100, 100)
+
+rec.upperLeft().setX(50);             // これで、rec の左上の点が(50, 0)になる
+```
+
+rec が const であるにも関わらずデータを変更できてしまいます。
+
+このようにメンバ関数が「内部」のデータへの参照を返す場合、そのクラスはあまり強くカプセル化されていないということになります。
+また、const なメンバ関数が「実際にはオブジェクトの外部に置いたデータオブジェクト」への参照を返す場合、その関数の呼び出し元でデータを変更できてしまうということです。これは、ポインタや反復子の場合も同じ問題があります。
+参照、ポインタ、反復子はハンドルと呼ばれます。
+また、public でないメンバ関数へのハンドルも戻さないことが重要です。そのポインタを使って「公開されない(はずの)関数」も呼び出されてしまうためです。
+
+先程の Rectangle の問題は、戻り値に const を付けることで解決できてしまいます。
+
+```C++
+class Rectangle {
+public:
+  ...
+  const Point& upperLeft() const { return pData->ulhc; }
+  const Point& lowerRight() const { return pData->lrhc; }
+  ...
+}
+```
+
+このようにすれば、呼び出し側での変更は行えなくなります。
+しかし、これでも「内部」へのハンドルを返すため、別の問題が発生する可能性があります。特に「どこも指し示さないハンドル」の問題です。
+下記のコードを考えます。
+
+```C++
+class GUIObject {...};
+const Rectangle boundingBox(const GUIObject& obj);  // Rectangle を値で返す
+```
+
+上記の関数は次のように使用できます。
+
+```C++
+GUIObject *pgo;
+...                                     // pgo が GUIObject を指し示すようにする
+
+const Point *pUpperLeft =               // GUI オブジェクトの範囲を表す矩形の
+    &(boundingBox(*pgo).upperLeft());   // 左上の点へのポインタを取得
+```
+
+このとき、boundingBox は Rectangle の一時オブジェクトを生成します。upperLeft は、その一時オブジェクトに対して呼ばれます。
+一時オブジェクトの左上の座標が返されるわけですが、この行の実行が終わると、当然ですが、一時オブジェクトは破棄されます。
+結果として、pUpperLeft は、すでに破棄された座標を指し示すことになります。
+これが、「内部」へのハンドルを返す関数が危険だという理由です。
+
+#### 覚えておくこと
+
+* **オブジェクト内部のデータへのハンドル(参照、ポインタ、反復子)を返す関数は避けよう。そうすることで、カプセル性を高め、const なメンバ関数を概念的にも const にし、「どこも指さないハンドル」を生成してしまう可能性を減らすことができる。**
+
+### 29 項 コードを例外安全なものにしよう
