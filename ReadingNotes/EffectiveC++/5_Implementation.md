@@ -266,3 +266,128 @@ const Point *pUpperLeft =               // GUI オブジェクトの範囲を表
 * **オブジェクト内部のデータへのハンドル(参照、ポインタ、反復子)を返す関数は避けよう。そうすることで、カプセル性を高め、const なメンバ関数を概念的にも const にし、「どこも指さないハンドル」を生成してしまう可能性を減らすことができる。**
 
 ### 29 項 コードを例外安全なものにしよう
+
+以下のコードを考えます。
+
+```C++
+class PrettyMenu {
+public:
+  ...
+  void changeBackground(std::istream& imgSrc);  // 背景の画像を変える
+  ...
+private:
+  Mutex mutex;      // このオブジェクトのミューテックス
+  Image *bgImage;   // 現在の背景画像
+  int imageChanges; // 画像が変更された回数
+};
+```
+
+changeBackground の実装は下記のようになるでしょう。
+
+```C++
+void PrettyMenu::changeBackground(std::istream& imgSrc)
+{
+  lock(&mutex);                 // ミューテックスのロック
+  delete bgImage;               // 古い背景画像を破棄
+  ++imageChanges;               // 変更回数を増やす
+  bgImage = new Image(imgSrc);  // 新しい背景画像に変える
+  unlock(&mutex);               // ミューテックスのアンロック
+}
+```
+
+しかし、上記のコードは、下記の 2 つの例外安全性をどちらも満たしていません。
+
+* **リソース漏れをおこさない** 上のコードはこの条件を満たしていません。「new Image(imgSrc)」が例外を投げると、ミューテックスの開放が行われません。
+* **データ構造が無効な状態(正しくない状態)になることを防ぐ** 「new Image(imgSrc)」が例外を投げると、bgImage が「破棄されたオブジェクト」を指し示したままになります。また、新しい画像に変わっていないにもかかわらず、imageChanges がインクリメントされます。
+
+リソース漏れに関しては、リソース管理オブジェクトを使用することで解決できます。
+
+```C++
+void PrettyMenu::changeBackground(std::istream& imgSrc)
+{
+  Lock ml(&mutex);  // ミューテックスをロックし、
+                    // あとで確実にアンロック
+  delete bgImage;
+  ++imageChanges;
+  bgImage = new Image(imgSrc);
+}
+```
+
+次に、データ保護について考えます。
+データ構造の保護に関して、例外安全な関数は、次の 3 つのうちの 1 つを保証しなければなりません。
+
+* **関数が例外に対し基本保証(basic guarantee)をする** これは、「例外が投げられても、プログラム中のすべてのものの状態が有効に保たれる」ということです。たとえば、「changeBackground で例外が投げられたら、PrettyMenu は古い背景画像かデフォルトの背景画像を持つことになる。ただし、どちらになるかは状況次第」になります。
+* **関数が例外に対し強い保証(strong guarantee)をする** これは、「例外が投げられた場合、プログラムの状態は、その関数を呼び出し前のものに戻される」ということです。
+* **関数が例外に対し投げない保証(nothrow grarantee)をする** これは、「必ず予定の仕事を実行し、例外を投げない」ということです。
+
+ほぼ強い保証を行うには下記のようにします。
+
+```C++
+class PrettyMenu {
+  ...
+  std::shared_ptr<Image> bgImage;
+  ...
+};
+
+void PrettyMenu::changeBackground(std::istream& imgSrc)
+{
+  Lock ml(&mutex);
+  bgImage.reset(new Image(imgSrc)); // bgImage の内部ポインタを
+                                    // 「new Image」の戻り値に変える
+  ++imageChanges;
+}
+```
+
+これで、古い画像を破棄するコードを書く必要はありません。これで「ほぼ強い保証」ができるようになりました。
+しかし、「ほぼ」です。問題は imgSrc です。Image のコンストラクタが例外を投げるかもしれないのです。
+
+ここでは、Image のコンストラクタも強い保証をするものとしましょう。
+強い保証をするための、一般的な設計に「コピーと交換(スワップ)」と呼ばれるものです。
+
+```C++
+struct PMImpl {                   // PrettyMenu の実装オブジェクト
+  std::shared_ptr<Image> bgImage; // 構造体にした理由は後述
+  imt imageChanges;
+};
+
+class PrettyMenu {
+  ...
+private:
+  Mutex mutex;
+  std::shared_ptr<PMImpl> pImpl;
+};
+
+void PrettyMenu::changeBackground(std::istream& imgSrc)
+{
+  using std::swap;
+  Lock ml(&mutex);                        // ミューテックスロック
+  std::shared_ptr<PMImpl>                 // データのコピー
+      pNew(new PMImpl(*pImpl));
+  pNew->bgImage.reset(new Image(imgSrc)); // コピーの変更
+  ++pNew->imageChanges;
+  swap(pImpl, pNew);                      // オブジェクトの交換
+}                                         // ミューテックスのアンロック
+```
+
+「コピーと交換」は、優れた方法ですが、残念ながら、関数全体を強い保証にできるとは限りません。
+
+```C++
+void someFunc()
+{
+  ...   // ローカルな状態のコピーを作る
+  f1();
+  f2();
+  ...   // 変更したコピーと元のものを交換する
+}
+```
+
+f1 と f2 が例外安全性に関して強い保証をしない関数なら、someFunc が強い保証をするのは難しいでしょう。実際には両関数が強い保証をしたとしても、f2 が例外を投げると元の状態には戻せなくなります。また、必ずコピーが発生するため、パフォーマンスの問題もあるでしょう。
+結論として、例外安全性に関する保証をまったくしないコードを書くべきではありません。できる範囲で保証されたコードを書きましょう。
+
+#### 覚えておくこと
+
+* **例外安全な関数とは、例外が投げられても、リソース漏れを起こさず、データを有効に保つ関数のこと。そのような関数には、基本保証をするもの、強い保証をするもの、投げない保証をするものがある。**
+* **つよう保証は、しばしば、「コピーと交換」で実装できる。しかし、強い保証が、すべての関数で実用的であるわけではない。**
+* **ある関数内で別の関数を呼び出す場合、「呼び出される関数」よりよい保証を「呼び出す関数」ですることは、通常、とても困難である。**
+
+### 30 項 インラインをよく理解しよう
