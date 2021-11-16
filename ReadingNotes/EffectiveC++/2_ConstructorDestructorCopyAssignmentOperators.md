@@ -805,4 +805,4 @@ PriorityCustomer::operator=(const PriorityCustomer& rhs)
 
 ***
 
-[戻る](../index.md)
+[戻る](./index.md)

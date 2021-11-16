@@ -726,4 +726,4 @@ std::swap(obj1, obj2);  // 誤った swap 呼び出し
 
 ***
 
-**[戻る](../index.md)**
+**[戻る](./index.md)**

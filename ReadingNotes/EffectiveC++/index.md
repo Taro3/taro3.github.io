@@ -10,6 +10,8 @@
 
 ## **[第 5 章 実装](5_Implementation.md)**
 
+## **[第 6 章 継承とオブジェクト指向設計](6_InheritanceAndObject-orientedDesign.md)**
+
 ***
 
 [戻る](../index.md)
