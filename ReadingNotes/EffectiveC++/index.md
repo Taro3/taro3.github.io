@@ -12,6 +12,8 @@
 
 ## **[第 6 章 継承とオブジェクト指向設計](6_InheritanceAndObject-orientedDesign.md)**
 
+## **[第 7 章 テンプレートとジェネリックプログラミング](7_TemplatesAndGenericProgramming.md)**
+
 ***
 
 [戻る](../index.md)
