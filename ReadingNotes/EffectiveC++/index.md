@@ -14,6 +14,8 @@
 
 ## **[第 7 章 テンプレートとジェネリックプログラミング](7_TemplatesAndGenericProgramming.md)**
 
+## **[第 8 章 new と delete のカスタマイズ](8_CustomizingNewAndDelete.md)**
+
 ***
 
 [戻る](../index.md)
