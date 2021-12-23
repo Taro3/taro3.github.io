@@ -16,6 +16,8 @@
 
 ## **[第 8 章 new と delete のカスタマイズ](8_CustomizingNewAndDelete.md)**
 
+## **[第 9 章 いろいろな事](9_VariousThings.md)**
+
 ***
 
 [戻る](../index.md)
