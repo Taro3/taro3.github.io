@@ -1,8 +1,12 @@
 # Unity に関するメモ
 
-## スクリプト関連
+***
+
+元情報は、 [Unity Game Development Cookbook](https://www.oreilly.com/library/view/unity-game-development/9781491999141/) です。
 
 ***
+
+## スクリプト関連
 
 ### プライベート変数をインスペクタに表示する
 
