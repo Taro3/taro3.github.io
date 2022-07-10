@@ -248,7 +248,7 @@
 
 ***
 
-## **[すべてが梱包され、配備の準備ができています。](13/index.html)**
+## **[13.すべてが梱包され、配備の準備ができています。](13/index.html)**
 
 ### **[アプリケーションのパッケージング](13/Packaging_your_application.html)**
 
@@ -266,29 +266,29 @@
 
 ***
 
-## [14.Qtハットのヒントとコツ](14/index.html)**
+## **[14.Qtハットのヒントとコツ](14/index.html)**
 
-### [セッションでワークスペースを管理する](14/Managing_your_workspace_with_sessions.html)**
+### **[セッションでワークスペースを管理する](14/Managing_your_workspace_with_sessions.html)**
 
-### [ロケーターで検索](14/Searching_with_the_Locator.html)**
+### **[ロケーターで検索](14/Searching_with_the_Locator.html)**
 
-### [コンパイル速度の向上](14/Increasing_the_compilation_speed.html)**
+### **[コンパイル速度の向上](14/Increasing_the_compilation_speed.html)**
 
-### [Qt Creatorでメモリを調べる](14/Examining_the_memory_with_Qt_Creator.html)**
+### **[Qt Creatorでメモリを調べる](14/Examining_the_memory_with_Qt_Creator.html)**
 
-### [乱数の生成](14/Generating_random_numbers.html)**
+### **[乱数の生成](14/Generating_random_numbers.html)**
 
-### [使用されていない変数の警告の消音](14/Silencing_unused_variable_warnings.html)**
+### **[使用されていない変数の警告の消音](14/Silencing_unused_variable_warnings.html)**
 
-### [カスタムオブジェクトをQDebugにロギングする](14/Logging_custom_objects_to_QDebug.html)**
+### **[カスタムオブジェクトをQDebugにロギングする](14/Logging_custom_objects_to_QDebug.html)**
 
-### [ログメッセージの改善](14/Improving_log_messages.html)**
+### **[ログメッセージの改善](14/Improving_log_messages.html)**
 
-### [ログをファイルに保存する](14/Saving_your_logs_to_a_file.html)**
+### **[ログをファイルに保存する](14/Saving_your_logs_to_a_file.html)**
 
-### [コマンドラインインターフェイスの生成](14/Generating_a_command-line_interface.html)**
+### **[コマンドラインインターフェイスの生成](14/Generating_a_command-line_interface.html)**
 
-### [HTTPデータの送受信](14/Sending_and_receiving_HTTP_data.html)**
+### **[HTTPデータの送受信](14/Sending_and_receiving_HTTP_data.html)**
 
 ***
 
