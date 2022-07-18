@@ -319,4 +319,279 @@ QtライブラリのQCameraInfoクラスを使うと、現在のコンピュー�
 
 ***
 
-## 撮影と再生
+## キャプチャと再生
+
+前節でウェブカメラの情報を得たので、選んだウェブカメラからのビデオフィードをOpenCVを使ってキャプチャし、再生してみましょう。
+
+OpenCV を使ってビデオをキャプチャするのはとても簡単です。以下はその例です。
+
+```cpp
+     #include <iostream>
+     #include "opencv2/opencv.hpp"
+
+     using namespace std;
+     using namespace cv;
+
+     int main() {
+         VideoCapture cap(0);
+         if(!cap.isOpened()) {
+             return -1;
+         }
+
+         while(1) {
+             Mat frame;
+             cap >> frame;
+
+             if (frame.empty())
+                 break;
+
+             imshow( "Frame", frame );
+
+             char c = (char)waitKey(25);
+             if(c==27) // ESC
+                 break;
+         }
+
+         cap.release();
+         destroyAllWindows();
+
+         return 0;
+     }
+```
+
+このコードでは、まずデフォルトのウェブカメラのインデックスでVideoCaptureのインスタンスを生成し、カメラが正常にオープンされたかどうかをテストします。開いた場合は、無限ループに入ります。ループ内では、VideoCapture インスタンスから Mat インスタンスに画像を読み込みます。ループが進むと、ウェブカメラから連続した画像が読み込まれ、それらが動画を構成することになります。ビデオ処理においては、この連続した画像の 1 つ 1 つを通常フレームと呼びます。そのため、前のコードではフレームという名前を使っています。フレームを読み込んだら、それが空かどうかをチェックします。trueの場合は無限ループを抜け、そうでない場合はimshow関数を呼び出して表示します。次に、キーが押されるまで最大25ミリ秒待ちます。待機中にEscキーが押された場合はループを抜け、そうでない場合は無限ループが続く。ループ終了後は、カメラの解放、映像表示用のウィンドウの破棄など、割り当てたリソースを解放しています。
+
+このように、OpenCVを使った動画のキャプチャは非常に簡単です。しかし、この機能を実際のGUIアプリケーションに組み込み始めると、少し複雑になってきます。第2章「プロ並みの画像編集」の「カートゥーン効果」で、画像にカートゥーン効果を生成する機能を作ったのを覚えていますか？その機能を実現するために、かなり低速なアルゴリズムをいくつか採用しています。GUIスレッドで遅いタスクを実行すると、そのタスクの実行期間中にUIがフリーズしてしまいます。アプリケーションを複雑にしないために、その場合はアルゴリズムを最適化してタスクの実行時間を短くし、GUIのフリーズ時間を短くする方法に頼ります。しかし、今回のビデオキャプチャの場合、時間軸で最適化する方法がないため、ユーザーがカメラを開いている間は常にフレームをキャプチャし続けなければなりません。GUIスレッドでビデオをキャプチャすると、UIがずっとフリーズしたままになってしまいます。そこで、アプリケーションのインターフェイスをレスポンシブに保つために、GUIスレッドとは異なる別のスレッドでビデオをキャプチャする必要があります。
+
+Qtライブラリには、アプリケーションのマルチスレッド化に対応するためのさまざまな技術が用意されています。QThreadクラスは、最もわかりやすく、基本的な機能です。シンプルでありながら、強力で柔軟性があります。このセクションでは、主にキャプチャタスクを新しいスレッドに分離するためにこのクラスを使用します。
+
+ビデオキャプチャを別のスレッドで行うために、まず必要なことは、QThreadクラスから派生した新しいクラスを定義することです。このクラスをCaptureThreadと名付け、capture_thread.hファイルで宣言します。
+
+ヘッダーファイルを見てみましょう。このファイルの最初と最後には、include-onceマクロの定義と、ヘッダーファイルのincludingディレクティブがあります。
+
+```cpp
+     #ifndef CAPTURE_THREAD_H
+     #define CAPTURE_THREAD_H
+
+     #include <QString>
+     #include <QThread>
+     #include <QMutex>
+
+     #include "opencv2/opencv.hpp"
+
+     // ... the class declaration goes here.
+
+     #endif // CAPTURE_THREAD_H
+```
+
+真ん中がクラス宣言です。
+
+```cpp
+     class CaptureThread : public QThread
+     {
+         Q_OBJECT
+     public:
+         CaptureThread(int camera, QMutex *lock);
+         CaptureThread(QString videoPath, QMutex *lock);
+         ~CaptureThread();
+         void setRunning(bool run) {running = run; };
+
+     protected:
+         void run() override;
+
+     signals:
+         void frameCaptured(cv::Mat *data);
+
+     private:
+         bool running;
+         int cameraID;
+         QString videoPath;
+         QMutex *data_lock;
+         cv::Mat frame;
+     };
+```
+
+このクラスは、前に述べたようにQThreadクラスから派生したもので、その本体の最初の行でQ_OBJECTマクロを使って、Qtライブラリのメタ・オブジェクト・システムにこのクラスの面倒を見るように指示しています。
+
+そして、publicセクションで2つのコンストラクタと1つのデストラクタを宣言しています。最初のコンストラクタは、ターゲットのウェブカメラのインデックスである整数と、レース状態でのデータ保護に使用される QMutex のポインタを受け取ります。2番目のコンストラクタは、ビデオファイルへのパスとして扱われる文字列とQMutexのポインタを受け取ります。このコンストラクタで、ビデオファイルを使用してウェブカメラをエミュレートすることができます。また、setRunningというパブリックメソッドがあり、これはキャプチャスレッドの実行状態を設定するために使用されます。
+
+次に、protectedセクションです。このセクションでは、runという名前のメソッドを宣言しています。overrideキーワードは、このメソッドが仮想メソッドであることと、ベースクラスのメソッドと同じ名前のメソッドをオーバーライドしていることを示します。QThreadのrunメソッドは、スレッドの起点となるメソッドです。スレッドのstartメソッドを呼び出すと、新しいスレッドが生成された後、そのrunメソッドが呼び出されます。このメソッドでの捕捉作業は後ほど行います。
+
+そして、 Mat オブジェクトへのポインタを唯一の引数として受け取る、frameCapture という名前のシグナルを宣言します。このシグナルは、Webcam からフレームがキャプチャされるたびに出力されます。このシグナルに興味がある場合は、スロットを接続することができます。
+
+最後に、private セクションで、多くのメンバフィールドを宣言しています。
+
+* スレッドステートのためのrunning
+* cameraID: カメラのインデックス
+* videoPath: ウェブカメラをエミュレートするために使用するビデオのパス。
+* data_lock: レースコンディションでデータを保護するためのロック
+* frame: 現在キャプチャされているフレームを格納するためのもの
+
+クラスの宣言は以上です。次に、capture_thread.cppファイルのメソッド実装に移ります。まず、コンストラクタとデストラクタです。どれも簡単で、フィールドの初期化などの情報を提供するだけです。
+
+```cpp
+     CaptureThread::CaptureThread(int camera, QMutex *lock):
+         running(false), cameraID(camera), videoPath(""), data_lock(lock)
+     {
+     }
+
+     CaptureThread::CaptureThread(QString videoPath, QMutex *lock):
+         running(false), cameraID(-1), videoPath(videoPath), data_lock(lock)
+     {
+     }
+
+     CaptureThread::~CaptureThread() {
+     }
+```
+
+そして、最も重要な部分であるrunメソッドの実装が行われます。
+
+```cpp
+     void CaptureThread::run() {
+         running = true;
+         cv::VideoCapture cap(cameraID);
+         cv::Mat tmp_frame;
+         while(running) {
+             cap >> tmp_frame;
+             if (tmp_frame.empty()) {
+                 break;
+             }
+             cvtColor(tmp_frame, tmp_frame, cv::COLOR_BGR2RGB);
+             data_lock->lock();
+             frame = tmp_frame;
+             data_lock->unlock();
+             emit frameCaptured(&frame);
+         }
+         cap.release();
+         running = false;
+     }
+```
+
+このメソッドはスレッドが生成された直後に呼ばれ、このメソッドから戻ったときにスレッドの寿命が終了します。したがって、このメソッドに入るときに実行状態を true に設定し、このメソッドから戻る前に実行状態を false に設定します。そして、冒頭の例と同様に、カメラインデックスを用いて VideoCapture クラスのインスタンスを生成し、キャプチャされたフレームを保存するために Mat のインスタンスを生成します。その後、無限ループに入ります。このループでは、フレームをキャプチャして、それが空であるかどうかをチェックします。ここでは、OpenCV を用いてフレームをキャプチャしているので、キャプチャフレームの色の順番は RGB ではなく BGR になっています。Qtで表示することを考えると、RGBを色順とする新しいフレームに変換する必要があります。これが、cvtColor関数の呼び出しの目的です。
+
+キャプチャしたフレームの準備が終わったら、それをframeクラスのメンバに代入し、先ほど変更したframeメンバフィールドを指すポインタを持つframeCaptureシグナルを出力しています。このシグナルに興味がある場合は、スロットを接続することができます。接続されたスロットでは、このフレームメンバーへのポインタを引数として持つことになります。つまり、接続されたスロットでは、このフレームオブジェクトから自由に読み書きすることができるのです。接続されたスロットは、捕捉スレッドとは異なる別のスレッドで実行される可能性が高いことを考えると、2つの異なるスレッドで同時にフレームメンバーが変更される可能性が非常に高く、この挙動は中のデータを破損させる可能性があります。このような事態を防ぐために、QMutexを使用して、フレームメンバーフィールドにアクセスするスレッドが常に1つだけであることを確認します。ここで使用したQMutexのインスタンスは、QMutex *data_lockメンバフィールドです。フレーム・メンバーに割り当てる前にそのロック・メソッドを呼び出し、割り当て後にそのアンロック・メソッドを呼び出しています。
+
+誰かが実行状態をfalseに設定すると（通常は別のスレッドで）、無限ループが解除されます。
+ループが解除され、その後、VideoCapture インスタンスを解放し、実行中フラグが false に設定されるようにするなど、いくつかのクリーンアップ作業が行われます。
+
+この時点で、キャプチャスレッドのすべての作業が完了します。次に、このスレッドをメインウィンドウに統合する必要があります。では、さっそく始めましょう。
+
+まず、mainwindow.hヘッダーファイルで、MainWindowクラスにいくつかのプライベートメンバーフィールドを追加します。
+
+```cpp
+         cv::Mat currentFrame;
+
+         // for capture thread
+         QMutex *data_lock;
+         CaptureThread *capturer;
+```
+
+currentFrameメンバは、キャプチャースレッドがキャプチャしているフレームを格納するために使用します。 capturerは、キャプチャースレッドのハンドルで、ユーザがカメラを開いたときにビデオのキャプチャ作業をするために使用しています。QMutextオブジェクトのdata_lockは、レースコンディションでCaptureThread.frameのデータを保護するために使用します。GUIスレッドとキャプチャースレッドの両方で使用されます。そして、MainWindowクラスのコンストラクタで、initUIメソッドを呼び出した後に、data_lockフィールドを初期化します。
+
+```cpp
+         initUI();
+         data_lock = new QMutex();
+```
+
+次に、mainwindow.hヘッダーファイルに戻り、クラス宣言でさらに2つのプライベートスロットを追加してみましょう。
+
+```cpp
+         void openCamera();
+         void updateFrame(cv::Mat*);
+```
+
+openCameraスロットは、新しいキャプチャスレッドを作成するために使用され、ファイルメニューのOpen Cameraアクションがトリガーされたときに呼び出されます。まず、このスロットをcreateActionsメソッドでOpen Cameraアクションのトリガーされたシグナルに接続します。
+
+```cpp
+         connect(openCameraAction, SIGNAL(triggered(bool)), this, SLOT(openCamera()));
+```
+
+続いて、openCameraスロットの実装に入ります。
+
+```cpp
+         int camID = 2;
+         capturer = new CaptureThread(camID, data_lock);
+         connect(capturer, &CaptureThread::frameCaptured, this, &MainWindow::updateFrame);
+         capturer->start();
+         mainStatusLabel->setText(QString("Capturing Camera %1").arg(camID));
+```
+
+このコードでは、CaptureThreadクラスのインスタンスを、カメラインデックスとMainWindowのコンストラクタで生成したQMutexオブジェクトで生成し、capturerのメンバフィールドに代入しています。
+
+そして、capturerのframeCapturedシグナルをメインウィンドウのupdateFrameスロットに接続し、CaptureThread::frameCapturedシグナルが発せられると、そのシグナルが発せられたときと同じ引数でMainWindow::updateFrameスロット（メソッド）が呼び出されるようにしています。
+
+この準備が終わったので、capturerと呼ばれるCaptureThreadインスタンスのstartメソッドを呼び出すことで、キャプチャーのスレッドを開始することができます。ちなみに、あるカメラが開かれたことは、ステータスバーにテキストを表示することでユーザーに伝えています。
+
+*既に述べたように、私のラップトップには2つのウェブカメラがあり、インデックスが2である2番目のものを使用しています。 あなたの選択に従って、camID変数の値を正しいカメラインデックスに変更する必要があります。一般的なケースでは、デフォルトのウェブカムには値0が使用されるべきです。*
+
+これでキャプチャスレッドが起動し、カメラからのフレームをキャプチャして frameCaptured シグナルを出力し続けます。このシグナルに反応するようにメインウィンドウのupdateFrameスロットを埋めましょう。
+
+```cpp
+     void MainWindow::updateFrame(cv::Mat *mat)
+     {
+         data_lock->lock();
+         currentFrame = *mat;
+         data_lock->unlock();
+
+         QImage frame(
+             currentFrame.data,
+             currentFrame.cols,
+             currentFrame.rows,
+             currentFrame.step,
+             QImage::Format_RGB888);
+         QPixmap image = QPixmap::fromImage(frame);
+
+         imageScene->clear();
+         imageView->resetMatrix();
+         imageScene->addPixmap(image);
+         imageScene->update();
+         imageView->setSceneRect(image.rect());
+     }
+```
+
+このスロットでは、前述したように、CaptureThreadによってキャプチャされたフレームへのポインタを引数として持っています。スロット本体では、そのキャプチャしたフレームをメインウィンドウクラスのcurrentFrameフィールドに代入しています。この代入式では、キャプチャしたフレームを読み込んでから、代入を行っています。そこで、データが壊れないように、data_lock mutex を使って、キャプチャしたスレッドがフレームフィールドに書き込んでいる間は、読み込みが行われないようにしています。
+
+キャプチャしたフレームを取得したら、第2章「プロ並みの画像編集」で作成した画像編集アプリケーションで行ったように、グラフィックスシーンとビューでそれを表示します。
+
+ユーザがOpen Cameraアクションをクリックすると、そのアクションのトリガー信号が出力され、openCameraスロットが呼び出され、キャプチャスレッドが生成されてカメラからのフレームをキャプチャし始めます。そして、メインウィンドウの updateFrame スロットがキャプチャしたフレームごとに呼び出されます。その結果、メインウィンドウのメインエリアのグラフィックビューには、キャプチャした連続したフレームが次々と素早く表示され、エンドユーザには動画が再生されているのが見えるようになります。
+
+しかし、このコードにはまだ不具合があります。ユーザーが「カメラを開く」アクションを複数回クリックすると、複数のキャプチャ用スレッドが作成され、それらが同時に実行されます。これは、私たちが望んでいる状況ではありません。そこで、新しいスレッドを開始する前に、すでに実行中のスレッドがないかどうかを確認し、もしある場合はそれを停止してから新しいスレッドを開始する必要があります。そのために、openCameraスロットの最初に次のコードを追加しましょう。
+
+```cpp
+         if(capturer != nullptr) {
+             // if a thread is already running, stop it
+             capturer->setRunning(false);
+             disconnect(capturer, &CaptureThread::frameCaptured, this, &MainWindow::updateFrame);
+             connect(capturer, &CaptureThread::finished, capturer, &CaptureThread::deleteLater);
+         }
+```
+
+このコードでは、CaptureThreadインスタンス、つまりcapturerの実行状態をfalseに設定し、nullでないことがわかったら無限ループを解除するようにしています。そして、接続されているシグナルとスロットを切断し、終了したシグナルに自分自身の新しいスロット、deleteLaterを接続します。無限ループが終了し、runメソッドが戻った後、スレッドはそのライフタイムが終了し、そのfinishedシグナルが発信されます。finishedシグナルからdeleteLaterスロットに接続されているため、スレッドが終了するとdeleteLaterスロットが呼び出されます。その結果、プログラムの制御フローがQtライブラリのイベントループに戻ったときに、Qtライブラリはこのスレッドインスタンスを削除することになります。
+
+さて、新しいヘッダーファイルとソースファイルをアプリケーションに追加できるように、Gazer.pro プロジェクトファイルを更新してみましょう。
+
+```qmake
+     HEADERS += mainwindow.h capture_thread.h
+     SOURCES += main.cpp mainwindow.cpp capture_thread.cpp
+```
+
+次に、アプリケーションをコンパイルして実行する必要があります。
+
+```sh
+     $ qmake -makefile
+     $ make
+     g++ -c -pipe -O2 -Wall -W...
+     # output truncated
+     $ echo $LD_LIBRARY_PATH
+     /home/kdr2/programs/opencv/lib/
+     $ ./Gazer
+     # the application is running now.
+```
+
+アプリケーションの起動後、ファイルメニューの「カメラを開く」アクションをクリックすると、我々のカメラの視点からの景色を見ることができます。以下は、私のウェブカメラから見た私のオフィスの外の風景です。
+
+![実行結果](img/6105425e-f6e2-443c-aa39-9c5668d69792.png)
+
+***
+
+## スレッディングとリアルタイムビデオ処理のパフォーマンス
