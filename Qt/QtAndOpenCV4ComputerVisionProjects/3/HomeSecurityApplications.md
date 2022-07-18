@@ -712,4 +712,137 @@ DEFINES += GAZER_USE_QT_CAMERA=1 の行は、コンパイル時に GAZER_USE_QT_
 
 ***
 
-## FPSの算出
+## FPSの計算
+
+これまでの節で、OpenCVのvideoモジュールとvideoioモジュール、およびQtが提供するマルチメディア機能を使って、ビデオをキャプチャして再生する方法を学びました。前にも述べたように、この章の続きでは、Qtライブラリのマルチメディアモジュールではなく、OpenCVライブラリを使ってビデオを処理します。QtライブラリはUIにのみ使用することになります。
+
+ウェブカメラから取り込んだ動画を保存する前に、動画やカメラに関する重要な指標であるFPSについて説明します（フレームレートやフレーム周波数と呼ばれる場合もあります）。FPSとは、カメラで1秒間に撮影できるフレーム数のことです。この数値が小さすぎると、ユーザーは連続したフレームを動きのように感じるのではなく、1つ1つのフレームを知覚することになります。一方、この数値が大きすぎると、短時間に大量のフレームを取り込むことになり、映像処理プログラムの性能が低いと破綻してしまう可能性があります。通常、映画やアニメーションの場合、FPSは24です。これは、人間の目がフレームを動きとして認識するのに適した数値であり、また、一般的な映像処理プログラムにとっても十分親しみやすい数値です。
+
+このFPSがわかれば、あるカメラのFPSを簡単に計算することができます。カメラから一定数のフレームを読み取り、その取り込みにかかった時間を計測します。そして、そのフレーム数を使用した時間で割って、FPSを算出することができます。簡単だと思いませんか？では、実際にアプリケーションでやってみましょう。
+
+UIがフリーズしないように、ビデオキャプチャースレッドで計算を行い、計算が終わったらメインスレッドにシグナルで通知することにします。そこで、capture_thread.hヘッダファイルを開き、CaptureThreadクラスにいくつかのフィールドとメソッドを追加してみましょう。まず、privateセクションに2つのフィールドを追加します。
+
+```cpp
+         // FPS calculating
+         bool fps_calculating;
+         float fps;
+```
+
+bool型のfps_calculatingフィールドは、キャプチャスレッドがFPSの計算を行っているか、または行うべきかどうかを示すために使用されます。fpsという別のフィールドは、計算されたFPSを保存するために使用されます。capture_thread.cpp ソースファイルのコンストラクタで、これらを false と 0.0 に初期化します。
+
+```cpp
+         fps_calculating = false;
+         fps = 0.0;
+```
+
+次に、いくつかのメソッドを追加します。
+
+* startCalcFPSメソッドは、FPS計算のトリガーとして使用されます。ユーザーがカメラのFPSを計算したいとき、このメソッドがUIスレッドで直接呼び出されます。このメソッドでは、単純にfps_calculatingフィールドをtrueに設定します。このメソッドは単純なインラインメソッドなので、.cppファイル内で実装を与える必要はありません。
+* void fpsChanged(float fps)メソッドは、シグナルセクションにあるので、シグナルになります。FPSの計算が終わると、このシグナルは計算されたFPSの値で発信されます。このメソッドはシグナルなので、その実装はmocが行います。
+* void calculateFPS(cv::VideoCapture &cap) というプライベートメソッドがあり，これは FPS を計算するために使用されます．
+
+3番目のメソッドである calculateFPS は，.cpp ファイルに実装が必要な唯一のメソッドです．capture_thread.cpp ファイルにあるそのメソッド本体を見てみましょう。
+
+```cpp
+     void CaptureThread::calculateFPS(cv::VideoCapture &cap)
+     {
+         const int count_to_read = 100;
+         cv::Mat tmp_frame;
+         QTime timer;
+         timer.start();
+         for(int i = 0; i < count_to_read; i++) {
+                 cap >> tmp_frame;
+         }
+         int elapsed_ms = timer.elapsed();
+         fps = count_to_read / (elapsed_ms / 1000.0);
+         fps_calculating = false;
+         emit fpsChanged(fps);
+     }
+```
+
+本体では、唯一の引数として渡されたカメラから100フレームを読み込むことにしています。読み出しが始まる前に、QTimerのインスタンスを作成し、読み出し処理の時間を計るために起動します。forループが実行されると読み込み処理が終了するので、timer.elapsed()式で経過時間をミリ秒単位で取得します。そして、フレーム数を経過時間（秒）で割ることでFPSを算出しています。最後に、fps_calculating フラグを false に設定し、計算した FPS を fpsChanged シグナルとして送出します。
+
+キャプチャースレッドの最後の仕事は、fps_calculatingフィールドがtrueに設定されているときに、runメソッド内の無限ループでcalculateFPSメソッドを呼び出すことです。その無限ループの最後に以下のコードを追加してみましょう。
+
+```cpp
+             if(fps_calculating) {
+                 calculateFPS(cap);
+             }
+```
+
+さて、キャプチャ・スレッドの作業は終わったので、UIスレッドでFPS計算のトリガーとなるアクションを提供し、計算が終わったときにメイン・ウィンドウのステータス・バーに計算されたFPSを表示させましょう。
+
+mainwindow.hのヘッダーファイルで、新しいQActionメソッドと2つのスロットを追加します。
+
+```cpp
+     private slots:
+         // ....
+         void calculateFPS();
+         void updateFPS(float);
+     //...
+     private:
+         //...
+         QAction *calcFPSAction;
+```
+
+このアクションは、ファイルメニューに追加されます。それがクリックされると、新しく追加されたcalculateFPSスロットが呼び出されます。これは、createActionsメソッド内の次のコードによって行われます。
+
+```cpp
+         calcFPSAction = new QAction("&Calculate FPS", this);
+         fileMenu->addAction(calcFPSAction);
+         // ...
+         connect(calcFPSAction, SIGNAL(triggered(bool)), this, SLOT(calculateFPS()));
+```
+
+では、アクションが発生したときのcalculateFPSのスロットを見てみましょう。
+
+```cpp
+     void MainWindow::calculateFPS()
+     {
+         if(capturer != nullptr) {
+             capturer->startCalcFPS();
+         }
+     }
+```
+
+これは簡単で、もしキャプチャースレッドオブジェクトがNULLでなければ、そのstartCalcFPSメソッドを呼び出し、runメソッド内の無限ループでFPSを計算するように指示するのです。計算が終了すると、キャプチャースレッドオブジェクトのfpsChangedシグナルが発信されます。発せられたシグナルを受信するためには、それをスロットに接続する必要があります。これは、MainWindow::openCameraメソッド内のコードで行われ、その中でキャプチャリングスレッドを生成しています。キャプチャスレッドが生成されたら、すぐにシグナルをスロットに接続します。
+
+```cpp
+         if(capturer != nullptr) {
+             // ...
+             disconnect(capturer, &CaptureThread::fpsChanged, this, &MainWindow::updateFPS);
+         }
+         // ...
+         connect(capturer, &CaptureThread::fpsChanged, this, &MainWindow::updateFPS);
+         capturer->start();
+         // ...
+```
+
+ご覧のように、シグナルとスロットを接続する以外に、キャプチャースレッドを停止するときに、それらを切断することも行っています。接続されたスロットも、このセクションで新しく追加されたものです。その実装を見てみましょう。
+
+```cpp
+     void MainWindow::updateFPS(float fps)
+     {
+         mainStatusLabel->setText(QString("FPS of current camera is %1").arg(fps));
+     }
+```
+
+単純に、QStringを構築し、それをステータスバーに設定します。
+
+すべての作業が終わったので、アプリケーションをコンパイルして実行し、ウェブカメラのFPSを計算することができます。これは、私の外付けウェブカメラ、Logitech C270の結果です。
+
+![実行結果](img/817c9ee7-fd9e-47cd-beea-0e7bdbcad21d.png)
+
+その結果、現在のカメラのFPSは29.80であるという。これをそのホームページ（[https://support.logitech.com/en_us/product/hd-webcam-c270/specs](https://support.logitech.com/en_us/product/hd-webcam-c270/specs)）で確認してみましょう。
+
+![確認](img/6540fd7c-d6ea-461b-afeb-43a34e5c2935.png)
+
+そのWebページでは、プロバイダーはそのFPSが30だと言っています。私たちの結果は非常に近いです。
+
+*フレームレートを計算する前に、ウェブカメラを開く必要があります。ですから、このアプリケーションでは、Calculate FPSアクションをクリックする前に、Open Cameraアクションをクリックしてください。もうひとつ注目すべきは、フレームレート計算中にキャプチャしたフレームはすべて破棄されるので、計算前にキャプチャした最後のフレームがその間のUI上でフリーズした状態で表示されることです。*
+
+*このように計算されたFPSは理論上の上限であり、ハードウェアのものであって、アプリケーション（ソフトウェア）のものではありません。アプリケーションのFPSを知りたい場合は、runメソッドでループ内のフレームと経過時間をカウントし、そのデータからFPSを算出することができます。*
+
+***
+
+## 動画の保存
