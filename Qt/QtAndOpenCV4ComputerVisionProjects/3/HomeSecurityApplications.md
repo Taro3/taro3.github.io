@@ -629,3 +629,87 @@ openCameraスロットは、新しいキャプチャスレッドを作成する�
 ***
 
 ## Qtのキャプチャと再生
+
+前節では、OpenCV を使って Web カメラからビデオをキャプチャする方法を紹介しました。QtライブラリのQt Multimediaモジュールには、マルチメディアを扱うための多くの機能があり、その中にはWebカメラからビデオをキャプチャするための機能も含まれています。このセクションでは、OpenCVを使う代わりに、これらの機能を使ってウェブカメラからビデオをキャプチャしてみましょう。
+
+Qt を使ってビデオをキャプチャするには、QGraphicsSence と QGraphicsView オブジェクトの代わりに、QCamera クラスのインスタンスと QCameraViewfinder オブジェクトを使えばよいのです。mainwindow.hのヘッダファイルの中で、それらの宣言を見てみましょう。
+
+```cpp
+     #ifdef GAZER_USE_QT_CAMERA
+         QCamera *camera;
+         QCameraViewfinder *viewfinder;
+     #endif
+```
+
+ご覧のように、私たちのコードでは、変数宣言が ifdef/endif ブロックで囲まれています。これにより、アプリケーションのコンパイル中に GAZER_USE_QT_CAMERA マクロが定義されたときのみ、Qt を使用したビデオキャプチャに関するコードが使用されるようになります。それ以外の場合は、アプリケーションは依然としてOpenCVを使用してビデオをキャプチャします。
+
+そして、mainwindow.cppファイルのinitUIメソッドの実装で、先ほど宣言したQCameraとQCameraViewfinderオブジェクトを生成し、設定します。
+
+```cpp
+     #ifdef GAZER_USE_QT_CAMERA
+         QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
+         // I have two cameras and use the second one here
+         camera = new QCamera(cameras[1]);
+         viewfinder = new QCameraViewfinder(this);
+         QCameraViewfinderSettings settings;
+         // the size must be compatible with the camera
+         settings.setResolution(QSize(800, 600));
+         camera->setViewfinder(viewfinder);
+         camera->setViewfinderSettings(settings);
+         main_layout->addWidget(viewfinder, 0, 0, 12, 1);
+     #else
+         imageScene = new QGraphicsScene(this);
+         imageView = new QGraphicsView(imageScene);
+         main_layout->addWidget(imageView, 0, 0, 12, 1);
+     #endif
+```
+
+前述のコードでは、まず、GAZER_USE_QT_CAMERA マクロがコンパイル時に定義されているかどうかをテストします。まず、利用可能なすべてのカメラの情報を取得し、そのうちの1つを選択してQCameraオブジェクトを作成します。
+
+次に、QCameraViewfinderとQCameraViewfinderSettingsを作成します。このオブジェクトは、ビューファインダーオブジェクトを設定するために使用されます。今回のコードでは、ビューファインダーの解像度を設定するために使用しています。ここでの解像度の値は、カメラと互換性のあるものでなければなりません。私のカメラはLogitech C270で、その仕様ページ（[https://support.logitech.com/en_us/product/hd-webcam-c270/specs](https://support.logitech.com/en_us/product/hd-webcam-c270/specs)）を見ると、320 x 240、640 x 480、800 x 600の解像度をサポートしていることがわかります。私はコード内で800 x 600を使用しています。設定とファインダーの準備ができたら、カメラオブジェクトのsetViewfinderメソッドとsetViewfinderSettingsメソッドを呼び出して、それらをカメラオブジェクトに設定します。そして、メインウィンドウのグリッドレイアウトにビューファインダーを追加し、最初の12行を占有させます。
+
+GAZER_USE_QT_CAMERAマクロが定義されていない場合、#elseブランチのコードが使用されます。つまり、Webカメラで撮影したビデオを再生するために、グラフィックシーンとグラフィックビューを引き続き使用します。
+
+ウィジェットの変更が終わったので、openCameraスロットを変更します。
+
+```cpp
+     #ifdef GAZER_USE_QT_CAMERA
+     void MainWindow::openCamera()
+     {
+         camera->setCaptureMode(QCamera::CaptureVideo);
+         camera->start();
+     }
+     #else
+     // The original implementation which uses QThread and OpenCV
+     #endif
+```
+
+GAZER_USE_QT_CAMERA マクロが定義されている場合、Qt を使用している openCamera のバージョンが定義されます。カメラのキャプチャモードを設定し、カメラの start メソッドを呼び出すというシンプルなバージョンです。QCameraクラスが処理してくれるので、スレッドに関する明示的な処理は必要ありません。
+
+最後に、Gazer.pro プロジェクトファイルを更新し、以下の行を追加します。
+
+```qmake
+     # Using OpenCV or QCamera
+     DEFINES += GAZER_USE_QT_CAMERA=1
+     QT += multimediawidgets
+```
+
+DEFINES += GAZER_USE_QT_CAMERA=1 の行は、コンパイル時に GAZER_USE_QT_CAMERA マクロを 1 と定義し、次の QT += multimediawidgets は、プロジェクトに multimediawidgets Qt モジュールを組み込んでいます。プロジェクトファイルが更新されたら、アプリケーションをコンパイルして実行することができます。コンパイルして起動し、「Open Camera」アクションをクリックすると、アプリケーションのメインエリアに動画が表示されます。以下は、私のコンピュータで実行中のアプリケーションのスクリーンショットです。
+
+![実行結果](img/9d020029-883d-4f8f-a0f7-db69d2d05d76.png)
+
+先のスクリーンショットにあるように、QCameraViewfinderの背景が黒いことを除けば、OpenCVを使ったときとほぼ同じ効果が得られます。このように、Qtを使ってビデオをキャプチャすることは、OpenCVを使うよりもずっと簡単です。しかし、私たちのアプリケーションの機能の一つである動きの検出は、Qtライブラリの領域を超えているため、プロジェクトではQtではなく、依然としてOpenCVを使用することにします。Qtは主にGUIライブラリやフレームワークですが、OpenCVは画像や映像の処理を含むコンピュータビジョンの領域に特化しています。開発では、正しいことを行うために正しいツールを使う必要があるので、この2つのライブラリを活用してアプリケーションを構築していきます。
+
+この章の残りの部分では、先ほどプロジェクトファイルに追加した行をコメントアウトしてもらい、OpenCVを使ってビデオ処理作業を続けていきます。
+
+```qmake
+     # Using OpenCV or QCamera
+     # DEFINES += GAZER_USE_QT_CAMERA=1
+     # QT += multimediawidgets
+```
+
+*アプリケーションをコンパイルする際、ソースファイルに変更がなければ、プロジェクトファイルだけが更新されるため、何も起こりません。make cleanコマンドを実行してプロジェクトをクリーンアップしてから、makeコマンドを実行してコンパイルする必要があります。*
+
+***
+
+## FPSの算出
