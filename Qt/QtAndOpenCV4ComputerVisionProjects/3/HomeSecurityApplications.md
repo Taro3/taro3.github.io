@@ -846,3 +846,287 @@ mainwindow.hのヘッダーファイルで、新しいQActionメソッドと2つ
 ***
 
 ## 動画の保存
+
+前項では、パソコンに接続されたカメラにアクセスする方法と、すべてのカメラの情報を取得する方法、カメラから取り込んだビデオをリアルタイムで再生する方法、カメラのフレームレートを計算する方法について学びました。ここでは、カメラからの動画を録画する方法を学びます。
+
+動画の録画の原理は簡単で、カメラからフレームを取り込みながら、それぞれのフレームをある方法で圧縮して動画ファイルに書き出します。OpenCVライブラリのvideoioモジュールに含まれるVideoWriterクラスは、これを便利に行う方法を提供しており、本節ではこれを用いて動画を記録します。
+
+動画を録画する作業を始める前に、動画をどこに保存するか、各動画ファイルの名前をどうするかなど、アプリケーションの準備作業を行う必要があります。これらの前提条件を解決するために、utilities.hという新しいヘッダーファイルの中にUtilitiesというアシスタントクラスを作成することにします。
+
+```cpp
+    class Utilities
+    {
+     public:
+        static QString getDataPath();
+        static QString newSavedVideoName();
+        static QString getSavedVideoPath(QString name, QString postfix);
+    };
+```
+
+ifndef/define イディオムや #include ディレクティブの行を省略しているので、クラス宣言は非常に明快で、その中に 3 つの静的メソッドを用意しています。
+
+* QString getDataPath() メソッドは、ビデオ ファイルを保存するディレクトリを返します。
+* QString newSavedVideoName() メソッドは、保存される動画の新しい名前を生成します。
+* QString getSavedVideoPath(QString name, QString postfix) メソッドは、名前と接尾辞（拡張子名）を受け取り、与えられた名前のビデオファイルの絶対パスを返します。
+
+utilities.cppのソースファイルから、その実装を見てみましょう。
+
+getDataPathメソッドでは、Qtが提供するQStandardPathsクラスを使って、QStandardPaths::StandardLocationsスタティックメソッドをQStardPaths::MoviesLocationで呼び出して、返ったリストの最初の要素を拾って、動画や映画の保存場所である標準場所を得ています。私のラップトップ、Linuxボックスでは、このパスは/home/\<USERNAME>/Videos/です。他のオペレーティングシステムを使用している場合、パスはmacOSでは/Users/\<USERNAME>/Movies、WindowsではC:InthexUsers\<USERNAME>/Videosになるでしょう。そして、そのビデオ・ディレクトリの中にGazerというサブディレクトリを作成し、新しいディレクトリの絶対パスを返します。以下はそのコードです。
+
+```cpp
+    QString Utilities::getDataPath()
+    {
+        QString user_movie_path = QStandardPaths::standardLocations(QStandardPaths::MoviesLocation)[0];
+        QDir movie_dir(user_movie_path);
+        movie_dir.mkpath("Gazer");
+        return movie_dir.absoluteFilePath("Gazer");
+    }
+```
+
+newSavedVideoName メソッドでは、メソッドが呼び出されたときの日付と時刻を使用して、新しい名前を生成しています。時刻は yyyy-MM-dd+HH:mm:ss パターンでフォーマットされ、年から秒まで日付と時刻のほとんどのフィールドが含まれています。
+
+```cpp
+    QString Utilities::newSavedVideoName()
+    {
+        QDateTime time = QDateTime::currentDateTime();
+        return time.toString("yyyy-MM-dd+HH:mm:ss");
+    }
+```
+
+QString getSavedVideoPath(QString name, QString postfix) メソッドでは、単純に、与えられた名前と postfix をドットで連結した新しい文字列を返し、その連結文字列と直前のスラッシュを getDataPath が返す文字列に付加しているだけです。
+
+```cpp
+        return QString("%1/%2.%3").arg(Utilities::getDataPath(), name, postfix);
+```
+
+さて、動画保存場所の準備が終わったので、CaptureThreadクラスに移り、動画保存作業を開始しましょう。
+
+まず、CaptureThreadクラスのpublicセクションにenum型を追加します。
+
+```cpp
+        enum VideoSavingStatus {
+                                STARTING,
+                                STARTED,
+                                STOPPING,
+                                STOPPED
+        };
+```
+
+キャプチャースレッドで動画保存を行う予定です。このenum型は、そのスレッドでの動画保存作業の状況を示すために使用されます。このenumの値については、後ほど紹介します。
+
+次に、CaptureThreadクラスのprivateセクションにいくつかのメンバフィールドを追加します。
+
+```cpp
+        // video saving
+        int frame_width, frame_height;
+        VideoSavingStatus video_saving_status;
+        QString saved_video_name;
+        cv::VideoWriter *video_writer;
+```
+
+frame_width と frame_height 変数は、その名前が非常にわかりやすく、ビデオライターを作成するときに使用されます。video_saving_status フィールドは、これまで述べてきたビデオの保存状態を示す指標ですが、 saved_video_name フィールドは、保存されているビデオの名前を保持します。最後の cv::VideoWriter *video_writer は、キャプチャされたフレームを書き込むビデオライタです。これは、ターゲットとなるビデオファイルにフレームを保存するのに役立ちます。これらのメンバは、コンストラクタの中で初期化されている必要があります。
+
+```cpp
+        frame_width = frame_height = 0;
+        video_saving_status = STOPPED;
+        saved_video_name = "";
+        video_writer = nullptr;
+```
+
+次に、新しいメソッド、シグナル、スロットの宣言を行います。
+
+```cpp
+    public:
+        // ...
+        void setVideoSavingStatus(VideoSavingStatus status) {video_saving_status = status; };
+        // ...
+    signals:
+        // ...
+        void videoSaved(QString name);
+        // ...
+    private:
+        // ...
+        void startSavingVideo(cv::Mat &firstFrame);
+        void stopSavingVideo();
+```
+
+setVideoSavingStatus インラインメソッドは、ビデオの保存状態を設定するために使用されます。録画が停止し、ビデオファイルが完全に保存されると、保存されたビデオファイル名でvideoSavedシグナルが出力されます。ヘッダーファイルで定義されたインラインメソッドや、Qtのメタオブジェクトシステムが担当するシグナルメソッドのため、この2つのメソッドについては、.cppファイル内でそれらの実装を提供する必要はありません。startSavingVideoメソッドとstopSavingVideoメソッドは、ビデオの保存作業が開始または停止されようとするときに呼び出されます。capture_thread.cppソースファイルにあるそれらの実装を見てみましょう。
+
+```cpp
+    void CaptureThread::startSavingVideo(cv::Mat &firstFrame)
+    {
+        saved_video_name = Utilities::newSavedVideoName();
+
+        QString cover = Utilities::getSavedVideoPath(saved_video_name, "jpg");
+        cv::imwrite(cover.toStdString(), firstFrame);
+
+        video_writer = new cv::VideoWriter(
+            Utilities::getSavedVideoPath(saved_video_name, "avi").toStdString(),
+            cv::VideoWriter::fourcc('M','J','P','G'),
+            fps? fps: 30,
+            cv::Size(frame_width,frame_height));
+        video_saving_status = STARTED;
+    }
+```
+
+ご覧のように、startSavingVideo メソッドは引数としてフレームへの参照を受け取ります。そのフレームは、ビデオに保存する最初のフレームです。メソッド本体では、まず動画の新しい名前を生成し、その名前と jpg という文字列をポストフィックスとするパスを取得します。明らかに、拡張子名が jpg であるため、このパスはビデオ ファイルではなく画像用です。そう、まず imwrite 関数を呼び出してビデオの最初のフレームを画像に保存し、この画像が UI に保存されている現在のビデオのカバーとして使用されるのです。カバー画像が保存されると、VideoWriter クラスのインスタンスを、Utilities クラスが生成した適切なビデオ ファイル パスを使用して作成します。ファイルパスの他に、ビデオライターを作成するためにいくつかの引数が必要です。
+
+* フレームを圧縮するために使用する 4 文字のコーデック。ここでは VideoWriter::fourcc('M','J','P','G') を使って motion-jpeg コーデックを取得し、ライターのコンストラクタに渡しています。
+* ビデオファイルのフレームレート。カメラと同じである必要があります。カメラのFPS計算がある場合はそれを使用し、そうでない場合は、私のカメラの仕様からデフォルト値である30を使用します。
+* ビデオフレームの大きさです。CaptureThreadクラスのrunメソッドでサイズ引数を構成するための変数は、後ほど初期化します。
+
+ビデオライターを作成したら、video_saving_statusにSTARTEDをセットしています。
+
+stopSavingVideoメソッドの実装に入る前に、CaptureThreadクラスのrunメソッドで、いくつかの更新を行います。まず、カメラを開いた後、無限ループに入る前に、ビデオフレームの幅と高さを取得し、対応するクラスメンバに代入しています。
+
+```cpp
+        frame_width = cap.get(cv::CAP_PROP_FRAME_WIDTH);
+        frame_height = cap.get(cv::CAP_PROP_FRAME_HEIGHT);
+```
+
+そして、無限ループの中で、フレームをキャプチャした後、キャプチャしたフレームをRGB色順序の画像に変換する前に、以下のコードを追加します。
+
+```cpp
+            if(video_saving_status == STARTING) {
+                startSavingVideo(tmp_frame);
+            }
+            if(video_saving_status == STARTED) {
+                video_writer->write(tmp_frame);
+            }
+            if(video_saving_status == STOPPING) {
+                stopSavingVideo();
+            }
+```
+
+このコードでは、video_saving_status フィールドの値をチェックします。
+
+* STARTING に設定されている場合、startSavingVideo メソッドを呼び出します。このメソッドでは、現在のフレームをカバー画像として保存し、ビデオ ライターを作成し、video_saving_status を STARTED に設定します。
+* STARTEDに設定された場合、キャプチャしたフレームをビデオファイルに書き込みます。
+* STOPPINGに設定されている場合は、stopSavingVideoメソッドを呼び出して、クリーニング処理を行います。
+
+では、stopSavingVideoに戻り、クリーニング作業を見てみましょう。
+
+```cpp
+    void CaptureThread::stopSavingVideo()
+    {
+        video_saving_status = STOPPED;
+        video_writer->release();
+        delete video_writer;
+        video_writer = nullptr;
+        emit videoSaved(saved_video_name);
+    }
+```
+
+video_saving_statusをSTOPPEDに設定し、ビデオライタを解放して削除し、ビデオライタをnullに設定し、VideoSavedシグナルを発信する、という単純なクリーニング作業です。
+
+これまでは、キャプチャ スレッドですべての動画保存処理を完了させていました。次に、これをUIに統合します。そこで、mainwindow.hファイルを開き、いくつかのスロットとフィールドを追加しましょう。
+
+```cpp
+    private slots:
+        // ...
+        void recordingStartStop();
+        void appendSavedVideo(QString name);
+        //...
+    private:
+        // ...
+        QStandardItemModel *list_model;
+```
+
+list_model フィールドは、QListView オブジェクトである saved_list にデータを提供するために使用されます。QListViewクラスはモデル/ビューパターンに従って設計されています。このパターンでは、データを保持するモデルと、データを表現する担当であるビューが分離されています。 そのため、そのデータを提供するためのモデルが必要になります。MainWindow::initUI() メソッドの本文では、saved_list を作成した後、保存した動画を表示するためのリストをセットアップするコードを追加しています。
+
+```cpp
+        // list of saved videos
+        saved_list = new QListView(this);
+        saved_list->setViewMode(QListView::IconMode);
+        saved_list->setResizeMode(QListView::Adjust);
+        saved_list->setSpacing(5);
+        saved_list->setWrapping(false);
+        list_model = new QStandardItemModel(this);
+        saved_list->setModel(list_model);
+        main_layout->addWidget(saved_list, 13, 0, 4, 1);
+```
+
+そのアイテムが大きなサイズでLeftToRightフローを使用してレイアウトされることを保証するために、そのビューモードをQListView::IconModeに設定します。そして、そのリサイズモードをQListView::Adjustに設定し、ビューがリサイズされるたびにそのアイテムがレイアウトされるようにする。spacingとwrappingの設定は、項目と項目の間に適切なスペースがあり、項目がいくつあってもすべて1列に配置されるようにするためのものです。リストビューの設定が終わったら、モデルを作成し、ビューに設定します。
+
+リストビューの設定が終わったので、スロットの設定に移りましょう。recordingStartStopスロットは、recordButtonプッシュボタン用のスロットです。以下のように実装します。
+
+```cpp
+    void MainWindow::recordingStartStop() {
+        QString text = recordButton->text();
+        if(text == "Record" && capturer != nullptr) {
+            capturer->setVideoSavingStatus(CaptureThread::STARTING);
+            recordButton->setText("Stop Recording");
+        } else if(text == "Stop Recording" && capturer != nullptr) {
+            capturer->setVideoSavingStatus(CaptureThread::STOPPING);
+            recordButton->setText("Record");
+        }
+    }
+```
+
+recordButtonボタンのテキストとキャプチャースレッドオブジェクトを確認します。テキストが「Record」で、キャプチャ・スレッドがNULLでなければ、キャプチャ・スレッドのビデオ保存状態をCaptureThread::STARTINGに設定して、録画を開始するように伝え、recordButtonのテキストをStop Recordingに設定します。テキストが録画の停止、キャプチャ・スレッドがNULLでなければ、キャプチャ・スレッドのビデオ保存状態をCaptureThread::STOPINGに設定して録画を停止し、recordButtonのテキストをRecordに戻しています。この実装があれば、MainWindow::initUIメソッドでボタンを作成した後、recordButtonのclickedシグナルにこのスロットを接続することができます。
+
+```cpp
+        connect(recordButton, SIGNAL(clicked(bool)), this, SLOT(recordingStartStop()));
+```
+
+さて、録画ボタンをクリックすることで、動画の録画を開始したり停止したりすることができます。しかし、メインスレッドでは、録画が終了したことをどうやって知ることができるのでしょうか？CaptureThread::videoSaved シグナルは、ビデオ ファイルが完全に保存されると発行されます。新しいMainWindow::appendSavedVideoスロットは、このシグナルのためのものです。このスロットの実装を見てみましょう。
+
+```cpp
+    void MainWindow::appendSavedVideo(QString name)
+    {
+        QString cover = Utilities::getSavedVideoPath(name, "jpg");
+        QStandardItem *item = new QStandardItem();
+        list_model->appendRow(item);
+        QModelIndex index = list_model->indexFromItem(item);
+        list_model->setData(index, QPixmap(cover).scaledToHeight(145), Qt::DecorationRole);
+        list_model->setData(index, name, Qt::DisplayRole);
+        saved_list->scrollTo(index);
+    }
+```
+
+スロットは、CaptureThread::videoSavedシグナルが発せられたときに持ってきたビデオ名で呼び出されます。メソッド本体では、Utilities クラスを使用して、保存されたビデオのカバー画像のパスを生成しています。そして、新しいQStandardItemオブジェクトを作成し、リストビューのモデルであるlist_modelに追加しています。QStandarditemアイテムは、標準的なアイコン画像と文字列を持つアイテムです。そのアイコンはUIデザイン上小さすぎるので、空のアイテムをプレースホルダーとして使用し、後でその位置に大きな画像を装飾データとしてセットします。そのため、空の項目を追加した後、モデル内のインデックスを見つけ、モデルの setData メソッドを呼び出して QPixmap オブジェクトを設定します。このオブジェクトはカバー画像から構築され、見つかった Qt::DecorationRole ロールのインデックスが示す位置に適切なサイズに拡大縮小されて配置されます。同様に、Qt::DisplayRole ロールの表示データとして、同じ位置にビデオ名を設定します。最後に、リストビューを新しく追加されたアイテムのインデックスまでスクロールするように指示します。
+
+MainWindow::appendSavedVideoスロットが完成しましたので、スレッド生成後のMainWindow::openCameraメソッドでキャプチャスレッドのvideoSavedシグナルに接続しましょう。
+
+```cpp
+        connect(capturer, &CaptureThread::videoSaved, this, &MainWindow::appendSavedVideo);
+```
+
+同じ方法で、既存のキャプチャースレッドを停止させながら、それらを切断することを忘れないでください。
+
+```cpp
+            disconnect(capturer, &CaptureThread::videoSaved, this, &MainWindow::appendSavedVideo);
+```
+
+アプリケーションを起動すると、前回起動時にアプリケーションによって保存された多くのビデオファイルが存在する可能性があります。そこで、これらのファイルにデータを入力し、下のリストビューに表示する必要があります。これを行うために MainWindow::populateSavedList という新しいメソッドを作成しましたが、その実装には新しい知識はありません。
+
+* 動画ディレクトリを一覧表示し、すべてのカバーファイルを見つける。これは、第2章「プロ並みの画像編集」でプラグインをロードしている間に行った作業に対するものである。
+* 各カバー画像を一番下のリストビューに追加する。これは、先ほど作成した MainWindow::appendSavedVideo メソッドが行うことです。
+
+ここでは、このメソッドのコードを貼り付けて説明することはしませんので、自分で実装してみてください。もし助けが必要な場合は、付属のGitHubリポジトリにあるコードを自由に参照してください。
+
+これで、コードに関する作業はすべて終了です。アプリケーションをコンパイルする前に、プロジェクトファイルを更新する必要があります。
+
+* 新しいソースファイルを追加します。
+* LIBS 設定に opencv_imgcodecs OpenCV モジュールを追加します。表紙画像を保存するために使用した imwrite 関数は、このモジュールによって提供されているからです。
+
+プロジェクトファイルの変更された行は以下のようなコードになります。
+
+```qmake
+    # ...
+        LIBS += -L/home/kdr2/programs/opencv/lib -lopencv_core -lopencv_imgproc -lopencv_imgcodecs -lopencv_video -lopencv_videoio
+    # ...
+    # Input
+    HEADERS += mainwindow.h capture_thread.h utilities.h
+    SOURCES += main.cpp mainwindow.cpp capture_thread.cpp utilities.cpp
+```
+
+最後に、このアプリケーションをコンパイルして実行します。次のスクリーンショットは、いくつかのビデオファイルを録画した後のアプリケーションの様子です。
+
+![実行結果](img/05d44380-78e5-4e91-9a9f-0fb6b4516f0b.png)
+
+この章とプロジェクトをシンプルで簡潔なものにするために、保存したビデオをアプリケーションで再生する機能は提供していません。もし再生したい場合は、お好みのビデオプレーヤーを使ってください。
+
+***
+
+## OpenCVによるモーション解析
