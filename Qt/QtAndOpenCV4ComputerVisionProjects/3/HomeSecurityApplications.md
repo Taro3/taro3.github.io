@@ -1336,4 +1336,112 @@ OpenCVでは、背景のセグメンテーションを行うための多くの�
 
 ***
 
-### 携帯電話への通知
+### 携帯電話に通知を送る
+
+前項で、動体検知の機能を終了しました。しかし、動きを検知しても、その動きを動画で保存する以外に、メッセージを印刷するだけです。ホームセキュリティのアプリケーションとしては、これでは十分ではありません。動体検知をしたときに、自分がどこにいて、何をしているのかがわかるようにする必要があります。ここでは、IFTTTのサービスを使って、携帯電話に通知を送る方法を紹介します。
+
+IFTTTは、さまざまな便利なサービスをつなげるプラットフォームです。IFTTTのアプレットを作成することで、選んだ2つのサービスを、これとこれというようにつなげることができます。これの側でイベントが発生すれば、そのサービスが起動する。これがIFTTTの意味する「if this then that」です。
+
+IFTTTを使って通知を送るには、IFTTTのアカウントが必要です。アカウントは、[https://ifttt.com](https://ifttt.com) で作ることができます。アカウントがあれば、Webhookをthisサービス、携帯電話通知サービスをthatサービスとするアプレットを作成することができる。それでは、順を追ってアプレットを作成していきましょう。アプレットを作るには、全部で8つのステップがありますが、次のスクリーンショットは、最初の4つのステップを示しています。
+
+![IFTTT](img/df9672ec-4441-4b13-bbab-9ccd27b56360.png)
+
+最後の4つのステップをご紹介します。
+
+![IFTTT](img/815a7d21-751d-4ef2-951e-3f062b89e23d.png)
+
+各ステップで何らかのアクションを起こす必要があります。
+
+1. ログインして、右上のユーザー名をクリックし、ドロップダウンメニューの[新しいアプレット]をクリックします。
+2. 青い +this リンクをクリックします。
+3. 「サービスの選択」ページで、テキストボックスに webhooks と入力し、「Webhooks」の四角をクリックします。次のページで「Web リクエストを受信する」を選択します。
+4. Complete trigger fieldsページで、イベント名としてMotion-Detected-by-Gazerを入力し、Create triggerボタンをクリックします。
+5. 新しいページで「+that」リンクをクリックします。
+6. Choose action serviceページで、テキストボックスにnotifiと入力し、Notificationsの四角を選択し、次のページでSend a notification from the IFTTT appを選択します。
+7. Complete action fieldsのページでは、テキストエリアがあります。テキストエリアに「Motions are just detected by the Gazer application from the camera {{Value1}} on {{Value2}}, please check it up! を入力し、Create actionボタンをクリックします。
+8. Review and finishページで、アプレットに名前を付けてFinishボタンをクリックします。私は Gazer Notification と名付けましたが、好きな名前を付けてください。
+
+アプレットが作成されたので、IFTTTでWebhookのエンドポイントを探しましょう。
+
+![IFTTT](img/f2be8abf-a161-489a-a4a8-a4f6f116d1cb.png)
+
+IFTTTのwebhookサービスの設定ページにアクセスします。ブラウザで[https://ifttt.com/services/maker_webhooks/settings](https://ifttt.com/services/maker_webhooks/settings) にアクセスすると、そのページを見つけることができます。このページには、先ほどのスクリーンショットで示した手順9のような情報が記載されています。そのページのURLをコピーしてアクセスすると、ステップ10のようなページに移動します。このページでは、どのようにWebhookを起動するかが示されています。このページのURLの中にテキストボックスがあることにお気づきでしょうか。そこに、アプレットを作成したときに使用したイベント名、Motion-Detected-by-Gazer を入力してください。こうすることで、Webhookのエンドポイントである完全なURLが得られます。これは [https://maker.ifttt.com/trigger/Motion-Detected-by-Gazer/with/key/-YOUR_KEY](https://maker.ifttt.com/trigger/Motion-Detected-by-Gazer/with/key/-YOUR_KEY) のようなものです。このエンドポイントはすぐにウェブリクエストを行うので覚えておいてください。
+
+IFTTTでアカウントを作成したので、次にIFTTTアプリを携帯電話にインストールする必要があります。Apple App StoreやGoogle PlayでIFTTTというキーワードで検索すれば、アプリを見つけることができます。アプリをインストールしたら、作成したアカウントでログインし、携帯電話の通知を受け取れるようにする必要があります。
+
+では、アプリケーションに戻り、エンドポイントにどのようにリクエストを行うか学びましょう。これは、Utilitiesクラスで行います。utilities.h ヘッダーファイルで、新しい静的メソッドを追加します。
+
+```cpp
+         static void notifyMobile(int cameraID);
+```
+
+そして、utilities.cppのソースファイルに、以下のように実装します。
+
+```cpp
+     void Utilities::notifyMobile(int cameraID)
+     {
+         // CHANGE endpoint TO YOURS HERE:
+         QString endpoint = "https://maker.ifttt.com/trigger/...";
+         QNetworkRequest request = QNetworkRequest(QUrl(endpoint));
+         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+         QJsonObject json;
+         json.insert("value1", QString("%1").arg(cameraID));
+         json.insert("value2", QHostInfo::localHostName());
+         QNetworkAccessManager nam;
+         QNetworkReply *rep = nam.post(request, QJsonDocument(json).toJson());
+         while(!rep->isFinished()) {
+             QApplication::processEvents();
+         }
+         rep->deleteLater();
+     }
+```
+
+このメソッドでは、QNetworkRequestオブジェクトを作成し、IFTTTが要求するように、そのコンテンツタイプヘッダーを「application/json」に設定します。次に、WebhookにポストするJSONを作成します。ステップ7でアプレットを作成する際に入力したメッセージを覚えていますか？そのメッセージの中の{{Value1}}と{{Value2}}という文字列はプレースホルダーで、投稿するJSONの中のvalue1とvalue2のフィールドに置き換えられます。ここでは、value1の値としてカメラのインデックスを、value2の値としてホスト名を使用しています。次に、ネットワークアクセスマネージャを作成し、その post メソッドにリクエストオブジェクトと JSON オブジェクトを渡して POST リクエストを実行します。最後に必要なことは、リクエストが完了するのを待つことです。完了したら、イベントループの次のラウンドで reply オブジェクトを削除するように、Qt の deleteLater メソッドを呼び出すことで指示します。
+
+このメソッドは、動きがあったときに呼び出すことにしましょう。Web リクエストを発行してそれが完了するのを待つのは非常に遅い処理なので、キャプチャ・スレッドでそれを行うことはできません。もしそうすれば、ビデオフレームの処理がブロックされてしまいます。幸いなことに、Qt は関数を別のスレッドで実行する方法を提供しています。
+
+```cpp
+         if(!motion_detected && has_motion) {
+             motion_detected = true;
+             setVideoSavingStatus(STARTING);
+             qDebug() << "new motion detected, should send a notification.";
+             QtConcurrent::run(Utilities::notifyMobile, cameraID);
+         } else if (motion_detected && !has_motion) {
+             // ...
+```
+
+このように、QtConcurrent::run 関数を使用すると、Qt ライブラリが提供するスレッドプールからピックアップしたスレッドで関数を簡単に実行することができます。
+
+この機能を実現するために、2つの新しいQtモジュールをプロジェクトにインポートします：ネットワークモジュールとコンカレントモジュールです。プロジェクトをコンパイルする前に、プロジェクト・ファイルでそのことをビルド・システムに伝えなければなりません。
+
+```qmake
+     QT += core gui multimedia network concurrent
+```
+
+では、プロジェクトをコンパイルしてアプリケーションを実行し、携帯電話にIFTTTアプリをインストールします。動きを検知すると、携帯電話に通知が届きます。私のはこんな感じです。
+
+![実行結果](img/7c5b9542-5c32-4f0d-88dd-ffc1343882ab.png)
+
+*携帯電話にIFTTTアプリをインストールし、その通知を有効にしてから、IFTTTアカウントでログインすることを忘れないでください。そうしないと、通知が届きません。*
+
+***
+
+## まとめ
+
+この章では、カメラの映像を取り込み、再生、保存するための新しいデスクトップアプリケーション、Gazerを作成しました。また、ホームセキュリティのために、動体検知の機能も追加しました。UI は Qt で構築し、ビデオ処理機能は OpenCV で開発しました。この2つのパーツは、有機的にアプリケーションに統合されました。このアプリケーションの開発では、Qtのレイアウトシステムを使ってUI上にウィジェットを配置する方法、マルチスレッド技術を使ってUIのメインスレッドとは異なるスレッドで遅い処理を行う方法、OpenCVを使って動きを検出する方法、HTTPリクエストを発行してIFTTT経由で携帯電話に通知を送る方法について学びました。
+
+次の章では、画像や動画からリアルタイムに顔を認識する方法を学び、検出された顔に面白いマスクをかぶせることができる面白いアプリケーションを作ります。
+
+***
+
+## 問題集
+
+この章に関する知識を試すために、以下の問題に挑戦してください。
+
+1. カメラではなく、ビデオファイルから動きを検出することはできますか？その方法は？
+2. ビデオキャプチャーのスレッドとは別のスレッドでモーション検出を行うことはできますか？なぜ、またはなぜそうしないのか？
+3. IFTTTでは、送信する通知に画像を含めることができます。IFTTTのこの機能を使って、携帯電話に通知を送る際に、検出した動きと一緒に画像を送るにはどうしたらよいでしょうか？
+
+***
+
+**[次へ](../4/FunWithFaces.md)**
