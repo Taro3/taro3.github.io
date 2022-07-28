@@ -221,4 +221,119 @@ utilities.cppでは、ヘッダーファイルの変更に合わせて名前の�
 
 ***
 
-### 写真撮影
+### 写真を撮る
+
+前節では、Gazerから動画保存機能と動体検知機能を削除し、新しいアプリケーション「Facetious」の基盤を作りました。また、写真撮影のためのいくつかのスタブを新しいアプリケーションに配置しました。このサブセクションでは、写真撮影の機能を完成させます。
+
+ビデオ撮影機能に比べ、写真撮影は非常にシンプルです。まず、capture_thread.h ヘッダーファイルで、CaptureThread クラスにフィールドと多くのメソッドを追加しています。
+
+```cpp
+     public:
+         // ...
+         void takePhoto() {taking_photo = true; }
+         // ...
+     signals:
+         // ...
+         void photoTaken(QString name);
+
+     private:
+         void takePhoto(cv::Mat &frame);
+
+     private:
+         // ...
+         // take photos
+         bool taking_photo;
+```
+
+bool taking_photo フィールドは、キャプチャスレッドが現在のフレームを写真としてハードディスクに保存すべきかどうかを示すフラグであり、void takePhoto() public inline メソッドはこのフラグを true に設定するためのメソッドである。このメソッドは、ユーザがメインウィンドウのシャッターボタンをクリックしたときにメインスレッドで呼び出すことにします。写真を撮るたびに void photoTaken(QString name) シグナルが発行され、Qt メタオブジェクトシステムがその実装を担当します。void takePhoto(cv::Mat &frame) private メソッドは，フレームを写真としてディスクに保存するためのメソッドで， capture_thread.cpp のソースファイルで実装する必要があるのはこのメソッドのみです． その実装を見てみましょう．
+
+```cpp
+     void CaptureThread::takePhoto(cv::Mat &frame)
+     {
+         QString photo_name = Utilities::newPhotoName();
+         QString photo_path = Utilities::getPhotoPath(photo_name, "jpg");
+         cv::imwrite(photo_path.toStdString(), frame);
+         emit photoTaken(photo_name);
+         taking_photo = false;
+     }
+```
+
+メソッド本体では、Utilitiesクラスで書いた関数を使って新しい名前を生成し、生成した名前で保存する写真のパスを取得し、拡張子名をjpgとしています。そして、OpenCVのimgcodecsモジュールのimwrite関数を使って、フレームをJPEG画像ファイルとして、指定したパスのディスクに書き込んでいます。写真が保存された後、写真名とともに photoTaken シグナルを出力します。このシグナルに興味を持つ人がいれば、スロットを接続する必要があり、シグナルが発せられた瞬間にそのスロットが呼ばれます。メソッド本体の最後では、taking_photoフラグをfalseに戻しています。
+
+CaptureThread::takePhoto(cv::Mat &frame) メソッドが実装されたので、 CaptureThread::run() メソッド内のキャプチャ無限ループでこれを呼び出してみましょう。
+
+```cpp
+             if(taking_photo) {
+                 takePhoto(tmp_frame);
+             }
+```
+
+このコード片では、写真を撮るべきかどうかを調べるために taking_photo フラグをチェックしています。もしこれが真であれば、 takePhoto(cv::Mat &frame) メソッドを呼び出して、現在のフレームを写真として保存します。このコード片は、 tmp_frame が空でないチェックを通過した後、そのフレームの色順序が BGR から RGB に変換される前に配置されなければならず、これにより、imwrite 関数に渡すことができる適切な色順序のフレームであることが確認されます。
+
+CaptureThreadクラスで最後に行うことは、そのコンストラクタでtaking_photoフラグをfalseに初期化することです。
+
+さて、ユーザーインターフェイスに移りましょう。まず、mainwindow.h で MainWindow クラスに新しいプライベートスロットを追加します。
+
+```cpp
+     private slots:
+         // ...
+         void takePhoto();
+```
+
+このスロットは、シャッターボタンのシグナルに接続されることになります。その実装をmainwindow.cppのソースファイルから見てみましょう。
+
+```cpp
+     void MainWindow::takePhoto()
+     {
+         if(capturer != nullptr) {
+             capturer->takePhoto();
+         }
+     }
+```
+
+単純な作業です。このメソッドでは、CaptureThreadのインスタンスであるcapturerのvoid takePhoto()メソッドを呼び出して、nullでなければ写真を撮るように指示しています。そして、MainWindow::initUI()メソッドで、シャッターボタンを作成した後、このスロットをshutterButtonのclickedシグナルに接続します。
+
+```cpp
+         connect(shutterButton, SIGNAL(clicked(bool)), this, SLOT(takePhoto()));
+```
+
+これまでの作業で、キャプチャースレッドに写真を撮るように指示することができるようになりました。しかし、写真が撮影されたとき、メインウィンドウはどうやってそれを知るのでしょうか？CaptureThread::photoTaken シグナルと MainWindow::appendSavedPhoto スロットの間の接続によって実現されます。 この接続は、MainWindow::openCamera()メソッドでキャプチャスレッドのインスタンスが生成された後に行います。
+
+```cpp
+         connect(capturer, &CaptureThread::photoTaken, this, &MainWindow::appendSavedPhoto);
+```
+
+また、同じメソッドで閉じたキャプチャースレッドインスタンスの前に切断することを忘れないでください。
+
+```cpp
+             disconnect(capturer, &CaptureThread::photoTaken, this, &MainWindow::appendSavedPhoto);
+```
+
+さて、MainWindow::appendSavedPhoto(QString name) スロットが何をするのかを見てみましょう。前のサブセクションで、私たちはこのスロットに空のボディを与えました。さて、このスロットはその責任を負わなければなりません。
+
+```cpp
+     void MainWindow::appendSavedPhoto(QString name)
+     {
+         QString photo_path = Utilities::getPhotoPath(name, "jpg");
+         QStandardItem *item = new QStandardItem();
+         list_model->appendRow(item);
+         QModelIndex index = list_model->indexFromItem(item);
+         list_model->setData(index, QPixmap(photo_path).scaledToHeight(145), Qt::DecorationRole);
+         list_model->setData(index, name, Qt::DisplayRole);
+         saved_list->scrollTo(index);
+     }
+```
+
+これは、第3章「ホームセキュリティの応用」でGazerアプリケーションの保存ビデオリストに新しく録画したビデオのカバー画像を追加したときに行ったことと非常によく似ています。したがって、ここではこのコードの一部を一行ずつ説明することはしません。
+
+もうひとつ、アプリケーションの起動中に、撮影したすべての写真を保存済み写真リストに登録するためのメソッド、MainWindow::populateSavedList()を実装する必要があります。このメソッドも、Gazerアプリケーションで保存された動画をポピュレートするために使用したメソッドと非常によく似ているので、実装はおまかせします。もし困ったことがあれば、GitHubにある本書の付属コードリポジトリを参照してください。このサブセクションのすべての変更は、このコミットにあります: [https://github.com/PacktPublishing/Qt-5-and-OpenCV-4-Computer-Vision-Projects/commit/744d445ad4c834cd52660a85a224e48279ac2cf4](https://github.com/PacktPublishing/Qt-5-and-OpenCV-4-Computer-Vision-Projects/commit/744d445ad4c834cd52660a85a224e48279ac2cf4)
+
+さて、もう一度アプリケーションをコンパイルして実行してみましょう。アプリケーションがメインウィンドウを表示した後、FileメニューのOpen Cameraアクションをクリックしてカメラを開き、シャッターボタンをクリックして写真を撮影します。これらのアクションの後、私のメインウィンドウは次のスクリーンショットのようになります。
+
+![実行結果](img/641e3c74-b3f5-43f2-8c2e-699b73dc4957.png)
+
+この章では、新しいアプリケーションの基本的な機能を設定します。次章では、OpenCVを用いて、撮影したフレームからリアルタイムに顔を検出します。
+
+***
+
+## カスケード分類器による顔検出
