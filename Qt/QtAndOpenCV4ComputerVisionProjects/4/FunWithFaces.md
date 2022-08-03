@@ -336,4 +336,127 @@ CaptureThreadクラスで最後に行うことは、そのコンストラクタ�
 
 ***
 
-## カスケード分類器による顔検出
+## カスケード分類器を用いた顔検出
+
+前節では、カメラの映像を再生したり写真を撮ったりできる新しいアプリケーション、Facetiousを作成しました。本章では、このアプリケーションに新しい機能を追加し、OpenCVライブラリを使ってリアルタイムにビデオ内の顔を検出する方法を紹介します。
+
+顔検出には、OpenCVが提供するカスケード分類器と呼ばれる機能を使用します。カスケード分類器は、顔の検出だけでなく、物体の検出にも使われます。分類器としては、画像中のある注目領域がある種の物体であるか否かを教えてくれます。この分類器は、いくつかの単純な分類器（段階）を含んでおり、その後、これらの単純な分類器を注目領域に適用します。そして、いずれかの簡易分類器が否定的な結果を出した場合、その注目領域には注目すべきオブジェクトが含まれないと判断します。一方、すべての段階が成功すれば、その領域から対象物を発見したと言う。これがカスケード（cascade）の意味です。
+
+カスケード分類器を使用する前に、まず学習させる必要があります。学習過程では、ある種類のオブジェクトの多くのサンプルビュー（正の例と呼ばれる）と、その種類のオブジェクトを含まない多くの画像（負の例）を分類器に与える。例えば、カスケード分類器を人間の顔の検出に役立てたい場合、人間の顔を含む画像と人間の顔を含まない画像を多数用意して学習させる必要があります。カスケード分類器は、これらの正例と負例を用いて、画像中のある領域がある種の物体を含んでいるかどうかを学習します。
+
+この学習プロセスは複雑ですが、幸いなことにOpenCVでは、事前に学習された多くのカスケード分類器がリリースされています。後ほど例に挙げる Haar 分類器を考えてみましょう。インストールされた OpenCV ライブラリのデータディレクトリを調べると、その中にたくさんの事前学習された分類器データがあることが分かります。
+
+```sh
+    # if you use a system provided OpenCV, the path is /usr/share/opencv/haarcascades
+    $ ls /home/kdr2/programs/opencv/share/opencv4/haarcascades/
+    haarcascade_eye_tree_eyeglasses.xml haarcascade_lefteye_2splits.xml
+    haarcascade_eye.xml haarcascade_licence_plate_rus_16stages.xml
+    haarcascade_frontalcatface_extended.xml haarcascade_lowerbody.xml
+    haarcascade_frontalcatface.xml haarcascade_profileface.xml
+    haarcascade_frontalface_alt2.xml haarcascade_righteye_2splits.xml
+    haarcascade_frontalface_alt_tree.xml haarcascade_russian_plate_number.xml
+    haarcascade_frontalface_alt.xml haarcascade_smile.xml
+    haarcascade_frontalface_default.xml haarcascade_upperbody.xml
+    haarcascade_fullbody.xml
+```
+
+学習済みデータファイルは、ファイル名で簡単に見分けることができます。frontalfaceを含むファイル名は、顔検出に必要なものです。
+
+物体検出、特に顔検出に関する知識を得たところで、ビデオフィードから顔を検出するためのアプリケーションに戻りましょう。
+
+まず、Facetious.pro のプロジェクトファイルを更新します。
+
+```qmake
+    # ...
+    unix: !mac {
+        INCLUDEPATH += /home/kdr2/programs/opencv/include/opencv4
+        LIBS += -L/home/kdr2/programs/opencv/lib -lopencv_core -lopencv_imgproc -lopencv_imgcodecs -lopencv_video -lopencv_videoio -lopencv_objdetect
+    }
+
+    # ...
+    DEFINES += OPENCV_DATA_DIR=\\\"/home/kdr2/programs/opencv/share/opencv4/\\\"
+    #...
+```
+
+LIBS キーの設定では、これから使用する顔検出を含む物体検出の機能は、この OpenCV コアモジュールによって提供されるため、その値に opencv_objdetect OpenCV モジュールを追加しています。変更点の 2 つ目は、OpenCV のインストール先であるデータディレクトリを定義するマクロ定義です。このマクロを使用して、事前学習された分類器データをコードに読み込みます。
+
+次に、capture_thread.h ヘッダファイルに移動します。このファイルでは、CaptureThread クラスに private メソッドと private メンバフィールドを追加しています。
+
+```cpp
+    #include "opencv2/objdetect.hpp"
+    //...
+
+    private:
+        // ...
+        void detectFaces(cv::Mat &frame);
+
+    private:
+        // ...
+
+        // face detection
+        cv::CascadeClassifier *classifier;
+```
+
+このメンバフィールドが顔検出に使うカスケード分類器であり、顔検出の作業は新しく追加されたdetectFacesメソッドで行われることは明らかです。
+
+では、capture_thread.cppのソースファイルを見て、そこでカスケード分類器をどのように使うか見てみましょう。まず、CaptureThread::runメソッドの本体を更新します。
+
+```cpp
+        classifier = new cv::CascadeClassifier(OPENCV_DATA_DIR "haarcascades/haarcascade_frontalface_default.xml");
+
+        while(running) {
+            cap >> tmp_frame;
+            if (tmp_frame.empty()) {
+                break;
+            }
+
+            detectFaces(tmp_frame);
+            // ...
+        }
+        cap.release();
+        delete classifier;
+        classifier = nullptr;
+```
+
+このメソッドを入力して Web カメラを開いた後、cv::CascadeClassifier のインスタンスを生成し、classifier メンバフィールドに代入しています。インスタンスを生成する際に、コンストラクタに事前に学習された分類器のデータパスを渡します。このパスは、プロジェクトファイルで定義されている OPENCV_DATA_DIR マクロを用いて構築されます。また、顔検出用の分類器を作成するために、OpenCV のデータディレクトリの下にある haarcascades/haarcascade_frontalface_default.xml ファイルを使用します。
+
+runメソッド内の無限ループでは、新たに追加したdetectFacesメソッドを、開いたWebカメラからキャプチャしたばかりのフレームで呼び出しています。
+
+無限ループ終了後、キャプチャスレッドが終了する前に、クリーニングを行い、開いたカメラを解放し、分類器を削除し、nullに設定します。
+
+最後に、detectFacesメソッドの実装を見てみましょう。
+
+```cpp
+    void CaptureThread::detectFaces(cv::Mat &frame)
+    {
+        vector<cv::Rect> faces;
+        cv::Mat gray_frame;
+        cv::cvtColor(frame, gray_frame, cv::COLOR_BGR2GRAY);
+        classifier->detectMultiScale(gray_frame, faces, 1.3, 5);
+
+        cv::Scalar color = cv::Scalar(0, 0, 255); // red
+        for(size_t i = 0; i < faces.size(); i++) {
+            cv::rectangle(frame, faces[i], color, 1);
+        }
+    }
+```
+
+このメソッドの本体では、まず検出された顔の外接矩形を保存するための cv::Rect ベクトルを宣言します。次に、顔検出処理はRGBの色の特徴とは無関係であるため、入力フレームをグレースケール画像に変換します。そして、分類器のdetectMultiScaleメソッドを呼び出します。このメソッドの最初の引数は、顔を検出したいグレースケールの入力フレームです。第2引数は矩形ベクトルへの参照で、先ほど定義した検出された顔の外接矩形を保存するために使用します、第3引数は、画像スケールごとに画像サイズをどれだけ縮小するかを指定するためのもので、一方の顔がカメラに近いという理由だけで他方の顔より大きく見える場合に生じる大きさの誤認識を補償するために作られる。この検出アルゴリズムでは、移動ウィンドウを使用してオブジェクトを検出します。4番目の引数は、顔が検出されたと宣言する前に、現在のオブジェクトの近くでいくつのオブジェクトが検出されたかを定義するためのものです。
+
+detectMultiScale メソッドが返った後、検出された顔の領域をすべて faces vector に取得し、キャプチャしたフレームにこれらの長方形を 1 ピクセルの赤い縁取りで描画します。
+
+さて、顔検出のための機能はこれで完了です。では、プロジェクトをコンパイルして実行してみましょう。開いたウェブカメラの目線の先に誰かが入ってくると、その人の顔の周りに赤い矩形が表示されます。
+
+![実行結果](img/03184846-d6cf-47d8-807f-3f1e10720b22.png)
+
+今回のコードでは、カスケード分類器を作成する際に、haarcascade_frontalface_default.xml ファイルを使用しました。しかし、OpenCVのデータディレクトリを見ると、haarcascade_frontalface_alt.xml, haarcascade_frontalface_alt2.xml, haarcascade_frontalface_alt_tree.xml など、前顔検出のためのファイルであることがわかるファイルが複数あることに気づかれるかもしれません。なぜhaarcascade_frontalface.xmlを選び、他を選ばないのでしょうか？この事前学習済みモデルデータは、異なるデータセット、または異なる設定で学習されます。詳細はこれらのXMLファイルの冒頭にコメントとして記述されていますので、必要であればそちらのドキュメントを参照してください。モデルファイルを選択するもう一つの簡単な方法は、すべてのモデルファイルを試し、あなたのデータセットでテストし、精度と再現率を計算し、あなたのケースに最適なものを選択することです。
+
+Haarカスケード分類器以外にも、Local binary pattern (LBP) カスケード分類器という名前のカスケード分類器があり、これはOpenCVのリリースにデフォルトで同梱されています。この分類器の学習済みモデルデータは、OpenCV のインストールディレクトリのデータパスにある lbpcascades ディレクトリに格納されています。LBP カスケード分類器は、Haar よりも高速ですが、精度も低くなっています。以下の表で、両者を比較することができます。
+
+![表](img/6f842a64-f44d-4238-9b7c-0693c8b9cb92.png)
+
+これらのアルゴリズムと学習済みモデルデータを自由に試して、ご自分のケースに合った最適なものを見つけてください。
+
+***
+
+## 顔のランドマーク検出
