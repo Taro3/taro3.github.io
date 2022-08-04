@@ -459,4 +459,146 @@ Haarカスケード分類器以外にも、Local binary pattern (LBP) カスケ�
 
 ***
 
-## 顔のランドマーク検出
+## 顔のランドマークの検出
+
+前節では、OpenCVが提供するカスケード分類器を用いて顔を検出することで、画像中のどの領域が顔であるかを知ることができました。しかし、矩形領域だけでは、顔の目、眉、鼻がどこにあるのか、といった顔の詳細まではわかりません。顔認識技術では、このような詳細な情報を顔のランドマークと呼んでいます。本章では、このような顔のランドマークを検出する方法を探します。
+
+残念ながら、OpenCVのコアモジュールは顔のランドマークを検出するアルゴリズムを提供していないので、OpenCVの追加モジュールであるfaceモジュールに頼ることになります。
+
+faceモジュールを使用する前に、このモジュールがコンピュータにインストールされていることを確認する必要があります。第2章「プロ並みの画像編集」の「OpenCVをソースからビルドしてインストールする」では、OpenCV v4.0.0を追加モジュールのないソースからビルドしてインストールしました。ここで、追加モジュールを含めて再構築し、再インストールしてみましょう。
+
+前回ビルドした際に、OpenCVのソースをダウンロードして解凍し、あるディレクトリに配置しました。では、OpenCVの追加モジュールのソースを、そのリリースページ（[https://github.com/opencv/opencv_contrib/releases](https://github.com/opencv/opencv_contrib/releases)）からダウンロードしてみましょう。ダウンロードして使用したコアモジュールのバージョンはv4.0.0なので、同じバージョンのエクストラモジュールを [https://github.com/opencv/opencv_contrib/archive/4.0.0.zip](https://github.com/opencv/opencv_contrib/archive/4.0.0.zip) からダウンロードします。ダウンロードしたソースを解凍し、解凍したコアモジュールのソースと同じディレクトリに置き、ターミナルでビルドします。
+
+```sh
+    $ ls ~
+    opencv-4.0.0 opencv_contrib-4.0.0 # ... other files
+    $ cd ~/opencv-4.0.0 # path to the unzipped source of core modules
+    $ mkdir release # create the separate dir
+    $ cd release
+    $ cmake -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib-4.0.0/modules \
+      -D CMAKE_BUILD_TYPE=RELEASE \
+      -D CMAKE_INSTALL_PREFIX=$HOME/programs/opencv ..
+    # ... output of cmake ...
+    # rm ../CMakeCache.txt if it tells you are not in a separate dir
+    $ make
+    # ... output of make ...
+    $ make install
+```
+
+このように、前回のインストールとは異なり、cmake コマンドに -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib-4.0.0/modules オプションを追加し、追加モジュールのソースが存在する場所を指定しています。これらのコマンドが終了した後、faceモジュールが正しくインストールされているかどうかを確認します。
+
+```sh
+    $ ls ~/programs/opencv/include/opencv4/opencv2/face
+    bif.hpp facemark.hpp facerec.hpp
+    face_alignment.hpp facemarkLBF.hpp mace.hpp
+    facemarkAAM.hpp facemark_train.hpp predict_collector.hpp
+    $ ls ~/programs/opencv/lib/libopencv_face*
+    /home/kdr2/programs/opencv/lib/libopencv_face.so
+    /home/kdr2/programs/opencv/lib/libopencv_face.so.4.0
+    /home/kdr2/programs/opencv/lib/libopencv_face.so.4.0.0
+    $
+```
+
+先のシェルコマンドのように、ヘッダファイルや共有オブジェクトがOpenCVのインストールパスにあれば、OpenCVの追加モジュールが正常にインストールされたことになります。
+
+Faceモジュールがインストールされたら、Webブラウザで[https://docs.opencv.org/4.0.0/d4/d48/namespacecv_1_1face.html](https://docs.opencv.org/4.0.0/d4/d48/namespacecv_1_1face.html)、そのドキュメントを開き、どのような機能を提供しているか見てみましょう。
+
+FacemarkKazemi、FacemarkAAM、FacemarkLBFクラスは、顔のランドマークを検出するために利用されるアルゴリズムです。これらのアルゴリズムはすべて機械学習ベースのアプローチであるため、データセット操作やモデル学習のための設備も充実しています。機械学習モデルの学習は本章の範囲外ですので、本節では、やはり事前に学習させたモデルを使用することにします。
+
+今回のアプリケーションでは、FacemarkLBFクラスで実装されているアルゴリズムを使用します。事前学習済みモデルのデータファイルは、[https://raw.githubusercontent.com/kurnianggoro/GSOC2017/master/data/lbfmodel.yaml](https://raw.githubusercontent.com/kurnianggoro/GSOC2017/master/data/lbfmodel.yaml) からダウンロードすることができます。ダウンロードして、プロジェクトのルートディレクトリにあるdataというサブディレクトリに配置しましょう。
+
+```sh
+    $ mkdir -p data
+    $ cd data/
+    $ pwd
+    /home/kdr2/Work/Books/Qt-5-and-OpenCV-4-Computer-Vision-Projects/Chapter-04/Facetious/data
+    $ curl -O https://raw.githubusercontent.com/kurnianggoro/GSOC2017/master/data/lbfmodel.yaml
+      % Total % Received % Xferd Average Speed Time Time Time Current
+                                     Dload Upload Total Spent Left Speed
+      0 53.7M 0 53.7k 0 0 15893 0 0:59:07 0:59:07 0:00:00 0
+    $ ls
+    lbfmodel.yaml
+```
+
+これで準備作業はすべて終了です。では、顔のランドマーク検出機能の開発を完了させるために、プロジェクトのコードソースに戻りましょう。capture_thread.hに、CaptureThreadクラスのinclude指示文とprivateメンバ・フィールドを新たに追加します。
+
+```cpp
+    // ...
+    #include "opencv2/face/facemark.hpp"
+    // ...
+    class CaptureThread : public QThread
+    {
+        // ...
+    private:
+        // ...
+        cv::Ptr<cv::face::Facemark> mark_detector;
+    };
+```
+
+cv::Ptr\<cv::face::Facemark\> 型のメンバフィールド mark_detector は、顔のランドマークを検出するために利用される検出器です。この検出器は、ソースファイルcapture_thread.cppのCaptureThread::runメソッドでインスタンス化されます。
+
+```cpp
+        classifier = new cv::CascadeClassifier(OPENCV_DATA_DIR "haarcascades/haarcascade_frontalface_default.xml");
+        mark_detector = cv::face::createFacemarkLBF();
+        QString model_data = QApplication::instance()->applicationDirPath() + "/data/lbfmodel.yaml";
+        mark_detector->loadModel(model_data.toStdString());
+```
+
+以下のコードにあるように、runメソッドでは、顔検出に用いる分類器を作成した後、cv::face::createFacemarkLBF() を呼び出して FacemarkLBF のインスタンスを作成し、mark_detector メンバフィールドに代入しています。次に、ダウンロードしたプリトレーニングモデルのデータファイルのパスを文字列で作成します。最後に、モデルデータファイルのパスを指定して loadModel メソッドを呼び出し、mark_detector にデータをロードします。この時点で、検出器は使用可能な状態になりました。では、CaptureThread::detectFacesメソッドでどのように使うか見てみましょう。
+
+```cpp
+        vector< vector<cv::Point2f> > shapes;
+        if (mark_detector->fit(frame, faces, shapes)) {
+            // draw facial land marks
+            for (unsigned long i=0; i<faces.size(); i++) {
+                for(unsigned long k=0; k<shapes[i].size(); k++) {
+                    cv::circle(frame, shapes[i][k], 2, color, cv::FILLED);
+                }
+            }
+        }
+```
+
+CaptureThread::detectFaces メソッドの最後で、要素の型が cv::Point2f の vector である変数を宣言しています。1つの顔のランドマークはvector\<cv::Point2f\>型で表現される点の列で、1つのフレームに複数の顔が検出されることがあるので、このように複雑なデータ型を使って表現する必要があるのです。次に、顔のランドマークを検出するために、mark_detector メンバフィールドの fit メソッドを呼び出すことが肝心です。このメソッドには、入力フレーム、カスケード分類器で検出した顔の矩形、そして出力ランドマークを保存するための変数が渡されます。fitメソッドが0以外の値を返した場合、ランドマークの取得に成功したことになります。顔のランドマークが得られたら、検出された顔を繰り返し処理し、各顔のランドマークの点を繰り返し処理し、各点に2ピクセルの円を描いてランドマークを示すようにします。
+
+*前述したように、macOSを使用している場合、コンパイルされたアプリケーションは実際にはFacetious.appというディレクトリであり、QApplication::instance()->applicationDirPath()の表現値はFacetious.app/Contents/MacOSとなります。そのため、macOSでは、lbfmodel.yamlのモデルデータをFacetious.app/Contents/MacOS/dataディレクトリの下に配置する必要があります。*
+
+プロジェクトファイルを除いて、ほとんどすべてが完了しました。LIBS の設定に使用した追加の face モジュールをそのファイルに追加してみましょう。
+
+```qmake
+    unix: !mac {
+        INCLUDEPATH += /home/kdr2/programs/opencv/include/opencv4
+        LIBS += -L/home/kdr2/programs/opencv/lib -lopencv_core -lopencv_imgproc -lopencv_imgcodecs -lopencv_video -lopencv_videoio -lopencv_objdetect -lopencv_face
+    }
+```
+
+さて、いよいよアプリケーションをコンパイルして実行します。以下は、アプリケーションの実行中にこれらのランドマークがどのように見えるかを示しています。
+
+![実行結果](img/71d8484b-bcb6-45b3-9004-4340a7f5ba9a.png)
+
+このように、目、眉、鼻、口、あごに多くのランドマークが得られます。しかし、どの点がどの顔の特徴を表しているのかは、まだわかりません。各顔のランドマークの点の順番が決まっていると考えると、ある点がある顔の特徴を表しているかどうかは、その点のインデックスを利用して判断することができます。そこで、2ピクセルの円ではなく、各点のインデックス番号を描き、その分布を見ることにする。
+
+```cpp
+    // cv::circle(frame, shapes[i][k], 2, color, cv::FILLED);
+    QString index = QString("%1").arg(k);
+    cv::putText(frame, index.toStdString(), shapes[i][k], cv::FONT_HERSHEY_SIMPLEX, 0.4, color, 2);
+```
+
+そして、人間の顔のランドマークを検出して描画すると、次のようになります。
+
+![実行結果](img/23f2644c-ad09-4510-b402-1ae72d87d07f.png)
+
+このように、インデックス番号で表される点は、顔上の位置が固定されているため、以下のような点のインデックスによって、これらの顔の特徴にアクセスすることができる。
+
+* 口は点[48, 68]
+* 右眉は点[17, 22]
+* 左眉は点[22, 27]
+* 右目は点[36, 42]
+* 左目は点[42, 48]
+* 鼻は点[27, 35]
+* 顎は点[0, 17]
+
+次章では、この位置情報を用いて、検出された顔にマスクを適用する。
+
+***
+
+## 顔へのマスクの貼り付け
