@@ -782,3 +782,184 @@ Qt のリソースシステムに関するこの知識を利用して、アプ�
 ***
 
 ### UI上でのマスクの選択
+
+本章の前節では、Webカメラからの映像からリアルタイムに顔や顔のランドマークを検出する作業を多く行ってきました。その際、顔の周囲に矩形を描き、顔のランドマークを2ピクセルの円として描き、3種類のマスクを顔に適用しました。この方法は、OpenCVを使った顔認識の勉強になりますが、ユーザーからすると、顔に描く量が多すぎます。そこで、ここでは、検出された顔に描くマークやマスクを、ユーザーインターフェースのチェックボックスで選択できるようにします。そのために、メインウィンドウのシャッターボタンの下に5つのチェックボックスを追加します。
+
+ユーザー・インターフェースを変更する前に、CaptureThreadクラスにどのマークやマスクを最初に描画するかを選択する機能を持たせる必要があります。そこで、capture_thread.hファイルを開いて、このクラスに何かを追加してみましょう。
+
+```cpp
+     public:
+         // ...
+         enum MASK_TYPE{
+                        RECTANGLE = 0,
+                        LANDMARKS,
+                        GLASSES,
+                        MUSTACHE,
+                        MOUSE_NOSE,
+                        MASK_COUNT,
+         };
+
+         void updateMasksFlag(MASK_TYPE type, bool on_or_off) {
+             uint8_t bit = 1 << type;
+             if(on_or_off) {
+                 masks_flag |= bit;
+             } else {
+                 masks_flag &= ~bit;
+             }
+         };
+
+     // ...
+     private:
+         // ...
+         bool isMaskOn(MASK_TYPE type) {return (masks_flag & (1 << type)) != 0; };
+     private:
+         // ...
+         uint8_t masks_flag;
+         // ...
+```
+
+まず、マークやマスクの種類を示す列挙型 MASK_TYPE を追加する。
+
+* RECTANGLEの値は0であり、顔の周囲を囲む矩形である。
+* LANDMARKSは値1で顔のランドマークを表す。
+* GLASSESは、値2でメガネの飾り（またはマスク）です。
+* MUSTACHE は口ひげの飾りで、値は 3 です。
+* MOUSE_NOSE はネズミの鼻の飾りで、値は 4 です。
+* MASK_COUNT は、どのマークやマスクにも対応するものではなく、値5（前の値に1を足した値）を持ち、便宜上、マークやマスクの総数を数えるために使用されます。
+
+次に、これらのマークやマスクがオンになっているかオフになっているかの状態を保存するために、uint8_t masks_flag プライベートフィールドを新たに追加する。このフィールドは、マークやマスクがオンになっていれば対応するビットが1になり、そうでなければビットが0になるというビットマップとして使用されます。これは、新しく追加した updateMasksFlag public inlineメソッドで行います。 また、あるマークやマスクがオンになっているかどうかをテストするために、isMaskOnというプライベートインラインメソッドも用意しました。では、これらの機能をcapture_thread.cppのソースファイル内で使ってみましょう。
+
+まず、CaptureThread::runメソッドの中で、detectFacesメソッドを呼び出すところで、条件チェックを追加しています。
+
+```cpp
+             // detectFaces(tmp_frame);
+             if(masks_flag > 0)
+                 detectFaces(tmp_frame);
+```
+
+masks_flag ビットマップがゼロであれば、マークやマスクがオンになっていないことがわかるので、detectFaces メソッドを呼び出す必要はない。しかし、そのビットマップがゼロより大きい場合、顔を検出するためにそのメソッドを呼び出して入力する必要があります。ここで、どのように条件チェックを行うか見てみましょう。
+
+```cpp
+    // ...
+         if (isMaskOn(RECTANGLE)) {
+             for(size_t i = 0; i < faces.size(); i++) {
+                 cv::rectangle(frame, faces[i], color, 1);
+             }
+         }
+     // ...
+ 
+                 if (isMaskOn(LANDMARKS)) {
+                     for(unsigned long k=0; k<shapes[i].size(); k++) {
+                         cv::circle(frame, shapes[i][k], 2, color, cv::FILLED);
+                     }
+                 }
+     // ...
+                 if (isMaskOn(GLASSES))
+                     drawGlasses(frame, shapes[i]);
+                 if (isMaskOn(MUSTACHE))
+                     drawMustache(frame, shapes[i]);
+                 if (isMaskOn(MOUSE_NOSE))
+                     drawMouseNose(frame, shapes[i]);
+     // ...
+```
+
+それらはシンプルでわかりやすい。isMaskOnメソッドで各マスクタイプのフラグをチェックし、そのタイプのマークやマスクを描画するかどうかを判断しているのです。
+
+CaptureThreadクラスの最後の注意点は、コンストラクタでmasks_flagを0に初期化することを忘れないことです。CaptureThreadクラスに関するこれらのことが終わったら、ユーザー・インターフェースを変更するために、メイン・ウィンドウに移りましょう。
+
+mainwindow.hのヘッダーファイルで、新しいプライベートスロットとチェックボックスの配列を追加しています。
+
+```cpp
+     private slots:
+         // ...
+         void updateMasks(int status);
+
+     // ...
+     private:
+         // ...
+         QCheckBox *mask_checkboxes[CaptureThread::MASK_COUNT];
+```
+
+先の配列にはCaptureThread::MASK_COUNTの要素があり、先程のように5個です。updateMasksスロットは、これらのチェックボックスのためのものです。これらのチェックボックスをmainwindow.cppのソースファイルのinitUIメソッドで作成、配置してみましょう。
+
+```cpp
+         // masks
+         QGridLayout *masks_layout = new QGridLayout();
+         main_layout->addLayout(masks_layout, 13, 0, 1, 1);
+         masks_layout->addWidget(new QLabel("Select Masks:", this));
+         for (int i = 0; i < CaptureThread::MASK_COUNT; i++){
+             mask_checkboxes[i] = new QCheckBox(this);
+             masks_layout->addWidget(mask_checkboxes[i], 0, i + 1);
+             connect(mask_checkboxes[i], SIGNAL(stateChanged(int)), this, SLOT(updateMasks(int)));
+         }
+         mask_checkboxes[0]->setText("Rectangle");
+         mask_checkboxes[1]->setText("Landmarks");
+         mask_checkboxes[2]->setText("Glasses");
+         mask_checkboxes[3]->setText("Mustache");
+         mask_checkboxes[4]->setText("Mouse Nose");
+```
+
+initUIメソッドでは、チェックボックス用の新しいグリッドレイアウトを作成するために、シャッターボタンを作成する次の行に前のコードを追加しています。そのグリッドレイアウトは、メインレイアウトの1行、14列目を占有しています。そして、新しく作成したグリッドレイアウトに新しいラベルを追加し、そのテキストをSelect Masks: に設定して、この領域の機能を紹介します。その後、forループで、マスクの種類ごとにチェックボックスを作成してグリッドレイアウトに追加し、そのstateChanged（int）シグナルを新しく追加したupdateMasks（int）スロットに接続します。forループの後、先ほど作成した各チェックボックスに適切なテキストを設定します。
+
+新しく追加した領域がメインレイアウトの14行目を占めることを考えると、同じメソッドで保存された写真用のリストの領域を1行下に移動させる必要があります。
+
+```cpp
+         // main_layout->addWidget(saved_list, 13, 0, 4, 1);
+         main_layout->addWidget(saved_list, 14, 0, 4, 1);
+```
+
+以下はupdateMasksスロットの実装ですが、これから見ていきましょう。
+
+```cpp
+    void MainWindow::updateMasks(int status)
+     {
+         if(capturer == nullptr) {
+             return;
+         }
+
+         QCheckBox *box = qobject_cast<QCheckBox*>(sender());
+         for (int i = 0; i < CaptureThread::MASK_COUNT; i++){
+             if (mask_checkboxes[i] == box) {
+                 capturer->updateMasksFlag(static_cast<CaptureThread::MASK_TYPE>(i), status != 0);
+             }
+         }
+     }
+```
+
+このスロットでは、まず、キャプチャしているスレッドがNULLであるかどうかをチェックします。もしNULLでなければ、シグナルの送り手、つまりQtライブラリからsender関数を呼び出して、このスロットが呼ばれるようにどのチェックボックスがクリックされたかを見つけます。そして、チェックボックス配列 mask_checkboxes の中から sender のインデックスを見つけます。先ほど見つけたインデックスは、正しくMASK_TYPE列挙型の中の対応するマスクの型の値なので、次に、キャプチャするスレッドインスタンスのupdateMasksFlagメソッドを呼び出し、送り手のチェックボックスの状態に従って、マスクをオンまたはオフにします。
+
+最後に、ユーザインタフェースの変更についてですが、MainWindow::openCameraメソッドでキャプチャスレッドの新しいインスタンスを生成して起動した後、すべてのチェックボックスのチェックをはずすように設定します。
+
+```cpp
+         for (int i = 0; i < CaptureThread::MASK_COUNT; i++){
+             mask_checkboxes[i]->setCheckState(Qt::Unchecked);
+         }
+```
+
+さて、ついに私たちの新しいアプリケーション、Facetious のすべての作業が完了しました! それでは、コンパイルと実行を行い、どのように見えるか見てみましょう。
+
+![実行結果](img/efb1c2db-8891-499e-a6f2-1060d41b8c5f.png)
+
+シャッターボタンの下にあるチェックボックスを利用して、表示するマークやマスクを選択できるようになりました。
+
+***
+
+## まとめ
+
+本章では、前章で作成した Gazer アプリケーションを簡略化して、Facetious という新しいアプリケーションを作成しました。要約の過程で、ビデオ保存とモーション検出の機能が削除され、新たに写真撮影の機能が追加されました。その結果、顔認証に集中できるすっきりとしたアプリケーションを得ることができました。そして、このアプリケーションでは、事前に学習したカスケード分類器を用いて顔を検出する機能と、別の事前学習した機械学習モデルを用いて顔のランドマークを検出する機能を開発しました。最後に、面白いことに、検出されたランドマークを用いて、検出された顔に様々な装飾を施すことができました。
+
+次章では、光学式文字認識（OCR）技術について説明し、この技術を使って画像やスキャンした文書からテキストを抽出します。
+
+***
+
+## 問題集
+
+この章の知識を試すために、以下の問題に挑戦してください。
+
+1. LBPカスケード分類器を用いて、自分で顔を検出してみてください。
+2. OpenCVライブラリには、顔のランドマークを検出するために使用できる他のアルゴリズムがいくつかあり、それらのほとんどは[https://docs.opencv.org/4.0.0/db/dd8/classcv_1_1face_1_1Facemark.html](https://docs.opencv.org/4.0.0/db/dd8/classcv_1_1face_1_1Facemark.html)。ぜひ試してみてください。
+3. 顔に色のついた装飾を施すには？
+
+***
+
+**[次へ](../5/OpticalCharacterRecognition.md)**
