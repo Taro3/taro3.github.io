@@ -1,14 +1,26 @@
 # どうでもよさげな日記
 
+最近、SQLをもう一回ちゃんと勉強しようと思って
+![表紙](https://m.media-amazon.com/images/I/51N++ifzamL.jpg)
+[SQL 第２版 ゼロからはじめるデータベース操作](https://www.amazon.co.jp/SQL-%E7%AC%AC2%E7%89%88-%E3%82%BC%E3%83%AD%E3%81%8B%E3%82%89%E3%81%AF%E3%81%98%E3%82%81%E3%82%8B%E3%83%87%E3%83%BC%E3%82%BF%E3%83%99%E3%83%BC%E3%82%B9%E6%93%8D%E4%BD%9C-%E3%83%9F%E3%83%83%E3%82%AF-ebook/dp/B01HD5VWWO/ref=tmm_kin_swatch_0?_encoding=UTF8&qid=&sr=)
+を読んでます。
+
+更に、フロントエンドも少しは理解できないとまずいなと思って
+![表紙](https://m.media-amazon.com/images/I/51Y0-P+m94L.jpg)
+[React 実践の教科書](https://www.amazon.co.jp/%E3%83%A2%E3%83%80%E3%83%B3JavaScript%E3%81%AE%E5%9F%BA%E6%9C%AC%E3%81%8B%E3%82%89%E5%A7%8B%E3%82%81%E3%82%8B-React%E5%AE%9F%E8%B7%B5%E3%81%AE%E6%95%99%E7%A7%91%E6%9B%B8-%EF%BC%88%E6%9C%80%E6%96%B0ReactHooks%E5%AF%BE%E5%BF%9C%EF%BC%89-%E3%81%98%E3%82%83%E3%81%91%E3%81%87%EF%BC%88%E5%B2%A1%E7%94%B0-%E6%8B%93%E5%B7%B3%EF%BC%89-ebook/dp/B09BV2HGN3/ref=sr_1_1?keywords=react+%E5%AE%9F%E8%B7%B5%E3%81%AE%E6%95%99%E7%A7%91%E6%9B%B8&qid=1668315866&qu=eyJxc2MiOiIxLjI2IiwicXNhIjoiMS4wNiIsInFzcCI6IjAuOTYifQ%3D%3D&s=digital-text&sprefix=React+%E5%AE%9F%E8%B7%B5%E3%81%AE%2Cdigital-text%2C131&sr=1-1)
+も、読んでます。^^;
+
+2022/11/13
+***
 C#＋Pythonのデスクトップアプリのプロジェクトがほぼ終わった(；・∀・)
 もう一つのASP.NET系のプロジェクトは引き続き作業中( ･`ω･´)
 そして、もしかしたら新しくGo言語のバックエンド系のプロジェクトに参画するかもしれない…。
 何気に今年はよく働いてるかも(；・∀・)
+
 2022/10/21
-
 ***
-
 最近ASP.NET関係と普通のデスクトップアプリケーション開発を並行している…。なかなか大変だけど勉強になる。特にWeb系は。
+
 2022/06/23
 ***
 うーん。Flutterアプリって外見がほとんど同じ感じになってしまうんだなぁ…。今ひとつかゆいところに手が届かないかも…。
