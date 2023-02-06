@@ -1,5 +1,11 @@
 # どうでもよさげな日記
 
+この本読み掛けだけど結構面白いと言うか為になる（；\^ω^）
+![表紙](https://m.media-amazon.com/images/I/41E7wI9N9ZL.jpg)
+[Clean Craftsmanship](https://www.amazon.co.jp/gp/product/B0B9LPZ4R7/ref=ppx_yo_dt_b_d_asin_title_o00?ie=UTF8&psc=1)
+
+2023/02/06
+***
 最近、SQLをもう一回ちゃんと勉強しようと思って
 ![表紙](https://m.media-amazon.com/images/I/51N++ifzamL.jpg)
 [SQL 第２版 ゼロからはじめるデータベース操作](https://www.amazon.co.jp/SQL-%E7%AC%AC2%E7%89%88-%E3%82%BC%E3%83%AD%E3%81%8B%E3%82%89%E3%81%AF%E3%81%98%E3%82%81%E3%82%8B%E3%83%87%E3%83%BC%E3%82%BF%E3%83%99%E3%83%BC%E3%82%B9%E6%93%8D%E4%BD%9C-%E3%83%9F%E3%83%83%E3%82%AF-ebook/dp/B01HD5VWWO/ref=tmm_kin_swatch_0?_encoding=UTF8&qid=&sr=)
