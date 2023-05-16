@@ -1,5 +1,14 @@
 # どうでもよさげな日記
 
+この本も買ってみた。
+
+![表紙](https://m.media-amazon.com/images/I/51BhhfT6IyL._SX260_.jpg)
+[プロを目指す人のためのTypeScript入門　安全なコードの書き方から高度な型の使い方まで Software Design plus](https://www.amazon.co.jp/%E3%83%97%E3%83%AD%E3%82%92%E7%9B%AE%E6%8C%87%E3%81%99%E4%BA%BA%E3%81%AE%E3%81%9F%E3%82%81%E3%81%AETypeScript%E5%85%A5%E9%96%80-%E5%AE%89%E5%85%A8%E3%81%AA%E3%82%B3%E3%83%BC%E3%83%89%E3%81%AE%E6%9B%B8%E3%81%8D%E6%96%B9%E3%81%8B%E3%82%89%E9%AB%98%E5%BA%A6%E3%81%AA%E5%9E%8B%E3%81%AE%E4%BD%BF%E3%81%84%E6%96%B9%E3%81%BE%E3%81%A7-Software-Design-plus-%E9%88%B4%E6%9C%A8-ebook/dp/B09Y527YPV/ref=sr_1_5?__mk_ja_JP=%E3%82%AB%E3%82%BF%E3%82%AB%E3%83%8A&crid=L4PWTWU0BTRQ&keywords=typescript&qid=1684280617&sprefix=typescript%2Caps%2C150&sr=8-5)
+
+まだ読んでないけども…。
+
+2023/05/17
+***
 ChatGPTで、知らない or 慣れていないライブラリとかフレームワークのことを聞くとほんとに便利！
 ちょっと情報が古いので、非推奨メソッドだったりするけど、現時点でも導入部での利用には十分価値がある気がする。
 どんどん情報が更新されていけば更に使えるようになるなぁ（；\^ω^）
