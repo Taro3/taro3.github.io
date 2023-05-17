@@ -1,5 +1,7 @@
 # どうでもよさげな日記
 
+***
+
 この本も買ってみた。
 
 ![表紙](https://m.media-amazon.com/images/I/51BhhfT6IyL._SX260_.jpg)
