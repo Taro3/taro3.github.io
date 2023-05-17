@@ -8,13 +8,17 @@
 まだ読んでないけども…。
 
 2023/05/17
+
 ***
+
 ChatGPTで、知らない or 慣れていないライブラリとかフレームワークのことを聞くとほんとに便利！
 ちょっと情報が古いので、非推奨メソッドだったりするけど、現時点でも導入部での利用には十分価値がある気がする。
 どんどん情報が更新されていけば更に使えるようになるなぁ（；\^ω^）
 
 2023/02/09
+
 ***
+
 この本読み掛けだけど結構面白いと言うか為になる（；\^ω^）
 ![表紙](https://m.media-amazon.com/images/I/41E7wI9N9ZL.jpg)
 [Clean Craftsmanship](https://www.amazon.co.jp/gp/product/B0B9LPZ4R7/ref=ppx_yo_dt_b_d_asin_title_o00?ie=UTF8&psc=1)
