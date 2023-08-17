@@ -475,3 +475,180 @@ Page segmentation modes:
 ***
 
 ### リテラシーで文字を認識する
+
+テッサー・アクト・ライブラリーの準備ができたので、それを使ってリタイア・アプリのキャラクターを再定義してみよう。
+
+まず最初にすべきことは、プロジェクトファイルを更新し、Tesserのアクトリブラリに反映させます：
+
+```sh
+# use your own path in the following config
+unix: {
+    INCLUDEPATH += homekdr2/programs/tesseract/include
+    LIBS += -Lhomekdr2/programs/tesseract/lib -ltesseract
+}
+win32 {
+    INCLUDEPATH += c:/path/to/tesseract/include
+    LIBS += -lc:/path/to/opencv/lib/tesseract
+}
+DEFINES += TESSDATA_PREFIX=\\\"homekdr2/programs/tesseract/share/tessdata/\\\"
+```
+
+先の変更セットでは、異なるプラットフォーム用のTesseractライブラリのインクルードパスとライブラリパスを追加し、TESSDATA_PREFIXというマクロを定義しました。このマクロは後ほど学習済みデータをロードする際に使用します。
+
+次に、mainwindow.hヘッダーファイルを開き、新しい行を追加します：
+
+```cpp
+     #include "tesseract/baseapi.h"
+
+     class MainWindow : public QMainWindow
+     {
+         // ...
+     private slots:
+         // ...
+         void extractText();
+
+     private:
+         // ...
+         QAction *ocrAction;
+         // ...
+         tesseract::TessBaseAPI *tesseractAPI;
+     };
+```
+
+この変更セットでは、まずTesseractライブラリのベースAPIヘッダーファイルをインクルードするためにincludeディレクティブを追加し、次にMainWindowクラスに1つのスロットと2つのメンバーを追加します。
+
+QAction \*ocrActionメンバーは、メインウィンドウのツールバーに表示されます。このアクションがトリガーされると、新しく追加されたスロットであるextractTextが呼び出され、そのスロットはtesseract::TessBaseAPI *tesseractAPIメンバを使用して、開かれたイメージ内の文字を認識します。
+
+では、ソースファイルmainwindow.cppでこれらのことがどのように行われるかを見てみましょう。
+
+MainWindowクラスのコンストラクタで、メンバ・フィールドのtesseractAPIをnullptrに初期化します：
+
+```cpp
+     MainWindow::MainWindow(QWidget *parent) :
+         QMainWindow(parent)
+         , currentImage(nullptr)
+         , tesseractAPI(nullptr)
+     {
+         initUI();
+     }
+```
+
+createActionsメソッドでは、ocrActionアクションを作成し、ツールバーに追加し、そのトリガーシグナルを新しく追加されたextractTextスロットに接続します：
+
+```cpp
+     void MainWindow::createActions()
+     {
+         // ...
+         ocrAction = new QAction("OCR", this);
+         fileToolBar->addAction(ocrAction);
+
+         // ...
+         connect(ocrAction, SIGNAL(triggered(bool)), this, SLOT(extractText()));
+         // ...
+     }
+```
+
+あとは、最も複雑で重要な部分であるextractTextスロットの実装だけです：
+
+```cpp
+     void MainWindow::extractText()
+     {
+         if (currentImage == nullptr) {
+             QMessageBox::information(this, "Information", "No opened image.");
+             return;
+         }
+
+         char *old_ctype = strdup(setlocale(LC_ALL, NULL));
+         setlocale(LC_ALL, "C");
+         tesseractAPI = new tesseract::TessBaseAPI();
+         // Initialize tesseract-ocr with English, with specifying tessdata path
+         if (tesseractAPI->Init(TESSDATA_PREFIX, "eng")) {
+             QMessageBox::information(this, "Error", "Could not initialize tesseract.");
+             return;
+         }
+
+         QPixmap pixmap = currentImage->pixmap();
+         QImage image = pixmap.toImage();
+         image = image.convertToFormat(QImage::Format_RGB888);
+
+         tesseractAPI->SetImage(image.bits(), image.width(), image.height(),
+             3, image.bytesPerLine());
+         char *outText = tesseractAPI->GetUTF8Text();
+         editor->setPlainText(outText);
+         // Destroy used object and release memory
+         tesseractAPI->End();
+         delete tesseractAPI;
+         tesseractAPI = nullptr;
+         delete [] outText;
+         setlocale(LC_ALL, old_ctype);
+         free(old_ctype);
+     }
+```
+
+メソッド本体の冒頭で、currentImageメンバ・フィールドがnullかどうかをチェックする。もしnullであれば、アプリケーションで開いている画像はないので、メッセージボックスを表示した後、すぐにリターンします。
+
+もしnullでなければ、Tesseract APIインスタンスを作成します。TesseractはロケールをCに設定する必要があるため、まず、LC_ALLカテゴリとnull値でsetlocale関数を呼び出し、現在のロケール設定を取得し保存します。OCR作業が完了したら、保存されたLC_ALL値を使用してロケール設定を復元します。
+
+ロケールをCに設定した後、Tesseract APIのインスタンスを作成します。作成にはnew tesseract::TessBaseAPI()を使用します。新しく作成したAPIインスタンスは、使用する前に初期化する必要があります。初期化はInitメソッドを呼び出すことで実行されます。Initメソッドには多くのバージョン（オーバーロード）があります：
+
+```cpp
+// 1
+int Init(const char* datapath, const char* language, OcrEngineMode mode,
+         char **configs, int configs_size,
+         const GenericVector<STRING> *vars_vec,
+         const GenericVector<STRING> *vars_values,
+         bool set_only_non_debug_params);
+// 2
+int Init(const char* datapath, const char* language, OcrEngineMode oem) {
+  return Init(datapath, language, oem, nullptr, 0, nullptr, nullptr, false);
+}
+// 3
+int Init(const char* datapath, const char* language) {
+  return Init(datapath, language, OEM_DEFAULT, nullptr, 0, nullptr, nullptr, false);
+}
+// 4
+int Init(const char* data, int data_size, const char* language,
+         OcrEngineMode mode, char** configs, int configs_size,
+         const GenericVector<STRING>* vars_vec,
+         const GenericVector<STRING>* vars_values,
+         bool set_only_non_debug_params, FileReader reader);
+```
+
+これらのバージョンのいくつかでは、事前学習されたデータ・パス、言語名、OCR エンジン・モード、ページ分割モード、その他多くの設定を指定することができます。コードを単純化し、API インスタンスを初期化するために、このメソッドの最も単純なバージョンである 3 番目のバージョンを使用します。この呼び出しでは、データパスと言語名を渡すだけです。データ・パスは、プロジェクト・ファイルで定義したマクロで表されていることに注意してください。初期化プロセスは失敗する可能性があるため、その結果をチェックし、初期化に失敗した場合は簡単なメッセージを表示した後、すぐにリターンします。
+
+Tesseract APIインスタンスの準備ができたら、現在開いている画像を取得し、以前のプロジェクトで行ったようにQImage::Format_RGB888フォーマットの画像に変換します。
+
+RGB888フォーマットの画像を取得したら、SetImageメソッドを呼び出すことで、Tesseract APIインスタンスに画像を渡すことができます。SetImageメソッドには様々なオーバーロードがあります：
+
+```cpp
+// 1
+void SetImage(const unsigned char* imagedata, int width, int height,
+              int bytes_per_pixel, int bytes_per_line);
+// 2
+void SetImage(Pix* pix);
+```
+
+最初のものは、指定された画像のデータフォーマットの情報を使って呼び出すことができます。これは、Qt の QImage や OpenCV の Mat などのライブラリで定義されたクラスに制限されません。2番目のバージョンは、入力画像として Pix ポインタを受け付けます。Pix クラスは、画像処理ライブラリ Leptonica によって定義されています。この例で最も適しているのは、明らかに最初のバージョンです。必要な情報はすべてQImageインスタンスから取得でき、QImageは3つのチャンネルと8ビットの深度を持ちます：
+
+```cpp
+         tesseractAPI->SetImage(image.bits(), image.width(), image.height(),
+             3, image.bytesPerLine());
+```
+
+Tesseract APIインスタンスが画像を取得したら、そのGetUTF8Text()メソッドを呼び出し、画像から認識したテキストを取得することができます。ここで注意すべき点は、このメソッドの結果として得られるデータバッファを解放するのは呼び出し側の責任であるということです。
+
+残りのタスクは、抽出されたテキストをエディタ・ウィジェットに設定し、Tesseract APIインスタンスを破棄し、GetUTF8Textコールの結果データ・バッファを削除し、ロケール設定を回復することです。
+
+OK。アプリケーションをコンパイルし、再起動しましょう。アプリケーションが起動したら、テキストを含む画像を開き、ツールバーのOCRアクションをクリックします。すると、画像から抽出されたテキストが左側のエディターに表示されます：
+
+![結果](img/2023-08-17-09-18-39.png)
+
+結果に満足したら、ファイルメニューの「名前を付けてテキストを保存」をクリックして、テキストをファイルとして保存できます。
+
+これまでのところ、このアプリケーションは、本の写真やスキャンした文書などの画像からテキストを認識し、抽出する機能を持っています。これらの画像には、活字の組版が上手なテキストしかありません。もしこのアプリケーションに、さまざまな要素を含む写真を与え、テキストがその中のほんの一部を占めるだけ、例えばお店の正面の写真や道路上の交通標識の写真などを与えた場合、どのような確率でも文字を認識できないでしょう。次の写真で試してみよう：
+
+![image](2023-08-17-09-20-46.png)
+
+推測通り、我々のアプリケーションはテキストを抽出することができなかった。このような画像を扱うには、単に画像全体をTesseractに渡すだけでは駄目です。画像のどの領域にテキストが含まれているかをTesseractに伝える必要があります。そのため、この種の画像からテキストを抽出する前に、まず画像内のテキスト領域を検出しなければなりません。次のセクションでOpenCVを使ってこれを行います。
+
+### OpenCVによるテキスト領域の検出
