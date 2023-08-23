@@ -647,8 +647,315 @@ OK。アプリケーションをコンパイルし、再起動しましょう。
 
 これまでのところ、このアプリケーションは、本の写真やスキャンした文書などの画像からテキストを認識し、抽出する機能を持っています。これらの画像には、活字の組版が上手なテキストしかありません。もしこのアプリケーションに、さまざまな要素を含む写真を与え、テキストがその中のほんの一部を占めるだけ、例えばお店の正面の写真や道路上の交通標識の写真などを与えた場合、どのような確率でも文字を認識できないでしょう。次の写真で試してみよう：
 
-![image](2023-08-17-09-20-46.png)
+![image](img/2023-08-17-09-20-46.png)
 
 推測通り、我々のアプリケーションはテキストを抽出することができなかった。このような画像を扱うには、単に画像全体をTesseractに渡すだけでは駄目です。画像のどの領域にテキストが含まれているかをTesseractに伝える必要があります。そのため、この種の画像からテキストを抽出する前に、まず画像内のテキスト領域を検出しなければなりません。次のセクションでOpenCVを使ってこれを行います。
 
+***
+
 ### OpenCVによるテキスト領域の検出
+
+前節では、たとえばスキャンした文書など、テキストがきちんとタイプセットされた画像からテキストを抽出することに成功しました。しかし、一般的なシーンの写真からテキストを抽出することはできません。本節では、この問題を解決します。
+
+このセクションでは、画像内のテキストの存在を検出するために、OpenCVを使ったEASTテキスト検出器に頼ることにします。EASTとは、Efficient and Accurate Scene Text detectorの略で、解説は https://arxiv.org/abs/1704.03155 にあります。これはニューラルネットワークベースのアルゴリズムですが、そのニューラルネットワークモデルのアーキテクチャと学習プロセスは本章の範囲外です。この章では、OpenCVのEASTテキスト検出器の事前学習済みモデルの使い方に焦点を当てます。
+
+コードを始める前に、まず事前学習済みモデルを用意しましょう。EASTモデルの事前学習済みモデルファイルは、http://depot.kdr2.com/books/Qt-5-and-OpenCV-4-Computer-Vision-Projects/trained-model/frozen_east_text_detection.pb からダウンロードできます。これをダウンロードして、プロジェクトのルート・ディレクトリに置きましょう：
+
+```bash
+$ curl -O http://depot.kdr2.com/books/Qt-5-and-OpenCV-4-Computer-Vision-Projects/trained-model/frozen_east_text_detection.pb
+# output omitted
+$ ls -l
+total 95176
+-rw-r--r-- 1 kdr2 kdr2 96662756 Mar 22 17:03 frozen_east_text_detection.pb
+-rwxr-xr-x 1 kdr2 kdr2 131776 Mar 22 17:30 Literacy
+-rw-r--r-- 1 kdr2 kdr2 988 Mar 23 21:13 Literacy.pro
+-rw-r--r-- 1 kdr2 kdr2 224 Mar 7 15:32 main.cpp
+-rw-r--r-- 1 kdr2 kdr2 11062 Mar 23 21:13 mainwindow.cpp
+-rw-r--r-- 1 kdr2 kdr2 1538 Mar 23 21:13 mainwindow.h
+# output truncated
+```
+
+これはかなり簡単です。ニューラルネットワーク・モードの準備は完了しました。では、コードに移りましょう。
+
+最初に更新する必要があるのは、プロジェクト・ファイルのLiteracy.proです。前の章でやったのと同じように、OpenCVライブラリの設定を組み込む必要があります：
+
+```qmake
+# opencv config
+unix: !mac {
+    INCLUDEPATH += /home/kdr2/programs/opencv/include/opencv4
+    LIBS += -L/home/kdr2/programs/opencv/lib -lopencv_core -lopencv_imgproc -lopencv_dnn
+}
+
+unix: mac {
+    INCLUDEPATH += /path/to/opencv/include/opencv4
+    LIBS += -L/path/to/opencv/lib -lopencv_world
+}
+
+win32 {
+    INCLUDEPATH += c:/path/to/opencv/include/opencv4
+    LIBS += -lc:/path/to/opencv/lib/opencv_world
+}
+```
+
+注目すべきは、LIBSの設定にopencv_dnnモジュールを追加していることです。実際にはディープニューラルネットワークであるEASTアルゴリズムの実装はこのモジュールにあります。
+
+次に更新するのは、mainwindow.h というヘッダー・ファイルです。このファイルに2つのOpenCVヘッダー・ファイルをインクルードし、MainWindowクラスにいくつかのフィールドとメソッドを追加します：
+
+```cpp
+    // ...
+    #include <QCheckBox>
+    // ...
+    #include "opencv2/opencv.hpp"
+    #include "opencv2/dnn.hpp"
+
+    class MainWindow : public QMainWindow
+    {
+        // ...
+    private:
+        // ...
+        void showImage(cv::Mat);
+        // ...
+        void decode(const cv::Mat& scores, const cv::Mat& geometry, float scoreThresh,
+            std::vector<cv::RotatedRect>& detections, std::vector<float>& confidences);
+        cv::Mat detectTextAreas(QImage &image, std::vector<cv::Rect>&);
+
+        // ...
+    private:
+        // ...
+        QCheckBox *detectAreaCheckBox;
+        // ...
+        cv::dnn::Net net;
+    };
+```
+
+まず、新しく追加されたプライベートフィールドを調べてみよう。メンバフィールドである cv::dnn::Net net は、テキスト領域の検出に使用されるディープニューラルネットワークのインスタンスです。detectAreaCheckBoxフィールドはツールバーに表示されるチェックボックスで、TesseractでOCR作業を実行する前にテキストエリアを検出すべきかどうかを判断するためのインジケータをユーザーが与えることができます。
+
+detectTextAreasメソッドはOpenCVで領域を検出するためのもので、decodeメソッドは補助的なメソッドです。画像上のテキスト領域を検出した後、その画像上の各テキスト領域に対して矩形を描画します。これらのステップはすべてOpenCVで行われます。したがって、画像は cv::Mat のインスタンスとして表現されるので、更新された画像を UI に表示するために， cv::Mat のインスタンスを唯一の引数としてとる別のバージョンの showImage メソッドをオーバーロードします。
+
+それでは、xmainwindow.cpp のソースファイルにアクセスして、変更点を確認してみましょう。
+
+まず、最も重要なメソッドである MainWindow::detectTextAreas を見てみましょう。意図したとおり、このメソッドは入力画像としてQImageオブジェクトを第1引数に取ります。このメソッドの第2引数には、検出されたテキスト領域を保持するための cv::Rect ベクタへの参照が渡されます。このメソッドの戻り値は、検出された矩形が描画された入力画像を表す cv::Mat です。その実装を、次のコードを見てみましょう。
+
+```cpp
+    cv::Mat MainWindow::detectTextAreas(QImage &image, std::vector<cv::Rect> &areas)
+    {
+        float confThreshold = 0.5;
+        float nmsThreshold = 0.4;
+        int inputWidth = 320;
+        int inputHeight = 320;
+        std::string model = "./frozen_east_text_detection.pb";
+        // Load DNN network.
+        if (net.empty()) {
+            net = cv::dnn::readNet(model);
+        }
+
+        // more ...
+    }
+```
+
+このコードはメソッド本体の最初の部分です。この部分では、多くの変数を定義し、ディープニューラルネットワークを作成します。最初の2つの閾値は確信度と非最大抑制のためのものです。AIモデルの検出結果をフィルタリングするために使用します。EASTモデルでは、画像の幅と高さが32の倍数でなければならないので、値が両方とも320である2つのint変数を定義します。入力画像をDNNモデルに送る前に、この2つの変数に記述された寸法、つまりこの例では320 x 320にリサイズします。
+
+次に、ダウンロードした事前学習済みモデルデータファイルへのパスを文字列で定義し、クラスメンバ net が空であることを条件に cv::dnn::readNet 関数を呼び出してロードします。OpenCV の DNN は、様々な種類の事前学習済みモデルデータファイルをサポートしています。
+
+* *.caffemodel (Caffe, http://caffe.berkeleyvision.org/)
+* *.pb (TensorFlow, https://www.tensorflow.org/)
+* *.t7 or *.net (Torch, http://torch.ch/)
+* *.weights (Darknet, https://pjreddie.com/darknet/)
+* *.bin (DLDT, https://software.intel.com/openvino-toolkit)
+
+前のリストから、私たちが使用する事前学習済みモデルは、TensorFlowフレームワークを使用して構築され、学習されていることがわかります。
+
+つまり、DNNモデルがロードされたことになります。では、テキスト検出を行うために、入力画像をモデルに送ってみましょう：
+
+```cpp
+        std::vector<cv::Mat> outs;
+        std::vector<std::string> layerNames(2);
+        layerNames[0] = "feature_fusion/Conv_7/Sigmoid";
+        layerNames[1] = "feature_fusion/concat_3";
+
+        cv::Mat frame = cv::Mat(
+            image.height(),
+            image.width(),
+            CV_8UC3,
+            image.bits(),
+            image.bytesPerLine()).clone();
+        cv::Mat blob;
+
+        cv::dnn::blobFromImage(
+            frame, blob,
+            1.0, cv::Size(inputWidth, inputHeight),
+            cv::Scalar(123.68, 116.78, 103.94), true, false
+        );
+        net.setInput(blob);
+        net.forward(outs, layerNames);
+```
+
+このコードでは、モデルの出力層を保存するために cv::Mat のベクトルを定義します。そして、DNN モデルから抽出する必要のある 2 つの層の名前を、文字列ベクトル layerNames 変数に入れます。この2つの層は、我々が欲しい情報を含んでいます：
+
+1. 最初の層、feature_fusion/Conv_7/Sigmoidはシグモイド活性化の出力層です。この層のデータは、与えられた領域がテキストを含むかどうかの確率を含みます。
+2. 2番目のレイヤ、feature_fusion/concat_3は、特徴マップの出力レイヤです。この層のデータには画像のジオメトリが含まれます。後でこのレイヤーのデータをデコードして、多くのバウンディングボックスを得ます。
+
+この後、入力画像を QImage から cv::Mat に変換し、その行列を DNN モデルの入力、つまり入力層として利用可能な 4 次元の blob である別の行列に変換します。後者の変換は、OpenCV ライブラリの cv::dnn 名前空間にある blobFromImage 関数を呼び出すことで実装されます。この変換では、画像のサイズ変更や中心からの切り出し、平均値の引き算、スケールファクターによる値の拡大縮小、RチャンネルとBチャンネルの入れ替えなど、多くの処理が実行されます。このblobFromImage関数の呼び出しには、多くの引数があります。ひとつずつ説明しましょう：
+
+1. 第1引数は入力画像。
+2. 第2引数は出力画像。
+3. 第3引数は各ピクセル値のスケールファクター。ここではピクセルを拡大縮小する必要がないため、1.0を使用する。
+4. 第4引数は出力画像の空間サイズです。このサイズの幅と高さは32の倍数でなければならないと述べましたが、ここでは定義した変数で320×320を使用します。
+5. 第5引数は各画像から差し引かれるべき平均値で、これはモデルの学習中に使用されたからです。ここで使用される平均は (123.68, 116.78, 103.94)です。
+6. 次の引数は、RチャンネルとBチャンネルを入れ替えるかどうかです。OpenCVはBGRフォーマットを使用し、TensorFlowはRGBフォーマットを使用するため、これは必須です。
+7. 最後の引数は、画像をトリミングして中央を切り取るかどうかです。この場合はfalseを指定します。
+
+この呼び出しが戻ると、DNNモデルの入力として使用できるblobが得られます。次に、これをニューラルネットワークに渡し、モデルのsetInputメソッドとforwardメソッドを呼び出して、出力レイヤーを取得するためにフォワーディングのラウンドを実行します。フォワーディングが完了すると、欲しい2つの出力層が定義したアウトベクターに格納されます。次にすることは、これらの出力レイヤーを処理してテキスト・エリアを得ることです：
+
+```cpp
+        cv::Mat scores = outs[0];
+        cv::Mat geometry = outs[1];
+
+        std::vector<cv::RotatedRect> boxes;
+        std::vector<float> confidences;
+        decode(scores, geometry, confThreshold, boxes, confidences);
+
+        std::vector<int> indices;
+        cv::dnn::NMSBoxes(boxes, confidences, confThreshold, nmsThreshold, indices);
+```
+
+outsベクトルの最初の要素はスコアで、2番目の要素はジオメトリです。次に、MainWindow クラスの別のメソッドである decode を呼び出して、テキストボックスの位置と向きをデコードします。このデコード処理によって、候補となるテキスト領域が cv::RotatedRect として得られ、変数 boxes に格納されます。これらのボックスに対応する信頼度は、 confidences 変数に格納されます。
+
+1つのテキストボックスに対して多くの候補が得られるかもしれないので、最もよく見えるテキストボックスをフィルタリングする必要があります。これは非最大抑制、つまりNMSBoxesメソッドの呼び出しを使って行われます。この呼び出しでは、デコードされたボックス、信頼度、信頼度と非最大抑制のしきい値を与え、排除されなかったボックスのインデックスは最後の引数indicesに格納されます。
+
+デコードメソッドは、出力レイヤからコンフィデンスとボックス情報を抽出するために使用されます。その実装は https://github.com/opencv/opencv/blob/master/samples/dnn/text_detection.cpp#L119 にあります。これを理解するためには、DNNモデルのデータ構造、特に出力層のデータ構造を理解する必要があります。しかし、それは本書の範囲を超えています。もし興味があれば、https://arxiv.org/abs/1704.03155v2 にあるEASTに関連する論文や、https://github.com/argman/EAST にあるTensorflowを使った実装の1つを参照してください。
+
+とりあえず、すべてのテキスト領域を cv::RotatedRect のインスタンスとして取得します。
+
+```cpp
+        cv::Point2f ratio((float)frame.cols / inputWidth, (float)frame.rows / inputHeight);
+        cv::Scalar green = cv::Scalar(0, 255, 0);
+
+        for (size_t i = 0; i < indices.size(); ++i) {
+            cv::RotatedRect& box = boxes[indices[i]];
+            cv::Rect area = box.boundingRect();
+            area.x *= ratio.x;
+            area.width *= ratio.x;
+            area.y *= ratio.y;
+            area.height *= ratio.y;
+            areas.push_back(area);
+            cv::rectangle(frame, area, green, 1);
+            QString index = QString("%1").arg(i);
+            cv::putText(
+                frame, index.toStdString(), cv::Point2f(area.x, area.y - 2),
+                cv::FONT_HERSHEY_SIMPLEX, 0.5, green, 1
+            );
+        }
+        return frame;
+```
+
+テキスト領域を元の画像にマッピングするためには、DNNモデルに送られる前に、画像がどのようにリサイズされるかを知っておく必要があります。そこで、幅と高さの縦横比を計算し、それらを cv::Point2f ratio に保存します。そして、保持しているインデックスを繰り返し処理し、各インデックスで示される cv::RotatedRect オブジェクトを取得します。コードの複雑さを軽減するために、 cv::RotatedRect とその内容を通常の矩形に回転させるのではなく、単にその外接矩形を取得します。そして、その矩形に対して逆リサイズを行い、それを areas vector に押し込みます。これらの領域がどのように表示されるかを示すために、元の画像にも領域を描画し、それぞれの矩形の右上に番号を挿入して、処理される順番を示します。
+
+メソッドの最後には、更新された元画像を返します。
+
+テキスト領域検出メソッドが完成したので、アプリケーションに組み込んでみましょう。
+
+まずinitUIメソッドで、OCRを実行する前にテキスト領域を検出するかどうかを決定するためのチェックボックスを作成し、ファイルツールバーに追加します：
+
+```cpp
+        detectAreaCheckBox = new QCheckBox("Detect Text Areas", this);
+        fileToolBar->addWidget(detectAreaCheckBox);
+```
+
+そしてMainWindow::extractTextメソッドで、画像全体をTesseract APIにセットした後、そのチェックボックスの状態をチェックします：
+
+```cpp
+        tesseractAPI->SetImage(image.bits(), image.width(), image.height(),
+            3, image.bytesPerLine());
+
+        if (detectAreaCheckBox->checkState() == Qt::Checked) {
+            std::vector<cv::Rect> areas;
+            cv::Mat newImage = detectTextAreas(image, areas);
+            showImage(newImage);
+            editor->setPlainText("");
+            for(cv::Rect &rect : areas) {
+                tesseractAPI->SetRectangle(rect.x, rect.y, rect.width, rect.height);
+                char *outText = tesseractAPI->GetUTF8Text();
+                editor->setPlainText(editor->toPlainText() + outText);
+                delete [] outText;
+            }
+        } else {
+            char *outText = tesseractAPI->GetUTF8Text();
+            editor->setPlainText(outText);
+            delete [] outText;
+        }
+```
+
+このように、チェックボックスがチェックされている場合は、 detextTextAreas メソッドを呼び出してテキスト領域を検出します。この呼び出しは、テキスト領域とインデックスが描画された画像を cv::Mat のインスタンスとして返し、この画像を用いて showImage メソッドを呼び出してウィンドウに表示します。次に、テキスト領域を繰り返し処理し、Tesseract API の SetRectangle メソッドを呼び出して、この矩形内にある文字のみを認識するように指示します。そして、認識されたテキストを取得し、エディタに追加し、テキストのメモリを解放します。
+
+チェックボックスがチェックされていない場合は、以前から確立されているロジックを適用します。Tesseractに画像全体のテキストを認識させます。
+
+また、ここでコードのちょっとした最適化を行います。Tesseract APIインスタンスは再利用できるので、作成と初期化は一度だけ行います：
+
+```cpp
+        if (tesseractAPI == nullptr) {
+            tesseractAPI = new tesseract::TessBaseAPI();
+            // Initialize tesseract-ocr with English, with specifying tessdata path
+            if (tesseractAPI->Init(TESSDATA_PREFIX, "eng")) {
+                QMessageBox::information(this, "Error", "Could not initialize tesseract.");
+                return;
+            }
+        }
+```
+
+そして、MainWindowクラスのデストラクタでこれを破棄します：
+
+```cpp
+    MainWindow::~MainWindow()
+    {
+        // Destroy used object and release memory
+        if(tesseractAPI != nullptr) {
+            tesseractAPI->End();
+            delete tesseractAPI;
+        }
+    }
+```
+
+最後に残っているのは、オーバーロードされたshowImageメソッドの実装です。画像フォーマットの変換やQtでの画像表示に関しては、すでに多くの作業を終えているので、これは本当に簡単なことです：
+
+```cpp
+    void MainWindow::showImage(cv::Mat mat)
+    {
+        QImage image(
+            mat.data,
+            mat.cols,
+            mat.rows,
+            mat.step,
+            QImage::Format_RGB888);
+
+        QPixmap pixmap = QPixmap::fromImage(image);
+        imageScene->clear();
+        imageView->resetMatrix();
+        currentImage = imageScene->addPixmap(pixmap);
+        imageScene->update();
+        imageView->setSceneRect(pixmap.rect());
+    }
+```
+
+OK。最後に、アプリケーションをコンパイルして実行し、テストしましょう：
+
+```bash
+$ make
+# output omitted
+$ export LD_LIBRARY_PATH=/home/kdr2/programs/opencv/lib:/home/kdr2/programs/tesseract/lib
+$ ./Literacy
+```
+
+テキストを含む写真をアプリケーションで開き、[テキスト領域を検出]チェックボックスをオフにしたまま、[OCR]ボタンをクリックしてみましょう。次のような悪い結果が表示されます：
+
+![image](img/2023-08-24-08-29-43.png)
+
+次に、チェックボックスにチェックを入れ、もう一度OCRボタンをクリックして、何が起こるか見てみましょう：
+
+![image](img/2023-08-24-08-31-57.png)
+
+4つのテキストエリアが正しく検出され、そのうち3つのテキストが正しく認識されています。悪くない！
+
+***
+
+### 画面上の文字を認識する
