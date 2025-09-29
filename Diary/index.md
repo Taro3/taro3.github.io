@@ -2,10 +2,18 @@
 
 ***
 
+Next.jsを使ってWebアプリを作ろうかと思いこの本を買ってみた。
+![](https://m.media-amazon.com/images/I/71g+Z3GiWcL._SY385_.jpg)
+[改訂新版 これからはじめるReact実践入門　コンポーネントの基本からNext.jsによるアプリ開発まで](https://www.amazon.co.jp/%E6%94%B9%E8%A8%82%E6%96%B0%E7%89%88-%E3%81%93%E3%82%8C%E3%81%8B%E3%82%89%E3%81%AF%E3%81%98%E3%82%81%E3%82%8BReact%E5%AE%9F%E8%B7%B5%E5%85%A5%E9%96%80-%E3%82%B3%E3%83%B3%E3%83%9D%E3%83%BC%E3%83%8D%E3%83%B3%E3%83%88%E3%81%AE%E5%9F%BA%E6%9C%AC%E3%81%8B%E3%82%89Next-js%E3%81%AB%E3%82%88%E3%82%8B%E3%82%A2%E3%83%97%E3%83%AA%E9%96%8B%E7%99%BA%E3%81%BE%E3%81%A7-%E5%B1%B1%E7%94%B0-%E7%A5%A5%E5%AF%9B-ebook/dp/B0FFGQPMSX/ref=sr_1_2?crid=VHKRUV91COZL&dib=eyJ2IjoiMSJ9.dSyTOogTqB6KfUmfiw8111aeemaQqSo7uF-P31lw6ACkdQgLOwNROdAZMF2g47YoP2iy9g8EkydI2JEAKca0PZibQypJFqG1qglM7H3-iqC67ecuhgFXIrm5-ECJlvHiSDsBrDmMtMQsro0XKrogzQ4ZwAVL_hAd-3_CTQPvekX3m3EHWSBPkS13giDcNTbzzHYQvvqamASPj5dVIeSQFJHtYGByycVI0YCkhhBxHTinPDfRIIH1GBolktFtYrhMuCrv1nTXToyXNCfmkBTEnmsEPPJp4EzHOeUTMFFHCPw.RJ_SUjnzbG3ywRw2LSo3OMCOOpOzUaKCoTv8KXwnp38&dib_tag=se&keywords=next.js&qid=1759118366&sprefix=%2Caps%2C194&sr=8-2)
+
+一旦、簡単な掲示板アプリをFastAPIで作りかけてたんだけど、Next.jsで作ってみようかと。
+
+2025/09/29
+
+***
+
 相変わらずFastAPIとReactとC#の作業^^;
 なかなか大変だが、AI優秀すぎる！
-バックエンドはシングルスレッドが基本とか寝言言ってた人も過去の案件にはいたけども…。
-太古の昔から if 文の and は、1つ目が false なら2つ目は評価しません…。
 
 2025/06/09
 
